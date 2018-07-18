@@ -3,7 +3,7 @@
 
 %\documentclass[11pt,twocolumn]{article}
 \documentclass[11pt,onecolumn]{article}
-\usepackage{hyperref,color}
+\usepackage{hyperref}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{titlesec}
 \usepackage{longtable}
@@ -11,10 +11,13 @@
 %\usepackage[margin=.75in]{geometry}
 \usepackage{textcomp}
 \pagenumbering{gobble}
+%% \usepackage[utf8]{inputenc}
+%% \usepackage[english]{babel}
+%% \usepackage[usenames, dvipsnames]{color}
 
 %paragraph formatting
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt}
+\setlength{\parskip}{3pt}
 
 \usepackage{url}
 
@@ -29,15 +32,15 @@
 \titlespacing\section{0in}{\parskip}{\parskip}
 
 %Just fill these in to fill in the basic syllabus information.
-\newcommand{\coursename}{Introduction to Bayesian Statistics - STAT 446/646}
-\newcommand{\semester}{Spring 2019}
-\newcommand{\roomnumb}{AB 206}
-\newcommand{\classtimes}{Mon,Wed 1:00pm - 2:15pm}
+\newcommand{\coursename}{Introduction to Statistical Computing - STAT 446/646}
+\newcommand{\semester}{Fall 2018}
+\newcommand{\roomnumb}{DMSC 106}
+\newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
 \newcommand{\myname}{A.~Grant Schissler}
-% \newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
+%\newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
 \newcommand{\myemail}{aschissler@unr.edu}
 \newcommand{\office}{DMSC 224}
-\newcommand{\officehours}{Mon 2:30pm-3:30pm, Wed 3:30pm-4:30pm, or by appointment}
+\newcommand{\officehours}{Tue 2:30pm-3:30pm, Wed 1:30pm-2:30pm, or by appointment}
 % \newcommand{\university}{The University of Nevada, Reno}
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -60,45 +63,63 @@
 \end{tabular}
 \end{center}
 
-A primary goal of this course is to introduce Bayesian statistics at an early stage to students with a reasonable mathematical background. As such, the range of topics is similar to an introductory statistics course for a technical audience with an emphasis on statistical inference. Along those lines, the course will describe Bayesian methods and show how they compare favorable to frequentist alternatives. Topics include Bayesian inference for discrete and continuous univariate random variables, multivariate normal, and linear regression. We will implement methods analytically and using software such as Minitab, R, and Stan.
+Computational skills have become an invaluable asset in our increasingly quantitative world. This course introduces students to the foundational skills and concepts needed in modern statistical and mathematical computing, with an emphasis on high-level programming languages and statistical applications. We'll follow the required textbook closely except for the last few lectures.
 
-The latter portions of the course focuses on implementing more advanced Bayesian methods through modern computational techniques to sample posterior distributios including Markov Chain Monte Carlo (MCMC) and Hamiltonian Monte Carlo. The aim will be to provide the concepts and technical skills to conduct a realistic Bayesian data analysis to aid advanced and graduate students in their research projects. As such, the later topics may be challenging to those without experience in computer programming (although it is not required).
+There are three main parts to the course: First, students learn basic programming skills, graphics, and how to carry out basic statistical analyses (e.g., regression) all in \textsc{R}. Second, students learn the fundamentals of simulation techniques (Monte Carlo) for generating synthetic data. Third, students are introduced to various topics in computational statistics for estimation, integration, hypothesis testing, and density estimation for univariate and multivariate models.
+
+Additionally, we'll briefly cover high-performance computing and document creation. This include parallel computing on desktops and on the Math server Okapi and/or UNR\lq s Pronghorn cluster and the use \textsc{R} Markdown and \LaTeX. This course will primarily use \textsc{R}, but will introduce some \textsc{bash} shell (\textsc{Linux}) commands/scripting and Bayesian computation in \textsc{Stan}.
 
 \section*{Catalog Description}
-Bayes Theorem; statistical inference; Bayesian data analysis; prior specification, conjugacy, posterior approximation; Markov Chain Monte Carlo (MCMC); Hamiltonian Monte Carlo; Bayesian regression; Multivariate Normal; nuisance parameters; sufficient statistics
+Pseudo-random number generator; Monte Carlo integration; Power analysis; Importance sampling; Bootstrap; Jackknife; Permutation tests; Markov Chain Monte Carlo (MCMC); Gibbs sampler; Metropolis-Hastings; Kernel density estimation; Optimization; Maximum likelihood; Expectation Maximization (EM); Simplex method; R; parallelization
+
+%% Introduction to statistical computing; data visualization and manipulation; document creation; graphics; simulation techniques; parallel computing; estimation; optimization; advanced statistical methods.
 
 \section*{Course Pre-requisites}
-STAT 352 or STAT 467/667 or with instructor approval. Enrollment in STAT 445/645 is a suggested preparation.
+STAT 352 or STAT 467/667 or with instructor approval.
 
 \section*{400-level Student Learning Outcomes}
+%% Student Learning Outcomes
+%% Upon completion of this course, students will be able to:
+%% 1. implement statistical simulation and resampling techniques, maximum likelihood estimation. 
+%% 2. conduct a simulation-based power analysis. 
+%% 3. write professional quality reports and computer code. 
 \begin{description}
-\item[UG1] Students will be able to demonstrate understanding of the concepts that underlie Bayesian inference and compare the results to frequentist alternatives.
-\item[UG2] Students will be able to conduct Bayesian inference analytically and interpret the results.
-\item[UG3] Students will be able to perform a modern Bayesian analysis using professional statistical packages (e.g., \textsf{Minitab}, \textsf{R}, and \textsf{Stan}).
+\item[UG1] Implement statistical simulation and resampling techniques, maximum likelihood estimation. 
+\item[UG2] Conduct a simulation-based power analysis. 
+\item[UG3] Write professional quality reports and computer code. 
 \end{description}
 
 \section*{600-level Student Learning Outcomes}
 \begin{description}
-\item[GRAD1] Students will be able to synthesize course concepts to apply Bayesian modeling techniques to real-world data to facilitate scientific inquiry.
+\item[GRAD1] Complete a research project and effectively communicate their findings.
 \end{description}
 
-\section*{Required text}
-\emph{Introduction to Bayesian Statistics, 3rd edition}, by William M. Bolstad, James M. Curran\\
-Textbook website:\\~\url{https://www.wiley.com/en-us/Introduction+to+Bayesian+Statistics%2C+3rd+Edition-p-9781118091562}
+\clearpage
+\section*{Textbooks}
+Required: Rizzo, M. \emph{Statistical Computing With R}. 2008, Chapman \& Hall/CRC.\\
+%% $Textbook website:\\~\url{https://www.wiley.com/en-us/Introduction+to+Bayesian+Statistics%2C+3rd+Edition-p-9781118091562}
+Additonal Resource: Grolemund, G., Wickham, H. \emph{R for Data Science}. 2016, O’Reilly.\\(Free at ~\url{http://r4ds.had.co.nz/})
+
+\section*{Online resources}
+\begin{itemize}
+\item Course website:~\url{http:www.grantschissler.com/teaching/FA18/STAT445}, includes a working course schedule and approximate due dates of assignments and exams.
+\item Course github repo:~\url{http:github.com/grizant/STAT445}
+\item Students are responsible for checking Web Campus (\url{http:wcl.unr.edu}) and their email accounts, and are assumed to be aware of all information posted to these sources prior to each meeting.
+\end{itemize}
 
 \section*{Assignments}
-Exercises will be assigned approximately weekly. You are encouraged to discuss  assignments between each other and with instructor. However, the works must be completed and submitted individually.
+Exercises will be assigned approximately weekly. You are encouraged to discuss assignments between each other and with instructor. However, the works must be completed and submitted individually.
 
 \section*{Exam policy} You will be allowed at one 8.5x11in page of handwritten (on both sides) notes for each midterm and three such pages for the final exam. If you believe that your grade for exam or assignment is incorrect, contact instructor at the office hours with a rational justification. All such requests must be submitted to instructor within one week after a grade is announced; late requests will not be granted. The final decision about new grade is made by the instructor. Please understand that everyone can make a mistake, and that mistakes can go both ways: higher or lower than original grade.
 
 \section*{Midterms}
-There will be two midterms, the first on Thursday, March 1, and the second on Thursday, April 12.
+There will be two midterms, the first on Wednesday, September 26, and the second on Wednesday, October 31.
 
 \section*{Final exam}
-A comprehensive final examination will be held on May 15, 9:00am - 11:00am, AB 206.
+A comprehensive final examination will be held on Wednesday, December 19, 12:10pm - 2:10pm, DMS 106.
 
 \section*{400/600 Students}
-As indicated above, the student learning outcomes differ at the 400 and 600 levels. Assignments and exams for students enrolled at the 400 level and 600 level will also differ. Specifically, graduate students will be expected to complete more exercises and exercises of greater difficulty on assignments. Exams will be of higher difficulty. Students enrolled at the 600 level will also be required to complete a \textbf{term project} due May 14 in class.
+As indicated above, the student learning outcomes differ at the 400 and 600 levels. Assignments and exams for students enrolled at the 400 level and 600 level will also differ. Specifically, graduate students will be expected to complete more exercises and exercises of greater difficulty on assignments. Exams will be of higher difficulty. Students enrolled at the 600 level will also be required to complete a \textbf{term project} due December 12.
 
 \section*{Makeup, Late Policy}
 Late assignments, exams, and projects will not be graded. Exceptions will be made when a student misses work due to documented (doctor's note) illness or other extraordinary situation, up to the discretion of the instructor. There will be no early or make-up exams. However, if you need to miss an exam due to participation in official university activities (including athletics and other sanctioned activities), you must make arrangements with the instructor at least two weeks prior to the exam in question. Since the late policy is rather strict, I will drop your lowest two grades in the ``Assignments'' category as a safety factor for emergencies.
@@ -141,10 +162,10 @@ No laptops, cell phones, mp3 players, or other electronics are to be used for pe
 \section*{Academic Success Services}
 A common habit among successful students is to seek help outside of the classroom. Your student fees cover use of the Math Center (784-4433 or \url{http:www.unr.edu/mathcenter}), Tutoring Center (784-6801 or \url{http:www.unr.edu/tutoring-center}), and University Writing Center (784-6030 or \url{http:www.unr.edu/writing-center}). These centers support your classroom learning; it is your responsibility to take advantage of their services.
 
-\newpage
 \section*{University Recording Policy}
 Surreptitious or covert videotaping of class or unauthorized audio recording of class is prohibited by law and by Board of Regents policy. This class may be videotaped or audio recorded only with the written permission of the instructor. In order to accommodate students with disabilities, some students may have been given permission to record class lectures and discussions. Therefore, students should understand that their comments during class may be recorded.
 
+\clearpage
 \section*{Academic Dishonesty}
 Cheating, plagiarism, or otherwise obtaining grades under false pretenses constitutes academic dishonesty according to the code of this university. Academic dishonesty will not be tolerated and penalties can include canceling a student’s enrollment without a grade or giving an F for the assignment or for the entire course. For more details, see the University of Nevada, Reno general catalog.
 
@@ -157,39 +178,40 @@ Cheating, plagiarism, or otherwise obtaining grades under false pretenses consti
     \hline
     Week & Topic1 & Topic2 & Notes \\
     \hline
-    1 & Syllabus/expectations & Statistical science review & Ch.1,2 \\
+    1 & Syllabus/expectations & Intro to R/RStudio/RMarkdown & Ch.1 \\
     \hline
-    2 & Summarizing data & Logic, probability, uncertainty & Ch.3,4 \\
+    %% 2 & {\color{RubineRed} Labor Day} & Prob/Stats Review & Ch.3,4 \\
+    2 & Labor Day (no class) & Prob/Stats Review & Ch.2 \\
     \hline
-    3 & Discrete random variables & Inference for discrete random variables & Ch.5,6 \\
+    3 & Generating random variables & Generating random variables & Ch.3 \\
     \hline
-    4 & Continuous random variables & Inference for binomial proportion & Ch.7,8 \\
+    4 & Data Viz & Data Viz & Ch.4 \\
     \hline
-    5 & Frequentist/Bayes comparison for proportion & Inference for Poisson & Ch.9,10 \\
+    5 & Review session & \textbf{Midterm 1} & Ch.1-4\\
     \hline
-    6 & Review session & \textbf{Midterm 1} & \\
+    6 & Monte Carlo integration & Importance sampling  & Ch.5\\
     \hline
-    7 & Inference for Normal mean & Frequentist/Bayes comparison for mean & Ch.11,12 \\
+    7 & Monte Carlo estimation & Monte Carlo hypothesis testing & Ch.6 \\
     \hline
-    8 & Inference for difference in means & con'd & Ch.13 \\
+    8 & Bootstrap and jackknife & Bootstrap confidence intervals & Ch.7 \\
     \hline
-    9 & -- & -- & Spring break  \\
+    9 & Permutation tests & con'd & Ch.8 \\
     \hline
-    10 & Bayesian Simple Linear Regression & con'd & Ch.14 \\
+    10 & Review session & \textbf{Midterm 2} & Ch.1-8\\
     \hline
-    11 & Inference for Standard Deviation & Robust methods & Ch.15,16 \\
+    11 & Markov Chain Monte Carlo (MCMC) & MCMC & Ch.9 \\
     \hline
-    12 & Review session & \textbf{Midterm 2} & \\
+    12 & Veteran's Day (no class) & Hamiltonian MC in Stan & Not in text\\
     \hline
-    13 & Inference Normal unknown mean and variance & con'd & Ch.17 \\
+    13 & Probability density estimation & con'd & Ch.10 \\
     \hline
-    14 & Inference Multivariate Normal & con'd & Ch.18\\
+    14 & Numerical methods in R & con'd & Ch.11\\
     \hline
-    15 & Bayesian Multiple Linear Regression & con'd & Ch.19\\
+    15 & Parallel computing in R and clusters & GPU acceleration & Not in text\\
     \hline
-    16 & Bayes Computation/MCMC & HMC/Stan & Ch.20 \\
+    16 & Project presentations & Review/wrap-up (projects due) & Not in text \\
     \hline
-    17 & \textbf{Final exam} & & \\
+    17 & & \textbf{Final exam} & \\
     \hline
 \end{tabular}
 \end{center}
