@@ -32,7 +32,7 @@
 \titlespacing\section{0in}{\parskip}{\parskip}
 
 %Just fill these in to fill in the basic syllabus information.
-\newcommand{\coursename}{Introduction to Statistical Computing - STAT 446/646}
+\newcommand{\coursename}{Introduction to Statistical Computing - STAT 445/645}
 \newcommand{\semester}{Fall 2018}
 \newcommand{\roomnumb}{DMSC 106}
 \newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
@@ -63,16 +63,14 @@
 \end{tabular}
 \end{center}
 
-Computational skills have become an invaluable asset in our increasingly quantitative world. This course introduces students to the foundational skills and concepts needed in modern statistical and mathematical computing, with an emphasis on high-level programming languages and statistical applications. We'll follow the required textbook closely except for the last few lectures.
+Computational skills have become an invaluable asset in our increasingly quantitative world. This course introduces students to the foundational skills and concepts needed in modern statistical and mathematical computing, with an emphasis on high-level programming languages and statistical applications. 
 
 There are three main parts to the course: First, students learn basic programming skills, graphics, and how to carry out basic statistical analyses (e.g., regression) all in \textsc{R}. Second, students learn the fundamentals of simulation techniques (Monte Carlo) for generating synthetic data. Third, students are introduced to various topics in computational statistics for estimation, integration, hypothesis testing, and density estimation for univariate and multivariate models.
 
-Additionally, we'll briefly cover high-performance computing and document creation. This include parallel computing on desktops and on the Math server Okapi and/or UNR\lq s Pronghorn cluster and the use \textsc{R} Markdown and \LaTeX. This course will primarily use \textsc{R}, but will introduce some \textsc{bash} shell (\textsc{Linux}) commands/scripting and Bayesian computation in \textsc{Stan}.
+Additionally, we'll briefly cover high-performance computing and document creation. This include parallel computing on desktops and/or on the Math server Okapi and the use \textsc{R} Markdown and \LaTeX. This course will primarily use \textsc{R}, but may introduce some \textsc{bash} shell (\textsc{Linux}) commands/scripting and Bayesian computation in \textsc{Stan}.
 
 \section*{Catalog Description}
-Pseudo-random number generator; Monte Carlo integration; Power analysis; Importance sampling; Bootstrap; Jackknife; Permutation tests; Markov Chain Monte Carlo (MCMC); Gibbs sampler; Metropolis-Hastings; Kernel density estimation; Optimization; Maximum likelihood; Expectation Maximization (EM); Simplex method; R; parallelization
-
-%% Introduction to statistical computing; data visualization and manipulation; document creation; graphics; simulation techniques; parallel computing; estimation; optimization; advanced statistical methods.
+Introduction to statistical computing; data visualization and manipulation; document creation; graphics; simulation techniques; parallel computing; estimation; optimization; advanced statistical methods.
 
 \section*{Course Pre-requisites}
 STAT 352 or STAT 467/667 or with instructor approval.
@@ -96,9 +94,18 @@ STAT 352 or STAT 467/667 or with instructor approval.
 
 \clearpage
 \section*{Textbooks}
-Required: Rizzo, M. \emph{Statistical Computing With R}. 2008, Chapman \& Hall/CRC.\\
+None required. Supplementary texts:
+\begin{itemize} 
+\item Rizzo, M. \emph{Statistical Computing With R}. 2008, Chapman \& Hall/CRC.
 %% $Textbook website:\\~\url{https://www.wiley.com/en-us/Introduction+to+Bayesian+Statistics%2C+3rd+Edition-p-9781118091562}
-Additonal Resource: Grolemund, G., Wickham, H. \emph{R for Data Science}. 2016, O’Reilly.\\(Free at ~\url{http://r4ds.had.co.nz/})
+\item Grolemund, G., Wickham, H. \emph{R for Data Science}. 2016, O’Reilly.(Free at ~\url{http://r4ds.had.co.nz/})
+\item The R Cookbook, by Paul Teetor
+\item The R Graphics Cookbook, by Winston Chang
+\item The Art of R Programming: A Tour of Statistical Software Design, by Norman Matloff
+\item Data Manipulation with R, by Phil Spector
+\item Software for Data Analysis: Programming with R, by John Chambers (advanced book)
+\end{itemize}
+
 
 \section*{Online resources}
 \begin{itemize}
@@ -124,7 +131,6 @@ As indicated above, the student learning outcomes differ at the 400 and 600 leve
 \section*{Makeup, Late Policy}
 Late assignments, exams, and projects will not be graded. Exceptions will be made when a student misses work due to documented (doctor's note) illness or other extraordinary situation, up to the discretion of the instructor. There will be no early or make-up exams. However, if you need to miss an exam due to participation in official university activities (including athletics and other sanctioned activities), you must make arrangements with the instructor at least two weeks prior to the exam in question. Since the late policy is rather strict, I will drop your lowest two grades in the ``Assignments'' category as a safety factor for emergencies.
 
-\clearpage
 \section*{Grading}
 The final grades will be determined using the following percentages:
 
@@ -165,7 +171,6 @@ A common habit among successful students is to seek help outside of the classroo
 \section*{University Recording Policy}
 Surreptitious or covert videotaping of class or unauthorized audio recording of class is prohibited by law and by Board of Regents policy. This class may be videotaped or audio recorded only with the written permission of the instructor. In order to accommodate students with disabilities, some students may have been given permission to record class lectures and discussions. Therefore, students should understand that their comments during class may be recorded.
 
-\clearpage
 \section*{Academic Dishonesty}
 Cheating, plagiarism, or otherwise obtaining grades under false pretenses constitutes academic dishonesty according to the code of this university. Academic dishonesty will not be tolerated and penalties can include canceling a student’s enrollment without a grade or giving an F for the assignment or for the entire course. For more details, see the University of Nevada, Reno general catalog.
 
@@ -178,38 +183,38 @@ Cheating, plagiarism, or otherwise obtaining grades under false pretenses consti
     \hline
     Week & Topic1 & Topic2 & Notes \\
     \hline
-    1 & Syllabus/expectations & Intro to R/RStudio/RMarkdown & Ch.1 \\
+    1 & Syllabus/expectations/tools & Basic data structures &  \\
     \hline
     %% 2 & {\color{RubineRed} Labor Day} & Prob/Stats Review & Ch.3,4 \\
-    2 & Labor Day (no class) & Prob/Stats Review & Ch.2 \\
+    2 & \textbf{Labor Day (no class)} & Indexing/Iteration &  \\
     \hline
-    3 & Generating random variables & Generating random variables & Ch.3 \\
+    3 & Text manipulation & Lab & \\
     \hline
-    4 & Data Viz & Data Viz & Ch.4 \\
+    4 & Data frames and apply & Lab &  \\
     \hline
-    5 & Review session & \textbf{Midterm 1} & Ch.1-4\\
+    5 & Review session & \textbf{Midterm 1} & \\
     \hline
-    6 & Monte Carlo integration & Importance sampling  & Ch.5\\
+    6 & Data Viz & Lab  & \\
     \hline
-    7 & Monte Carlo estimation & Monte Carlo hypothesis testing & Ch.6 \\
+    7 & Functions & Lab & \\
     \hline
-    8 & Bootstrap and jackknife & Bootstrap confidence intervals & Ch.7 \\
+    8 & Simulation (Monte Carlo) & Lab & \\
     \hline
-    9 & Permutation tests & con'd & Ch.8 \\
+    9 & Importing data & Lab & \\
     \hline
-    10 & Review session & \textbf{Midterm 2} & Ch.1-8\\
+    10 & Review session & \textbf{Midterm 2} & \\
     \hline
-    11 & Markov Chain Monte Carlo (MCMC) & MCMC & Ch.9 \\
+    11 & Split-apply-combine/parallelization & Lab & \\
     \hline
-    12 & Veteran's Day (no class) & Hamiltonian MC in Stan & Not in text\\
+    12 & \textbf{Veteran's Day (no class)} & Fitting models/prediction & \\
     \hline
-    13 & Probability density estimation & con'd & Ch.10 \\
+    13 & Monte Carlo integration/inference & lab & \\
     \hline
-    14 & Numerical methods in R & con'd & Ch.11\\
+    14 & Bootstrap/jackknife & Lab & \\
     \hline
-    15 & Parallel computing in R and clusters & GPU acceleration & Not in text\\
+    15 & Optimization/Maximum likelihood estimation (MLE) & Lab & \\
     \hline
-    16 & Project presentations & Review/wrap-up (projects due) & Not in text \\
+    16 & Markov Chain Monte Carlo (MCMC) & Lab/\textbf{presentations} & \\
     \hline
     17 & & \textbf{Final exam} & \\
     \hline
