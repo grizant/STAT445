@@ -1,0 +1,92 @@
+\documentclass[letterpaper,11pt]{article}
+\usepackage[margin=20mm]{geometry}
+\usepackage{setspace} \doublespacing
+% \usepackage{multicol}
+\newcommand\T{\rule{0pt}{10ex}}       % Top strut
+\newcommand\Bshort{\rule[-5ex]{0pt}{0pt}} % Bottom strut
+\newcommand\B{\rule[-10ex]{0pt}{0pt}} % Bottom strut
+\newcommand\Blong{\rule[-40ex]{0pt}{0pt}} % Bottom strut
+\newcommand\textlcsc[1]{\textsc{\MakeLowercase{#1}}}
+\usepackage{booktabs}% http://ctan.org/pkg/booktabs
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+\usepackage{ amssymb }
+\thispagestyle{empty}
+
+\begin{document}
+
+% \title{Learning-focused lesson plan}
+% \maketitle
+%% \begin{center}
+%%   \Large \textlcsc{Learning-focused lesson plan}
+%% \end{center}
+
+\vspace{5mm}
+
+%% meta-data
+\begin{tabular}{p{0.4\linewidth} p{0.5\linewidth}}
+  Instructor: AG Schissler & Course: STAT 445-645 \\
+  Unit title: Intro to R & Lesson title: Intro to the course \\
+  Date(s): 27 Aug 2018 & Lesson length: 75 min \\
+\end{tabular}
+
+%% type of lesson
+\vspace{5mm}
+Type of lesson:~ $\boxtimes$ Acquisition \hspace{5mm} $\square$ Extending/refining  \hspace{5mm} $\square$ Assessment
+
+\vspace{5mm}
+
+%% lesson plan graphic organizer
+\begin{tabular}{|p{0.3\linewidth} | p{0.7\linewidth}|}
+  \hline
+  \textbf{Unit Learning Outcomes} & Students will be able to (SWBAT) use R to store/manipulate data and create reproducible documents in R Markdown. \\
+%%   \hline
+%%   Key vocabulary & \\
+  \hline
+  \textbf{Beginning of class} & 5-10 min, use ``primary'' effect
+  \\
+  \hline
+  Engagement trigger: 
+  \newline Most important information: 
+  \newline Start-of-class-work:
+                                  & Interactive R demonstration; rationale for learning/personal story
+                                    \newline Show website, syllabus, learning outcomes
+                                    \newline open R Studio and navigate to course website
+  \\
+  \hline
+  \textbf{Middle of class} & 10-20 min segments, follow ``I do'', ``We do'', ``You do''
+  \\
+  \hline
+  Segment 1 learning outcomes: 
+  \newline Strategies \B:
+
+                                  & SWBAT use course resources and basic git commands
+                                    \newline Instructor leads tour of website, Canvas, forum, github
+                                    \newline Students use git and web browser to retrieve R demonstration
+  \\
+  Segment 2 learning outcomes: 
+  \newline Strategies \B:
+                                  & SWBAT use R Markdown to produce HTML, PDF, or Word documents
+                                    \newline Instructor demonstrates/discusses R Markdown in RStudio
+                                    \newline Students compile (``knit'') an R Markdown document
+  \\
+  Segment 3 learning outcomes: 
+  \newline Strategies \B:
+                                  & SWBAT use DataCamp for online, independent learning
+                                    \newline Instructor tours DataCamp and expectations
+                                    \newline Students enroll, tour, play for a bit
+  \\
+  Segment 4 learning outcomes:
+  \newline Strategies \B:
+                                  &
+  \\
+  \hline
+  \textbf{End of class} & 5-10 min, ``Recency'' effect, Student-led summary, balance/vary activities \\
+  \hline
+  \Bshort
+                                  & Answer the following ``What?'', ``So what?'', ``Now what?''
+  \\
+  \hline
+\end{tabular}
+
+
+\end{document}
