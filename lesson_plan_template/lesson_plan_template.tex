@@ -1,11 +1,13 @@
 \documentclass[letterpaper,11pt]{article}
-\usepackage[margin=22mm]{geometry}
+\usepackage[margin=20mm]{geometry}
 \usepackage{setspace} \doublespacing
 % \usepackage{multicol}
 \newcommand\T{\rule{0pt}{10ex}}       % Top strut
 \newcommand\B{\rule[-10ex]{0pt}{0pt}} % Bottom strut
 \newcommand\Blong{\rule[-40ex]{0pt}{0pt}} % Bottom strut
 \newcommand\textlcsc[1]{\textsc{\MakeLowercase{#1}}}
+\usepackage{booktabs}% http://ctan.org/pkg/booktabs
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
 \usepackage{ amssymb }
 \thispagestyle{empty}
 
@@ -23,7 +25,7 @@
 \begin{tabular}{p{0.4\linewidth} p{0.5\linewidth}}
   Instructor: & Course: \\
   Unit title: & Lesson title: \\
-  Date(s): & \\
+  Date(s): & Lesson length: \\
 \end{tabular}
 
 %% type of lesson
@@ -33,19 +35,34 @@ Type of lesson:~ $\square$ Acquisition \hspace{5mm} $\square$ Extending/refining
 \vspace{5mm}
 
 %% lesson plan graphic organizer
-\begin{tabular}{|r | p{0.7\linewidth}|}
+\begin{tabular}{|p{0.3\linewidth} | p{0.7\linewidth}|}
   \hline
-  Unit Learning Outcomes & \\
+  \textbf{Unit Learning Outcomes} & \\
+%%   \hline
+%%   Key vocabulary & \\
   \hline
-  Lesson Learning Outcomes \B & \\
+  \textbf{Beginning of class}
+  \newline Most important information:
+  \newline Engagement trigger:
+  \newline Start-of-class-work:
+                                  & \\
   \hline
-  Activating strategy \B & \\
+  \textbf{Middle of class}
+  \newline ``I do'', ``We do'', ``You do''
+  \newline Segment 1 learning outcomes:
+  \newline Strategies \B:
+  \newline Segment 2 learning outcomes:
+  \newline Strategies \B:
+  \newline Segment 3 learning outcomes:
+  \newline Strategies \B:
+  \newline Segment 4 learning outcomes:
+  \newline Strategies \B:
+                                  & \\
   \hline
-  Key vocabulary \B & \\
-  \hline
-  Teaching strategies \Blong & \\
-  \hline
-  Summarizing strategy \B & \\
+  \textbf{End of class}
+  \newline Student-led summary:
+  \newline Balance/vary activities:
+                                  & \\
   \hline
 \end{tabular}
 
