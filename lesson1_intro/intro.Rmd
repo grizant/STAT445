@@ -1,0 +1,768 @@
+---
+title: "Intro to the class"
+author: "Intro to Statistical Computing, STAT 445-645"
+date: "Monday August 27, 2018"
+---
+
+Why statisticians learn to program
+===
+
+- **Independence**: otherwise, you rely on someone else giving you exactly the right tool
+- **Honesty**: otherwise, you end up distorting your problem to match the tools you have
+- **Clarity**: often, turning your ideas into something a machine can do refines your thinking
+- **Fun**: these were the best of times (the worst of times)
+
+Cool example: catching an intruder
+===
+
+![](http://www.stat.cmu.edu/~ryantibs/statcomp/lectures/intruder.png)
+
+How this class will work
+===
+
+- Instructor: Ryan Tibshirani
+- Associate Instructor: Kevin Lin
+- TAs: Tanguy Dauphin, Taylor Pospisil, Shamindra Shrotriya 
+- Not much programming knowledge assumed
+- Some statistics knowledge assumed
+- Focus is almost entirely on R 
+- Class will be cumulative, so keep up with the material and assignments!
+- Homework typically due Friday at 5:00pm.
+
+---
+
+- Tuesday period: lecture for ~40 minutes, then lab for ~40 minutes
+- Thursday class period: lab for 80 minutes
+- Lab due at 10pm each Thursday, submitted through Canvas
+- Graded 40\% on attendence, 60\% on completion
+- Homework due at 10pm on each Sunday, also through Canvas
+- No midterm, final take-home programming assignment
+
+---
+
+- Grading breakdown:
+    * Labs: 30%
+    * Homework: 50%
+    * Final project: 20%
+- Class website: http://www.stat.cmu.edu/~ryantibs/statcomp/
+- Piazza group: for announcements and discussions
+- Canvas: used to collect submissions, and keep track of grades
+
+R, R Studio, R Markdown
+===
+
+- R is a programming language for statistical computing
+- R Studio is an integrated development environment for R programming  
+- R Markdown is a markup language for combining R code with text
+
+All 3 are free, and all 3 will be used extensively in this course
+
+Read the syllabus
+===
+
+It's on the course website, please read it (actually read it)
+
+Copying
+===
+
+Don't do it, refer to syllabus if you're unclear about anything  
+(and if you're still unclear, come see me)
+
+What should you call me?
+===
+
+Please don't call me "Professor". Call me:
+
+- Professor Tibshirani
+- Professor Tibs
+- Ryan
+
+Things you should have done, by the end of this week
+===
+
+- Install R Studio on your laptop *(by Thursday class period)*
+- Get comfortable with R Studio, knitting Rmd documents into HTML files
+- Get comfortable with basics of the R language!
+- Complete and submit lab by Sunday 10pm *(note different time)*
+- No homework. Use the time to learn basics of R, if you need to
+
+Catching an intruder
+===
+
+(demo)
+
+<span style="color: blue">Part I</span>
+===
+
+<span style="color: blue">*Data types, operators, variables*</span>
+
+This class in a nutshell: functional programming
+===
+
+Two basic types of things/objects: **data** and **functions**
+
+- **Data**: things like 7, "seven", $7.000$, and $\left[ \begin{array}{ccc} 7 & 7 & 7 \\ 7 & 7 & 7\end{array}\right]$
+- **Functions**: things like `log`, `+` (takes two arguments), `<` (two), `%%` (two), and `mean` (one)
+
+> A function is a machine which turns input objects, or **arguments**, into an output object, or a **return value** (possibly with side effects), according to a definite rule
+
+---
+
+- Programming is writing functions to transform inputs into outputs
+- Good programming ensures the transformation is done easily and correctly
+- Machines are made out of machines; functions are made out of functions, like $f(a,b) = a^2 + b^2$
+
+> The trick to good programming is to take a big transformation and **break it down** into smaller ones, and then break those down, until you come to tasks which are easy (using built-in functions)
+
+Before functions, data
+====
+
+At base level, all data can represented in binary format, by **bits** (i.e., TRUE/FALSE, YES/NO, 1/0). Basic data types:
+
+- **Booleans**: Direct binary values: `TRUE` or `FALSE` in R
+- **Integers**: whole numbers (positive, negative or zero), represented by a fixed-length block of bits
+- **Characters**: fixed-length blocks of bits, with special coding; **strings**: sequences of characters
+- **Floating point numbers**: an integer times a positive integer to the power of an integer, as in $3 \times 10^6$ or $1 \times 3^{-1}$
+- **Missing or ill-defined values**: `NA`, `NaN`, etc.
+
+Operators
+====
+
+- **Unary**: take just one argument. E.g., `-` for arithmetic negation, `!` for Boolean negation
+- **Binary**: take two arguments. E.g., `+`, `-`, `*`, and `/` (though this is only a partial operator). Also, `%%` (for mod), and `^` (again partial)
+
+```{r}
+-7
+7 + 5
+7 - 5
+```
+
+---
+
+```{r}
+7 * 5
+7 ^ 5
+7 / 5
+7 %% 5
+```
+
+R console
+====
+
+- Basic interaction with R is by typing in the **console**, i.e., **terminal**, or **command line**
+- You type in commands, R gives back answers (or errors)
+- Menus and other graphical interfaces are extras built on top of the console
+
+Comparison operators
+===
+
+These are also binary operators; they take two objects, and give back a Boolean
+
+```{r}
+7 > 5
+7 < 5
+7 >= 7
+```
+
+---
+
+```{r}
+7 <= 5
+7 == 5
+7 != 5
+```
+
+Warning: `==` is a comparison operator, `=` is not!
+
+Logical operators
+===
+
+These basic ones are `&` (and) and `|` (or)
+
+```{r}
+(5 > 7) & (6 * 7 == 42)
+(5 > 7) | (6 * 7 == 42)
+(5 > 7) | (6 * 7 == 42) & (0 != 0)
+(5 > 7) | (6 * 7 == 42) & (0 != 0) | (9 - 8 >= 0)
+```
+
+Note: The double forms `&&` and `||` are different! We'll see them later
+
+More types
+===
+
+- The `typeof()` function returns the data type
+- `is.foo()` functions return Booleans for whether the argument is of type *foo*
+- `as.foo()` (tries to) "cast" its argument to type *foo*, to translate it sensibly into such a value
+
+```{r}
+typeof(7)
+is.numeric(7)
+is.na(7)
+is.na(7/0)
+is.na(0/0)
+```
+
+---
+
+```{r}
+is.character(7)
+is.character("7")
+is.character("seven")
+is.na("seven")
+```
+
+---
+
+```{r}
+as.character(5/6)
+as.numeric(as.character(5/6))
+6 * as.numeric(as.character(5/6))
+5/6 == as.numeric(as.character(5/6))
+```
+
+Data can have names
+===
+
+We can give names to data objects; these give us **variables**. Some variables are built-in:
+
+```{r}
+pi
+```
+
+Variables can be arguments to functions or operators, just like constants:
+
+```{r}
+pi * 10
+cos(pi)
+```
+
+---
+
+We create variables with the **assignment operator**, `<-` or `=`
+
+```{r}
+approx.pi = 22/7
+approx.pi
+diameter = 10
+approx.pi * diameter
+```
+
+The assignment operator also changes values:
+
+```{r}
+circumference = approx.pi * diameter
+circumference
+circumference = 30
+circumference
+```
+
+---
+
+- The code you write will be made of variables, with descriptive names
+- Easier to design, easier to debug, easier to improve, and easier for others to read
+- Avoid "magic constants"; instead use named variables 
+- Named variables are a first step towards **abstraction**
+
+R workspace
+===
+
+What variables have you defined?
+
+```{r}
+ls()
+```
+
+Getting rid of variables:
+
+```{r}
+rm("circumference")
+ls()
+rm(list=ls()) # Be warned! This erases everything
+ls()
+```
+
+<span style="color: blue">Part II</span>
+===
+
+<span style="color: blue">*Data structures*</span>
+
+First data structure: vectors
+===
+
+- A **data structure** is a grouping of related data values into an object
+- A **vector** is a sequence of values, all of the same type
+
+```{r}
+x = c(7, 8, 10, 45)
+x
+is.vector(x)
+```
+
+- The `c()` function returns a vector containing all its arguments in  specified order
+- `1:5` is shorthand for `c(1,2,3,4,5)`, and so on
+- `x[1]` would be the first element, `x[4]` the fourth element, and `x[-4]` is a vector containing *all but* the fourth element
+
+---
+
+`vector(length=n)` returns an empty vector of length *n*; helpful for filling things up later
+
+```{r}
+weekly.hours = vector(length=5)
+weekly.hours
+weekly.hours[5] = 8
+weekly.hours
+```
+
+Vector arithmetic
+===
+
+Arithmetic operator apply to vectors in a "componentwise" fashion
+
+```{r}
+y = c(-7, -8, -10, -45)
+x + y
+x * y
+```
+
+Recycling
+===
+
+**Recycling** repeat elements in shorter vector when combined with a longer one
+
+```{r}
+x + c(-7,-8)
+x^c(1,0,-1,0.5)
+```
+
+Single numbers are vectors of length 1 for purposes of recycling:
+
+```{r}
+2 * x
+```
+
+---
+
+Can do componentwise comparisons with vectors:
+
+```{r}
+x > 9
+```
+
+Logical operators also work elementwise:
+
+```{r}
+(x > 9) & (x < 20)
+```
+
+---
+
+To compare whole vectors, best to use `identical()` or `all.equal()`:
+
+```{r}
+x == -y
+identical(x, -y)
+identical(c(0.5-0.3,0.3-0.1), c(0.3-0.1,0.5-0.3))
+all.equal(c(0.5-0.3,0.3-0.1), c(0.3-0.1,0.5-0.3))
+```
+
+Note: these functions are slightly different; we'll see more later
+
+Functions on vectors
+===
+
+Many functions can take vectors as arguments:
+
+- `mean()`, `median()`, `sd()`, `var()`, `max()`, `min()`, 
+`length()`, and `sum()` return single numbers
+- `sort()` returns a new vector
+- `hist()` takes a vector of numbers and produces a histogram, 
+a highly structured object, with the side effect of making a plot
+- `ecdf()` similarly produces a cumulative-density-function object
+- `summary()` gives a five-number summary of numerical vectors
+- `any()` and `all()` are useful on Boolean vectors
+
+Indexing vectors
+===
+
+Vector of indices:
+
+```{r}
+x[c(2,4)]
+```
+
+Vector of negative indices:
+
+```{r}
+x[c(-1,-3)]
+```
+
+---
+
+Boolean vector:
+
+```{r}
+x[x > 9]
+y[x > 9]
+```
+
+`which()` gives the elements of a Boolean vector that are `TRUE`:
+
+```{r}
+places = which(x > 9)
+places
+y[places]
+```
+
+Named components
+===
+
+We can give names to elements/components of vectors, and index vectors accordingly
+
+```{r}
+names(x) = c("v1","v2","v3","fred")
+names(x)
+x[c("fred","v1")]
+```
+
+Note: here R is printing the labels, these are not additional components of `x`
+
+---
+
+`names()` returns another vector (of characters):
+
+```{r}
+names(y) = names(x)
+sort(names(x))
+which(names(x) == "fred")
+```
+
+Second data structure: arrays
+===
+
+An **array** is a multi-dimensional generalization of vectors
+
+```{r}
+x = c(7, 8, 10, 45)
+x.arr = array(x, dim=c(2,2))
+x.arr
+```
+
+- `dim` says how many rows and columns; filled by columns
+- Can have 3d arrays, 4d arrays, etc.; `dim` is vector of arbitrary length
+
+---
+
+Some properties of our array:
+
+```{r}
+dim(x.arr)
+is.vector(x.arr)
+is.array(x.arr)
+typeof(x.arr)
+```
+
+Indexing arrays
+===
+
+Can access a 2d array either by pairs of indices or by the underlying vector (column-major order):
+
+```{r}
+x.arr[1,2]
+x.arr[3]
+```
+
+---
+
+Omitting an index means "all of it":
+
+```{r}
+x.arr[c(1,2),2]
+x.arr[,2]
+x.arr[,2,drop=FALSE]
+```
+
+Note: the optional third argument `drop=FALSE` ensures that the result is still an array, not a vector
+
+Functions on arrays
+===
+
+Many functions applied to an array will just boil things down to the underlying vector:
+
+```{r}
+which(x.arr > 9)
+```
+
+This happens unless the function is set up to handle arrays specifically
+
+---
+
+And there are several functions/operators that _do_ preserve array structure:
+
+```{r}
+y = -x
+y.arr = array(y,dim=c(2,2))
+y.arr + x.arr
+```
+
+Others specifically act on each row or column of the array separately:
+
+```{r}
+rowSums(x.arr)
+colSums(x.arr)
+```
+
+2d arrays: matrices
+===
+
+A **matrix** is a specialization of a 2d array
+
+```{r}
+z.mat = matrix(c(40,1,60,3), nrow=2)
+z.mat
+is.array(z.mat)
+is.matrix(z.mat)
+```
+
+- Could also specify `ncol` for the number of columns
+- To fill by rows, use `byrow=TRUE` 
+- Elementwise operations with the usual arithmetic and comparison operators (e.g., `z.mat/3`)
+
+Matrix multiplication
+===
+
+Has its own special operator, written `%*%`:
+
+```{r}
+six.sevens = matrix(rep(7,6), ncol=3)
+six.sevens
+z.mat %*% six.sevens # [2x2] * [2x3]
+```
+
+Multiplying matrices and vectors
+===
+
+Numeric vectors can act like column or row vectors, as needed:
+
+```{r}
+a.vec = c(10,20)
+z.mat %*% a.vec
+a.vec %*% z.mat
+```
+
+Matrix operators
+===
+
+Transpose:
+
+```{r}
+t(z.mat)
+```
+
+Determinant:
+
+```{r}
+det(z.mat)
+```
+
+Matrix diagonal
+===
+
+The `diag()` function can be used to extract the diagonal entries of a matrix:
+
+```{r}
+diag(z.mat)
+```
+
+It can also be used to change the diagonal:
+
+```{r}
+diag(z.mat) = c(35,4)
+z.mat
+```
+
+Creating a diagonal or identity matrix
+===
+
+```{r}
+diag(c(3,4))
+diag(2)
+```
+
+Inverting a matrix
+===
+
+```{r}
+solve(z.mat)
+z.mat %*% solve(z.mat)
+```
+
+Names in matrices
+===
+
+- We can name either rows or columns or both, with `rownames()` and `colnames()`
+- These are just character vectors, and we use them just like we do `names()` for vectors
+- Names help us understand what we're working with 
+
+Third data structure: lists
+====
+
+A **list** is sequence of values, but not necessarily all of the same type
+
+```{r}
+my.dist = list("exponential", 7, FALSE)
+my.dist
+```
+
+Most of what you can do with vectors you can also do with lists
+
+Accessing pieces of lists
+===
+
+- Can use `[ ]` as with vectors  
+- Or use `[[ ]]`, but only with a single index `[[ ]]` drops names and structures, `[ ]` does not
+
+```{r}
+my.dist[2]
+my.dist[[2]]
+my.dist[[2]]^2
+```
+
+Expanding and contracting lists
+===
+
+Add to lists with `c()` (also works with vectors):
+
+```{r}
+my.dist = c(my.dist, 9)
+my.dist
+```
+
+---
+
+Chop off the end of a list by setting the length to something 
+smaller (also works with vectors):
+
+```{r}
+length(my.dist)
+length(my.dist) = 3
+my.dist
+```
+
+---
+
+Pluck out all but one piece of a list (also works with vectors):
+
+```{r}
+my.dist[-2]
+```
+
+Names in lists
+===
+
+We can name some or all of the elements of a list:
+
+```{r}
+names(my.dist) = c("family","mean","is.symmetric")
+my.dist
+my.dist[["family"]]
+my.dist["family"]
+```
+
+---
+
+Lists have a special shortcut way of using names, with `$`:
+
+```{r}
+my.dist[["family"]]
+my.dist$family
+```
+
+---
+
+Creating a list with names:
+
+```{r}
+another.dist = list(family="gaussian",
+                            mean=7, sd=1, is.symmetric=TRUE)
+```
+
+Adding named elements:
+
+```{r}
+my.dist$was.estimated = FALSE
+my.dist[["last.updated"]] = "2015-09-01"
+```
+
+Removing a named list element, by assigning it the value `NULL`:
+
+```{r}
+my.dist$was.estimated = NULL
+```
+
+Key-value pairs
+===
+
+- Lists give us a natural way to store and look up data by _name_, rather than by _position_
+- A really useful programming concept with many names: **key-value pairs**, i.e., **dictionaries**, or **associative arrays**
+- If all our distributions have components named `family`, we can look that up by name, without caring where it is (in what position it lies) in the list
+
+Data frames
+===
+
+- The classic data table, $n$ rows for cases, $p$ columns for variables
+- Lots of the really-statistical parts of R presume data frames  
+- Not just a matrix because _columns can have different types_
+- Many matrix functions also work for data frames (e.g.,`rowSums()`, `summary()`, `apply()`)
+
+```{r}
+a.mat = matrix(c(35,8,10,4), nrow=2)
+colnames(a.mat) = c("v1","v2")
+a.mat
+a.mat[,"v1"]  # Try a.mat$v1 and see what happens
+```
+
+---
+
+```{r}
+a.df = data.frame(a.mat,logicals=c(TRUE,FALSE))
+a.df
+a.df$v1
+a.df[,"v1"]
+a.df[1,]
+colMeans(a.df)
+```
+
+Adding rows and columns
+===
+
+We can add rows or columns to an array or data frame with `rbind()` and `cbind()`, but be careful about forced type conversions
+
+```{r}
+rbind(a.df,list(v1=-3,v2=-5,logicals=TRUE))
+rbind(a.df,c(3,4,6))
+```
+
+Much more on data frames a bit later in the course ...
+
+Structures of structures
+===
+
+So far, every list element has been a single data value. List elements can be other data structures, e.g., vectors and matrices, even other lists:
+
+```{r}
+my.list = list(z.mat=z.mat, my.lucky.num=13, my.dist=my.dist)
+my.list
+```
+
+Summary
+===
+
+- We write programs by composing functions to manipulate data
+- The basic data types let us represent Booleans, numbers, and characters
+- Data structures let us group together related values 
+- Vectors let us group values of the same type
+- Arrays add multi-dimensional structure to vectors
+- Matrices act like you'd hope they would
+- Lists let us combine different types of data
+- Data frames are hybrids of matrices and lists, allowing each column to have a different data type
