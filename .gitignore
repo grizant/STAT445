@@ -45,7 +45,7 @@ auto/
 
 ## PDF output - usually a bad idea to keep this in Git
 ## *.pdf
-tex/*pdf
+*tex/*.pdf
 
 # Latexmk
 *.fdb_latexmk

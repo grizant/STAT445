@@ -1,0 +1,80 @@
+%A simple LaTeX syllabus template by Luke Smith.
+%I believe this is a variation of a template I got by Mike Hammond...?
+
+%\documentclass[11pt,twocolumn]{article}
+\documentclass[11pt,onecolumn]{article}
+\usepackage{hyperref}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{gb4e}
+%\usepackage[margin=.75in]{geometry}
+\usepackage{textcomp}
+\pagenumbering{gobble}
+%% \usepackage[utf8]{inputenc}
+%% \usepackage[english]{babel}
+%% \usepackage[usenames, dvipsnames]{color}
+
+%paragraph formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\usepackage{url}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\titlespacing\subsection{0in}{\parskip}{\parskip}
+\titlespacing\section{0in}{\parskip}{\parskip}
+
+%Just fill these in to fill in the basic syllabus information.
+\newcommand{\coursename}{Introduction to Statistical Computing - STAT 445/645}
+\newcommand{\semester}{Fall 2018}
+\newcommand{\roomnumb}{DMSC 106}
+\newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
+\newcommand{\myname}{A.~Grant Schissler}
+%\newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
+\newcommand{\myemail}{aschissler@unr.edu}
+\newcommand{\office}{DMSC 224}
+\newcommand{\officehours}{Tue 2:30pm-3:30pm, Wed 1:30pm-2:30pm, or by appointment}
+% \newcommand{\university}{The University of Nevada, Reno}
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{\textbf{Graduate Project Description for\\ \coursename}}
+% \author{{\university}---{\semester}---{\roomnumb}---{\classtimes}}
+\author{{\semester}---{\roomnumb}---{\classtimes}}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+\vspace{-0.25in}
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+\begin{center}
+\begin{tabular}{llll}
+\textbf{Instructor}:&\myname & \textbf{Contact}:&\href{mailto:\myemail}{\myemail}, 775-784-4661 (office)\\
+\textbf{Office}:&\office & \textbf{Hours}:&\officehours\\
+\end{tabular}
+\end{center}
+
+\section*{Description and scope}
+
+Graduate students will complete a term project. Students will use statistical computing to conduct statistical inference in a problem of their choosing. The main constraint is the students must use tools/concepts learned during the class (or closely related techniques) to approach a real or synthetic data analytic research question.
+
+Students are encouraged to work in groups up to three members or may work individually. If working in groups, the contribution of each member must by articulated to the instructor. 
+
+\section*{Work products}
+
+Students will prepare a written report and an oral presentation. Rubrics provide guidelines for those components (located on the website). The instructor will score the written report out of 40 points and the presentation out of 16 (totaling of 56 points).
+
+\section*{Implementation}
+
+As the term progresses, students will meet project milestones as part of the graduate-level assignments. These milestones include the formulation a research question/problem, drafting sections of the written report, presentation slide review, etc. Students are encouraged to work with the instructor throughout the semester while reaching these goals.
+
+\end{document}
