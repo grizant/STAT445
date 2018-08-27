@@ -11,9 +11,48 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Opening 
 
-### Cool R example
+### 
 
-Place holder
+```{r cars}
+## from http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
+## load package and data
+library(ggplot2)
+data(mpg, package="ggplot2")
+mpg_select <- mpg[mpg$manufacturer %in% c("audi", "ford", "honda", "hyundai"), ]
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+g <- ggplot(mpg_select, aes(displ, cty)) + 
+  labs(subtitle="mpg: Displacement vs City Mileage",
+       title="Bubble chart")
+
+g + geom_jitter(aes(col=manufacturer, size=hwy)) + 
+  geom_smooth(aes(col=manufacturer), method="lm", se=F)
+```
+
+### Cool R example: from Hans Rosling <https://www.ted.com/speakers/hans_rosling> gapminder
+
+```{r gganimate, echo=TRUE, eval = FALSE}
+library(ggplot2)
+library(gganimate)
+library(gapminder)
+
+ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  facet_wrap(~continent) +
+  # Here comes the gganimate specific bits
+  labs(title = 'Year: {frame_time}', x = 'GDP per capita', y = 'life expectancy') +
+  transition_time(year) +
+  ease_aes('linear')
+
+anim_save("gapminder.gif")
+
+```
+
+![](gapminder.gif)
 
 ### Start-of-class work
 
@@ -22,12 +61,11 @@ Place holder
 
 ### Why statisticians learn to program
 
-- **Engineering**: build tools for someone to actually use.
 - **Independence**: otherwise, you rely on someone else giving you exactly the right tool
 - **Honesty**: otherwise, you end up distorting your problem to match the tools you have
 - **Clarity**: often, turning your ideas into something a machine can do refines your thinking
 - **Fun**: these were the best of times (the worst of times)
-
+- **Engineering**: build tools for someone to actually use.
 
 ## Segment 1: How this class will work
 
