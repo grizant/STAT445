@@ -28,6 +28,24 @@ How this class will work
 - Focus is almost entirely on R 
 - Class will be cumulative, so keep up with the material and assignments!
 - Homework typically due Friday at 5:00pm.
+- DataCamp. works on all devices
+- Earn special certificates in DataCamp for resume/CV.
+- DataCamp assignments should take between 3-4 hours a week.
+- Lab assignments should take between 1-2 hours a week.
+
+
+DataCamp
+===
+- DataCamp. works on all devices
+- DataCamp assignments should take between 3-4 hours a week.
+- Hopefully, you can learn special certificates in DataCamp for resume/CV.
+- Let's log in. What modules do you have access to?
+- If you only have access to assigned modules, I'll add "optional" modules. WebCampus will reflect the true assigned modules, indicated by DataCamp:<Module name>.
+
+Labs
+===
+- Lab assignments should take between 1-2 hours a week.
+- 
 
 ---
 
