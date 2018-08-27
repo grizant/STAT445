@@ -34,6 +34,19 @@ How this class will work
 - Lab assignments should take between 1-2 hours a week.
 
 
+Course website
+===
+- Homepage for course schedule and resources
+
+WebCampus
+===
+- How we'll handle official assignments, grades, and submissions
+- Discussions (forums)
+
+Github
+===
+- Distribution of the latest versions of documents, slides, labs, etc.
+
 DataCamp
 ===
 - DataCamp. works on all devices
@@ -41,11 +54,17 @@ DataCamp
 - Hopefully, you can learn special certificates in DataCamp for resume/CV.
 - Let's log in. What modules do you have access to?
 - If you only have access to assigned modules, I'll add "optional" modules. WebCampus will reflect the true assigned modules, indicated by DataCamp:<Module name>.
+- Link to DataCamp module document
 
 Labs
 ===
 - Lab assignments should take between 1-2 hours a week.
 - 
+
+Lecture
+===
+- For topics without DataCamp modules and/or topics that I don't want to cover deeply.
+- Or to go deeper than DataCamp.
 
 ---
 
