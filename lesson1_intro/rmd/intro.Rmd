@@ -9,9 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Opening 
+## I. Opening 
 
-### 
+### "Bubble plot"
 
 ```{r cars}
 ## from http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
@@ -67,7 +67,7 @@ anim_save("gapminder.gif")
 - **Fun**: these were the best of times (the worst of times)
 - **Engineering**: build tools for someone to actually use.
 
-## Segment 1: How this class will work
+## II. How this class will work
 
 - Instructor: A. Grant Schissler
 - Not much programming knowledge assumed
@@ -81,7 +81,6 @@ anim_save("gapminder.gif")
 - **Ask Questions** and **Work Together** --- these are the most important reasons for class time.
 
 ### I do
-
 - Let's tour to our [course website](http://www.grantschissler.com/teaching/FA18/STAT445/).
 
 ### We do
@@ -91,7 +90,7 @@ anim_save("gapminder.gif")
 ### You do
 - Download [intro.Rmd](https://github.com/grizant/STAT445/blob/master/lesson1_intro/rmd/intro.Rmd), an R Markdown file from the website or using git.
 
-## Segment 2: Using R/RStudio to produce HTML, PDF, or Word documents
+## III. Using R/RStudio to produce HTML, PDF, or Word documents
 
 R, R Studio, R Markdown
 
@@ -101,18 +100,18 @@ R, R Studio, R Markdown
 
 All 3 are free, and all 3 will be used extensively in this course.
 
-## I do
+### I do
 1. Open the .Rmd file in RStudio producing these slides.
 2. Compile the .Rmd to produce an html file.
 
-## We do
+### We do
 Please compile the slides using RStudio.
 
-## You do
+### You do
 1. Play around with RStudio.
 2. Can you produce a different backend for our slides - like slides, Word, or PDF?
 
-## Segment 3: Introduction to DataCamp
+## IV. Introduction to DataCamp
 
 - DataCamp is a Data Science instructional program
 - I've designed a course of study for you.
@@ -123,19 +122,19 @@ Please compile the slides using RStudio.
 - If you only have access to assigned modules, I'll add "optional" modules. WebCampus will reflect the true assigned modules, indicated by DataCamp:<Module name>.
 - You may want to bring headphones to class if you have time to listen to online modules.
 
-## I do
+### I do
 - I'll log in and point of a few features (modules, skill tracks, etc.)
-- Check out the assigned and recommended modules <https://github.com/grizant/STAT445/blob/master/DataCamp/tex/STAT445-645-Intro-to-Stats-Computing-DataCampModules.pdf>
+- [Datacamp](https://www.datacamp.com/).
+- Let's check out the assigned and recommended modules <https://github.com/grizant/STAT445/blob/master/DataCamp/tex/STAT445-645-Intro-to-Stats-Computing-DataCampModules.pdf>.
 - I'll store some DataCamp code in a .R script.
 
-## We do
+### We do
 1. Please log in. 
 2. What modules do you have access to? Only those assigned? 
 
-## You do
+### You do
 - Play around and let me know if you have any questions.
 - Store some DataCamp code in a .R script.
 
-## Closing
-
-Answer the following questions: "What?", "So what?", "Now what?".
+## V. Closing
+Please answer the following questions: "What?", "So what?", "Now what?".
