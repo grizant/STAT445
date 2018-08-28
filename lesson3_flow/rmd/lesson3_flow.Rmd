@@ -1,0 +1,61 @@
+---
+title: "Control flow in R"
+author: "AG Schissler"
+date: "8/29/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## I. Opening:
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+
+### Today learning outcomes
+
+1. Students will be able to use R help functions.
+2. Students will be able to control flow in R using conditionals and other tools.
+
+
+## II. Intro to control flow in R
+
+Control flow dictates the order/which operations are conducted.
+
+### I do
+Let's look at some R documentation on the topic.
+These are functions you can use access R's documentation (instead of Googling).
+```{r help}
+help("Control")
+```
+Or you could use `?"Control"`.
+
+### We do
+There are other ways to search including fuzzy matching. Try running `help("control")`.
+No match so let's search.
+
+```{r help2, eval=F}
+??"control"
+## Or
+help.search("control")
+```
+### You do
+Look up documentaion on `t.test`. What package houses the code for that function?
+
+## III. DataCamp: Intermediate R module 1
+
+### You do
+- Please work on the first module Conditional and Control Flow in DataCamp.
+- Please make use of the _people_ in the classroom: ask **questions** of your substitute instructor and classmates.
+- Take notes while learning by either copying DataCamp code into R scripts or hand notes. 
+
+## IV. Closing
+
+### Think-pair-share
+1. Create a one-sentence summary of today's lesson.
+2. Pair up with your neighbor and revise.
+3. Share a few summaries with whole group.
