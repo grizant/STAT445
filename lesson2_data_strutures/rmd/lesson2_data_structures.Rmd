@@ -14,21 +14,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Start-of-class work
 
 1. Log in the your workstation.
-2. Open the RStudio application on your machine.
+2. Download lesson2_data_structures.Rmd.
+3. Open lesson2_data_structures.Rmd in RStudio.
 
 ### Today learning outcomes
 
 Students will be able to
 
+- use data structures in R, including
 - use R vectors.
 - use R matrices.
-- use R factors.
 - use R lists.
 - use data.frames.
 
-### Some things I'd like to highlight in R 
+### How's it going?
 
-#### Data types
+- Everything clear so far?
+- Familiar with all the resources?
+- DataCamp working okay?
+- Anything else
+
+### I'm traveling :(
+
+- I'm presenting research in Wales, UK for the Royal Statistical Society 2018 [conference](https://events.rss.org.uk/rss/frontend/reg/thome.csp?pageID=57555&ef_sel_menu=1152&eventID=194).
+- I'll return Sunday 9/9/18 and won't be able to answer emails, etc. 
+- Dr. Paul Hurtado is covering our Wed 9/3/2018 class. He's an R expert too. Ask him lots of questions! I posted the lesson plan already. Paul will discuss a few topics at the beginning, but the rest of the time is dedicated to DataCamp.
+
+### DataCamp modules
+
+- I've decided to move up the DataCamp modules so that I can assume a baseline level of knowledge before the lesson.
+- Otherwise, I'll repeat everything and waste time.
+- That's part of the reason that I wanted to give you extra time in class next week to finish the longer Intermediate R module.
+- It's critical that you engage actively with the DataCamp information: Take notes, write down questions for me or your classmates for our discussion.
+
+## I. Introduction to data types in R
 
 At base level, all data can represented in binary format, by **bits** (i.e., TRUE/FALSE, YES/NO, 1/0). Basic data types:
 
@@ -38,7 +57,7 @@ At base level, all data can represented in binary format, by **bits** (i.e., TRU
 - **Floating point numbers**: an integer times a positive integer to the power of an integer, as in $3 \times 10^6$ or $1 \times 3^{-1}$
 - **Missing or ill-defined values**: `NA`, `NaN`, etc.
 
-#### Operators
+### Operators
 - **Unary**: take just one argument. E.g., `-` for arithmetic negation, `!` for Boolean negation
 - **Binary**: take two arguments. E.g., `+`, `-`, `*`, and `/` (though this is only a partial operator). Also, `%%` (for mod), and `^` (again partial)
 
@@ -55,7 +74,7 @@ At base level, all data can represented in binary format, by **bits** (i.e., TRU
 7 %% 5
 ```
 
-#### R workspace
+### R workspace
 
 What variables have you defined?
 
@@ -154,6 +173,11 @@ a highly structured object, with the side effect of making a plot
 5. How many arithmetic operations did this take?  
 **Challenge**: Show how Gauss would have done this same calculation as a 7 year old, using just 3 arithmetic operations.
 
+```{r}
+## Your code here
+
+```
+
 ## III. Using Matrices in R
 
 ### We do
@@ -162,13 +186,21 @@ a highly structured object, with the side effect of making a plot
 3. Check the dimensions of `x_mat`, and the data type as well. 
 4. Compute the sums of each of the 5 columns of `x_mat`, by calling a built-in R function. 
 
+```{r}
+## Our code here
+
+```
+
 ### You do
 
 1. Extract and display rows 1, 5, and 17 of `x_mat`, with a single line of code. Answer the following questions, each with a single line of code: how many elements in row 2 of `x_mat` are larger than 40? How many elements in column 3 are in between 45 and 50? How many elements in column 5 are odd? Hint: take advantage of the `sum()` function applied to Boolean.__
 
 2. Using Boolean indexing, modify `x_vec` so that every even number in this vector is incremented by 10, and every odd number is left alone. This should require just a single line of code. Print out the result to the console.__
 
-**Challenge**: show that `ifelse()` can be used to do the same thing, again using just a single line of code.
+```{r}
+## Your code here
+
+```
 
 ## IV. Third data structure: lists
 
@@ -182,7 +214,7 @@ A **list** is sequence of values, but not necessarily all of the same type
 
 ### I do
 
-Consider the list `x.list` created below. 
+Consider the list `x_list` created below. 
 
 ```{r}
 set.seed(08292018)
@@ -196,23 +228,21 @@ Complete the following tasks, each with a single line of code:
 
 ```{r}
 ## Our code here.
+
 ```
 
 ### You do
 
 Extract the second element of `x_list` as a vector, and then extract the first 10 elements of this vector---seeking here a vector as the final answer. Note: pay close attention to what is asked and use either single brackets `[ ]` or double brackets ``[[ ]]`` as appropriate.
 
-## V. Fifth data structure: `data.frame` or really just a list?
+```{r}
+## Your code here
 
-### I do
+```
 
-### We do
+## V. Closing: Mind map
 
-### You do
-
-## VI. Closing: Mind map
-
-Mind mapping is a powerful learning strategy that uses the associative powers of your mind, coupled with imagery and verbal labeling.
+Mind mapping is a powerful learning and creative strategy that uses the associative powers of your mind, coupled with imagery and verbal labeling.
 
 See the [wiki](https://en.wikipedia.org/wiki/Mind_map) page.
 
@@ -220,7 +250,7 @@ See the [wiki](https://en.wikipedia.org/wiki/Mind_map) page.
 I'll demonstrate the construction of a "mind map" (aka "concept map") from the first lesson.
 
 ### You do
-Please create a on today's lesson.
+Please create a mind map from today's lesson.
 
 ### We do
 Share insights from the process with the class.

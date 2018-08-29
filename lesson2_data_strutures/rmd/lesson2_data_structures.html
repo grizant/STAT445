@@ -319,24 +319,50 @@ $(document).ready(function () {
 <h3>Start-of-class work</h3>
 <ol style="list-style-type: decimal">
 <li>Log in the your workstation.</li>
-<li>Open the RStudio application on your machine.</li>
+<li>Download lesson2_data_structures.Rmd.</li>
+<li>Open lesson2_data_structures.Rmd in RStudio.</li>
 </ol>
 </div>
 <div id="today-learning-outcomes" class="section level3">
 <h3>Today learning outcomes</h3>
 <p>Students will be able to</p>
 <ul>
+<li>use data structures in R, including</li>
 <li>use R vectors.</li>
 <li>use R matrices.</li>
-<li>use R factors.</li>
 <li>use R lists.</li>
 <li>use data.frames.</li>
 </ul>
 </div>
-<div id="some-things-id-like-to-highlight-in-r" class="section level3">
-<h3>Some things I’d like to highlight in R</h3>
-<div id="data-types" class="section level4">
-<h4>Data types</h4>
+<div id="hows-it-going" class="section level3">
+<h3>How’s it going?</h3>
+<ul>
+<li>Everything clear so far?</li>
+<li>Familiar with all the resources?</li>
+<li>DataCamp working okay?</li>
+<li>Anything else</li>
+</ul>
+</div>
+<div id="im-traveling" class="section level3">
+<h3>I’m traveling :(</h3>
+<ul>
+<li>I’m presenting research in Wales, UK for the Royal Statistical Society 2018 <a href="https://events.rss.org.uk/rss/frontend/reg/thome.csp?pageID=57555&amp;ef_sel_menu=1152&amp;eventID=194">conference</a>.</li>
+<li>I’ll return Sunday 9/9/18 and won’t be able to answer emails, etc.</li>
+<li>Dr. Paul Hurtado is covering our Wed 9/3/2018 class. He’s an R expert too. Ask him lots of questions! I posted the lesson plan already. Paul will discuss a few topics at the beginning, but the rest of the time is dedicated to DataCamp.</li>
+</ul>
+</div>
+<div id="datacamp-modules" class="section level3">
+<h3>DataCamp modules</h3>
+<ul>
+<li>I’ve decided to move up the DataCamp modules so that I can assume a baseline level of knowledge before the lesson.</li>
+<li>Otherwise, I’ll repeat everything and waste time.</li>
+<li>That’s part of the reason that I wanted to give you extra time in class next week to finish the longer Intermediate R module.</li>
+<li>It’s critical that you engage actively with the DataCamp information: Take notes, write down questions for me or your classmates for our discussion.</li>
+</ul>
+</div>
+</div>
+<div id="i.-introduction-to-data-types-in-r" class="section level2">
+<h2>I. Introduction to data types in R</h2>
 <p>At base level, all data can represented in binary format, by <strong>bits</strong> (i.e., TRUE/FALSE, YES/NO, 1/0). Basic data types:</p>
 <ul>
 <li><strong>Booleans</strong>: Direct binary values: <code>TRUE</code> or <code>FALSE</code> in R</li>
@@ -345,9 +371,8 @@ $(document).ready(function () {
 <li><strong>Floating point numbers</strong>: an integer times a positive integer to the power of an integer, as in <span class="math inline">\(3 \times 10^6\)</span> or <span class="math inline">\(1 \times 3^{-1}\)</span></li>
 <li><strong>Missing or ill-defined values</strong>: <code>NA</code>, <code>NaN</code>, etc.</li>
 </ul>
-</div>
-<div id="operators" class="section level4">
-<h4>Operators</h4>
+<div id="operators" class="section level3">
+<h3>Operators</h3>
 <ul>
 <li><strong>Unary</strong>: take just one argument. E.g., <code>-</code> for arithmetic negation, <code>!</code> for Boolean negation</li>
 <li><strong>Binary</strong>: take two arguments. E.g., <code>+</code>, <code>-</code>, <code>*</code>, and <code>/</code> (though this is only a partial operator). Also, <code>%%</code> (for mod), and <code>^</code> (again partial)</li>
@@ -367,23 +392,23 @@ $(document).ready(function () {
 <pre class="r"><code>7 %% 5</code></pre>
 <pre><code>## [1] 2</code></pre>
 </div>
-<div id="r-workspace" class="section level4">
-<h4>R workspace</h4>
+<div id="r-workspace" class="section level3">
+<h3>R workspace</h3>
 <p>What variables have you defined?</p>
 <pre class="r"><code>ls()</code></pre>
-<pre><code>## [1] &quot;weekly.hours&quot; &quot;x&quot;            &quot;y&quot;</code></pre>
+<pre><code>## [1] &quot;weekly.hours&quot; &quot;x&quot;            &quot;x_list&quot;       &quot;y&quot;</code></pre>
 <p>Getting rid of variables:</p>
 <pre class="r"><code>x_vec &lt;- y_vec &lt;- 1:5
 ls()</code></pre>
-<pre><code>## [1] &quot;weekly.hours&quot; &quot;x&quot;            &quot;x_vec&quot;        &quot;y&quot;           
-## [5] &quot;y_vec&quot;</code></pre>
+<pre><code>## [1] &quot;weekly.hours&quot; &quot;x&quot;            &quot;x_list&quot;       &quot;x_vec&quot;       
+## [5] &quot;y&quot;            &quot;y_vec&quot;</code></pre>
 <pre class="r"><code>rm(&quot;x_vec&quot;)
 ls()</code></pre>
-<pre><code>## [1] &quot;weekly.hours&quot; &quot;x&quot;            &quot;y&quot;            &quot;y_vec&quot;</code></pre>
+<pre><code>## [1] &quot;weekly.hours&quot; &quot;x&quot;            &quot;x_list&quot;       &quot;y&quot;           
+## [5] &quot;y_vec&quot;</code></pre>
 <pre class="r"><code>rm(list=ls()) # Be warned! This erases everything
 ls()</code></pre>
 <pre><code>## character(0)</code></pre>
-</div>
 </div>
 </div>
 <div id="ii.-first-data-structure-vectors" class="section level2">
@@ -449,58 +474,71 @@ weekly.hours</code></pre>
 <li>How many arithmetic operations did this take?<br />
 <strong>Challenge</strong>: Show how Gauss would have done this same calculation as a 7 year old, using just 3 arithmetic operations.</li>
 </ol>
+<pre class="r"><code>## Your code here</code></pre>
 </div>
 </div>
 </div>
-<div id="iii.-using-factors-in-r" class="section level2">
-<h2>III. Using factors in R</h2>
-<div id="i-do-1" class="section level3">
-<h3>I do</h3>
-</div>
+<div id="iii.-using-matrices-in-r" class="section level2">
+<h2>III. Using Matrices in R</h2>
 <div id="we-do-1" class="section level3">
 <h3>We do</h3>
+<ol style="list-style-type: decimal">
+<li>Convert <code>x_vec</code> into a matrix with 20 rows and 5 columns, and store this as <code>x_mat</code>. Here <code>x_mat</code> should be filled out in the default order (column major order).</li>
+<li>Check the dimensions of <code>x_mat</code>, and the data type as well.</li>
+<li>Compute the sums of each of the 5 columns of <code>x_mat</code>, by calling a built-in R function.</li>
+</ol>
+<pre class="r"><code>## Our code here</code></pre>
 </div>
 <div id="you-do-1" class="section level3">
 <h3>You do</h3>
+<ol style="list-style-type: decimal">
+<li><p>Extract and display rows 1, 5, and 17 of <code>x_mat</code>, with a single line of code. Answer the following questions, each with a single line of code: how many elements in row 2 of <code>x_mat</code> are larger than 40? How many elements in column 3 are in between 45 and 50? How many elements in column 5 are odd? Hint: take advantage of the <code>sum()</code> function applied to Boolean.__</p></li>
+<li><p>Using Boolean indexing, modify <code>x_vec</code> so that every even number in this vector is incremented by 10, and every odd number is left alone. This should require just a single line of code. Print out the result to the console.__</p></li>
+</ol>
+<pre class="r"><code>## Your code here</code></pre>
 </div>
 </div>
-<div id="iv.-using-lists-in-r" class="section level2">
-<h2>IV. Using lists in R</h2>
-<div id="i-do-2" class="section level3">
+<div id="iv.-third-data-structure-lists" class="section level2">
+<h2>IV. Third data structure: lists</h2>
+<p>A <strong>list</strong> is sequence of values, but not necessarily all of the same type</p>
+<div id="key-value-pairs" class="section level3">
+<h3>Key-value pairs</h3>
+<ul>
+<li>Lists give us a natural way to store and look up data by <em>name</em>, rather than by <em>position</em></li>
+<li>A really useful programming concept with many names: <strong>key-value pairs</strong>, i.e., <strong>dictionaries</strong>, or <strong>associative arrays</strong>.</li>
+<li>If all our distributions have components named <code>family</code>, we can look that up by name, without caring where it is (in what position it lies) in the list.</li>
+</ul>
+</div>
+<div id="i-do-1" class="section level3">
 <h3>I do</h3>
+<p>Consider the list <code>x_list</code> created below.</p>
+<pre class="r"><code>set.seed(08292018)
+x_list = list(rnorm(6), letters, sample(c(TRUE,FALSE),size=4,replace=TRUE))</code></pre>
 </div>
 <div id="we-do-2" class="section level3">
 <h3>We do</h3>
+<p>Complete the following tasks, each with a single line of code: 1. Extract all but the second element of <code>x_list</code>—seeking here a list as the final answer. 2. Extract the first and third elements of <code>x_list</code>, then extract the second element of the resulting list—seeking here a vector as the final answer.</p>
+<pre class="r"><code>## Our code here.</code></pre>
 </div>
 <div id="you-do-2" class="section level3">
 <h3>You do</h3>
+<p>Extract the second element of <code>x_list</code> as a vector, and then extract the first 10 elements of this vector—seeking here a vector as the final answer. Note: pay close attention to what is asked and use either single brackets <code>[ ]</code> or double brackets <code>[[ ]]</code> as appropriate.</p>
+<pre class="r"><code>## Your code here</code></pre>
 </div>
 </div>
-<div id="v.-using-data.frames-in-r" class="section level2">
-<h2>V. Using data.frames in R</h2>
-<div id="i-do-3" class="section level3">
-<h3>I do</h3>
-</div>
-<div id="we-do-3" class="section level3">
-<h3>We do</h3>
-</div>
-<div id="you-do-3" class="section level3">
-<h3>You do</h3>
-</div>
-</div>
-<div id="vi.-closing-mind-map" class="section level2">
-<h2>VI. Closing: Mind map</h2>
-<p>Mind mapping is a powerful learning strategy that uses the associative powers of your mind, coupled with imagery and verbal labeling.</p>
+<div id="v.-closing-mind-map" class="section level2">
+<h2>V. Closing: Mind map</h2>
+<p>Mind mapping is a powerful learning and creative strategy that uses the associative powers of your mind, coupled with imagery and verbal labeling.</p>
 <p>See the <a href="https://en.wikipedia.org/wiki/Mind_map">wiki</a> page.</p>
-<div id="i-do-4" class="section level3">
+<div id="i-do-2" class="section level3">
 <h3>I do</h3>
 <p>I’ll demonstrate the construction of a “mind map” (aka “concept map”) from the first lesson.</p>
 </div>
-<div id="you-do-4" class="section level3">
+<div id="you-do-3" class="section level3">
 <h3>You do</h3>
-<p>Please create a on today’s lesson.</p>
+<p>Please create a mind map from today’s lesson.</p>
 </div>
-<div id="we-do-4" class="section level3">
+<div id="we-do-3" class="section level3">
 <h3>We do</h3>
 <p>Share insights from the process with the class.</p>
 </div>
