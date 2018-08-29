@@ -1,0 +1,226 @@
+---
+title: "Data Structures in R"
+author: "AG Schissler"
+date: "8/29/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## I. Opening 
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+
+### Today learning outcomes
+
+Students will be able to
+
+- use R vectors.
+- use R matrices.
+- use R factors.
+- use R lists.
+- use data.frames.
+
+### Some things I'd like to highlight in R 
+
+#### Data types
+
+At base level, all data can represented in binary format, by **bits** (i.e., TRUE/FALSE, YES/NO, 1/0). Basic data types:
+
+- **Booleans**: Direct binary values: `TRUE` or `FALSE` in R
+- **Integers**: whole numbers (positive, negative or zero), represented by a fixed-length block of bits
+- **Characters**: fixed-length blocks of bits, with special coding; **strings**: sequences of characters
+- **Floating point numbers**: an integer times a positive integer to the power of an integer, as in $3 \times 10^6$ or $1 \times 3^{-1}$
+- **Missing or ill-defined values**: `NA`, `NaN`, etc.
+
+#### Operators
+- **Unary**: take just one argument. E.g., `-` for arithmetic negation, `!` for Boolean negation
+- **Binary**: take two arguments. E.g., `+`, `-`, `*`, and `/` (though this is only a partial operator). Also, `%%` (for mod), and `^` (again partial)
+
+```{r}
+-7
+7 + 5
+7 - 5
+```
+
+```{r}
+7 * 5
+7 ^ 5
+7 / 5
+7 %% 5
+```
+
+#### R workspace
+
+What variables have you defined?
+
+```{r}
+ls()
+```
+
+Getting rid of variables:
+
+```{r}
+x_vec <- y_vec <- 1:5
+ls()
+rm("x_vec")
+ls()
+rm(list=ls()) # Be warned! This erases everything
+ls()
+```
+
+## II. First data structure: Vectors
+
+- A **data structure** is a grouping of related data values into an object
+- A **vector** is a sequence of values, all of the same type
+
+### I do
+
+```{r}
+x = c(7, 8, 10, 45)
+x
+is.vector(x)
+```
+
+- The `c()` function returns a vector containing all its arguments in  specified order
+- `1:5` is shorthand for `c(1,2,3,4,5)`, and so on
+- `x[1]` would be the first element, `x[4]` the fourth element, and `x[-4]` is a vector containing *all but* the fourth element
+
+---
+
+`vector(length=n)` returns an empty vector of length *n*; helpful for filling things up later
+
+```{r}
+weekly.hours = vector(length=5)
+weekly.hours
+weekly.hours[5] = 8
+weekly.hours
+```
+---
+Arithmetic operator apply to vectors in a "componentwise" fashion
+
+```{r}
+y = c(-7, -8, -10, -45)
+x + y
+x * y
+```
+---
+**Recycling** repeat elements in shorter vector when combined with a longer one
+
+```{r}
+x + c(-7,-8)
+x^c(1,0,-1,0.5)
+```
+
+Single numbers are vectors of length 1 for purposes of recycling:
+
+```{r}
+2 * x
+```
+
+### We do
+
+#### Apply some base (built-in) R functions to `x` and `y`.
+
+Many functions can take vectors as arguments:
+
+- `mean()`, `median()`, `sd()`, `var()`, `max()`, `min()`, 
+`length()`, and `sum()` return single numbers
+- `sort()` returns a new vector
+- `hist()` takes a vector of numbers and produces a histogram, 
+a highly structured object, with the side effect of making a plot
+- `ecdf()` similarly produces a cumulative-density-function object
+- `summary()` gives a five-number summary of numerical vectors
+- `any()` and `all()` are useful on Boolean vectors
+
+```{r}
+## Our code here
+
+```
+
+### You do
+
+#### Using R to be fast like Gauss
+
+1. Define a variable `x_vec` to contain the integers 1 through 100. 
+2. Check that it has length 100.
+3. Report the data type being stored in `x_vec`.
+4. Add up the numbers in `x_vec`, by calling a built-in R function. 
+5. How many arithmetic operations did this take?  
+**Challenge**: Show how Gauss would have done this same calculation as a 7 year old, using just 3 arithmetic operations.
+
+## III. Using Matrices in R
+
+### We do
+
+1. Convert `x_vec` into a matrix with 20 rows and 5 columns, and store this as `x_mat`. Here `x_mat` should be filled out in the default order (column major order). 
+3. Check the dimensions of `x_mat`, and the data type as well. 
+4. Compute the sums of each of the 5 columns of `x_mat`, by calling a built-in R function. 
+
+### You do
+
+1. Extract and display rows 1, 5, and 17 of `x_mat`, with a single line of code. Answer the following questions, each with a single line of code: how many elements in row 2 of `x_mat` are larger than 40? How many elements in column 3 are in between 45 and 50? How many elements in column 5 are odd? Hint: take advantage of the `sum()` function applied to Boolean.__
+
+2. Using Boolean indexing, modify `x_vec` so that every even number in this vector is incremented by 10, and every odd number is left alone. This should require just a single line of code. Print out the result to the console.__
+
+**Challenge**: show that `ifelse()` can be used to do the same thing, again using just a single line of code.
+
+## IV. Third data structure: lists
+
+A **list** is sequence of values, but not necessarily all of the same type
+
+### Key-value pairs
+
+- Lists give us a natural way to store and look up data by _name_, rather than by _position_
+- A really useful programming concept with many names: **key-value pairs**, i.e., **dictionaries**, or **associative arrays**.
+- If all our distributions have components named `family`, we can look that up by name, without caring where it is (in what position it lies) in the list.
+
+### I do
+
+Consider the list `x.list` created below. 
+
+```{r}
+set.seed(08292018)
+x_list = list(rnorm(6), letters, sample(c(TRUE,FALSE),size=4,replace=TRUE))
+```
+### We do
+
+Complete the following tasks, each with a single line of code: 
+1. Extract all but the second element of `x_list`---seeking here a list as the final answer. 
+2. Extract the first and third elements of `x_list`, then extract the second element of the resulting list---seeking here a vector as the final answer. 
+
+```{r}
+## Our code here.
+```
+
+### You do
+
+Extract the second element of `x_list` as a vector, and then extract the first 10 elements of this vector---seeking here a vector as the final answer. Note: pay close attention to what is asked and use either single brackets `[ ]` or double brackets ``[[ ]]`` as appropriate.
+
+## V. Fifth data structure: `data.frame` or really just a list?
+
+### I do
+
+### We do
+
+### You do
+
+## VI. Closing: Mind map
+
+Mind mapping is a powerful learning strategy that uses the associative powers of your mind, coupled with imagery and verbal labeling.
+
+See the [wiki](https://en.wikipedia.org/wiki/Mind_map) page.
+
+### I do
+I'll demonstrate the construction of a "mind map" (aka "concept map") from the first lesson.
+
+### You do
+Please create a on today's lesson.
+
+### We do
+Share insights from the process with the class.
