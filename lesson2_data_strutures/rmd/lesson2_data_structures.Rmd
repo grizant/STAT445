@@ -14,8 +14,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Start-of-class work
 
 1. Log in the your workstation.
-2. Download lesson2_data_structures.Rmd.
-3. Open lesson2_data_structures.Rmd in RStudio.
+2. Open in RStudio.
+3. Open [lesson2_data_structures.Rmd](https://github.com/grizant/STAT445/blob/master/lesson2_data_strutures/rmd/lesson2_data_structures.Rmd) in RStudio by _either_  
+3a. Copying the text into a new (blank) text file in RStudio or  
+3b. Downloading the .Rmd and opening in RStudio.
+
 
 ### Today learning outcomes
 
@@ -25,20 +28,20 @@ Students will be able to
 - use R vectors.
 - use R matrices.
 - use R lists.
-- use data.frames.
 
 ### How's it going?
 
 - Everything clear so far?
 - Familiar with all the resources?
 - DataCamp working okay?
-- Anything else
+- Anything else?
 
-### I'm traveling :(
+### I'm traveling 8/30 to 9/9 :(
 
 - I'm presenting research in Wales, UK for the Royal Statistical Society 2018 [conference](https://events.rss.org.uk/rss/frontend/reg/thome.csp?pageID=57555&ef_sel_menu=1152&eventID=194).
 - I'll return Sunday 9/9/18 and won't be able to answer emails, etc. 
-- Dr. Paul Hurtado is covering our Wed 9/3/2018 class. He's an R expert too. Ask him lots of questions! I posted the lesson plan already. Paul will discuss a few topics at the beginning, but the rest of the time is dedicated to DataCamp.
+- [Dr. Paul Hurtado](http://pauljhurtado.com/index.html) is covering our Wed 9/3/2018 class. He's an R expert too. Ask him lots of questions! I posted the lesson Rmd already here: [lesson3_flow.Rmd](https://github.com/grizant/STAT445/blob/master/lesson3_flow/rmd/lesson3_flow.Rmd). 
+- Dr. Hurtado will discuss a few topics at the beginning, but the rest of the time is dedicated to DataCamp.
 
 ### DataCamp modules
 
@@ -47,7 +50,7 @@ Students will be able to
 - That's part of the reason that I wanted to give you extra time in class next week to finish the longer Intermediate R module.
 - It's critical that you engage actively with the DataCamp information: Take notes, write down questions for me or your classmates for our discussion.
 
-## I. Introduction to data types in R
+## II. Introduction to data types in R
 
 At base level, all data can represented in binary format, by **bits** (i.e., TRUE/FALSE, YES/NO, 1/0). Basic data types:
 
@@ -93,7 +96,7 @@ rm(list=ls()) # Be warned! This erases everything
 ls()
 ```
 
-## II. First data structure: Vectors
+## III. First data structure: Vectors
 
 - A **data structure** is a grouping of related data values into an object
 - A **vector** is a sequence of values, all of the same type
@@ -178,7 +181,7 @@ a highly structured object, with the side effect of making a plot
 
 ```
 
-## III. Using Matrices in R
+## IV. Using Matrices in R
 
 ### We do
 
@@ -202,7 +205,7 @@ a highly structured object, with the side effect of making a plot
 
 ```
 
-## IV. Third data structure: lists
+## V. Third data structure: lists
 
 A **list** is sequence of values, but not necessarily all of the same type
 
@@ -240,7 +243,7 @@ Extract the second element of `x_list` as a vector, and then extract the first 1
 
 ```
 
-## V. Closing: Mind map
+## VI. Closing: Mind map
 
 Mind mapping is a powerful learning and creative strategy that uses the associative powers of your mind, coupled with imagery and verbal labeling.
 
