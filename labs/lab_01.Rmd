@@ -1,0 +1,138 @@
+---
+title: "Lab 1: R Basics"
+author: "Intro to Statistical Computing, STAT 445-645"
+date: "Monday, September 10, 2018"
+---
+
+Name:
+NSHE ID:
+Collaborated with:
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+
+```{r}
+## For reproducibility --- don't change this!
+set.seed(09102018)
+```
+
+**This week's agenda**: manipulating data objects; using built-in functions, doing numerical calculations, and basic plots; reinforcing core probabilistic ideas.
+
+The binomial distribution
+===
+
+The binomial distribution $\mathrm{Bin}(m,p)$ is defined by the number of successes in $m$ independent trials, each have probability $p$ of success. Think of flipping a coin $m$ times, where the coin is weighted to have probability $p$ of landing on heads.
+
+The R function `rbinom()` generates random variables with a binomial distribution. E.g., 
+
+```{r,eval=FALSE}
+rbinom(n=20, size=10, prob=0.5)
+```
+
+produces 20 observations from $\mathrm{Bin}(10,0.5)$.
+
+Some simple manipulations
+===
+
+- **1a.** Generate 200 random values from the $\mathrm{Bin}(10,0.5)$ distribution, and store them in a vector called `bin_draws_0.5`. Extract and display the first 10 elements. Extract and display all but the first 175 elements. 
+
+- **1b.** Add the first element of `bin_draws_0.5` to the seventh. Compare the second element to the fifth, which is larger? A bit more tricky: print the indices of the elements of `bin.draws.0.5` that are equal to 5. How many such elements are there? **Challenge**: theoretically, how many such elements would you expect there to be?
+
+- **1c.** Find the mean and standard deviation of `bin_draws_0.5`. Is the mean close what you'd expect? The standard deviation?
+
+- **1d.** Call `summary()` on `bin_draws_0.5` and describe the result.
+
+- **1e.** Find the data type of the elements in `bin_draws_0.5` using `typeof()`. Then convert `bin_draws_0.5` to a vector of characters, storing the result as `bin_draws_0.5_char`, and use `typeof()` again to verify that you've done the conversion correctly. Call `summary()` on `bin_draws_0.5_char`. Is the result formatted differently from what you saw above? Why?
+
+Some simple plots
+===
+
+- **2a.** The function `plot()` is a generic function in R for the visual display of data. The function `hist()` specifically produces a histogram display. Use `hist()` to produce a histogram of your random draws from the binomial distribution, stored in `bin_draws_0.5`. 
+
+- **2b.** Call `tabulate()` on `bin_draws_0.5`. What is being shown? Does it roughly match the histogram you produced in the last question?
+
+- **2c.** Call `plot()` on `bin_draws_0.5` to display your random values from the binomial distribution. Can you guess what the `plot()` function is doing here?
+
+- **2d.** Call `plot()` with two arguments, the first being `1:200`, and the second being `bin_draws_0.5`. This creates a scatterplot of `bin_draws_0.5` (on the y-axis) versus the indices 1 through 200 (on the x-axis). Does this match your plot from the last question?
+
+More binomials, more plots
+===
+
+- **3a.** Generate binomial random variables again, but now produce 7 different vectors of length 200, with probability of success equal to: 0.2, 0.3, 0.4, 0.6, 0.7, and 0.8, storing the results in vectors called `bin_draws_0.2`, `bin_draws_0.3`, `bin_draws_0.4.`, `bin_draws_0.6`, `bin_draws_0.7` and  `bin_draws_0.8`. For each, compute the mean and standard deviation.
+
+- **3b.** We'd like to compare the properties of our vectors. Create a vector of length 7, whose entries are the means of the 7 vectors we've created, in order according to the success probabilities of their underlying binomial distributions (0.2 through 0.8).
+
+- **3c.** Using the vectors from the last part, create the following scatterplots. Explain in words, for each, what's going on.    
+
+    * The 7 means versus the 7 probabilities used to generate the draws.
+    * The standard deviations versus the probabilities. 
+    * The standard deviations versus the means.
+    
+    **Challenge**: for each plot, add a curve that corresponds to the relationships you'd expect to see in the theoretical population (i.e., with an infinite amount of draws, rather than just 200 draws).
+
+Working with matrices
+===
+
+- **4a.** Create a matrix of dimension 200 x 7, called `bin_matrix`, whose columns contain the 7 vectors we've created, in order of the success probabilities of their underlying binomial distributions (0.2 through 0.8). 
+
+- **4b.** Print the first three rows of `bin_matrix`. Print the element in the 77th row and 6th column. Compute the largest element in first column. Compute the largest element in all but the first column.
+
+- **4c.** Calculate the means of each column by calling `colMeans()` on `bin_matrix`. 
+
+- **4d.** Compare the means you computed in the last question to those you computed in Q3b. Do they appear equal, when you print the results out to the console? Try using `identical()` to check that they are exactly equal. Does it fail? Why? Try using `all.equal()`. What does it report?
+
+- **4e.** Take the transpose of `bin_matrix` and then take row means. Are these the same as what you just computed? Should they be?
+
+Warm up is over, let's go big
+===
+
+- **5a.** R's capacity for data storage and computation is very large compared to what was available 10 years ago. Generate 2 million numbers from $\mathrm{Bin}(1 \times 10^6, 0.5)$ distribution and store them in a vector called `big_bin_draws`. Calculate the mean and standard deviation of this vector.
+
+- **5b.** Create a new vector, called `big_bin_draws_standardized`, which is given by taking `big_bin_draws`, subtracting off its mean, and then dividing by its standard deviation. Calculate the mean and standard deviation of `big_bin_draws_standardized`. (These should be 0 and 1, respectively, or very, very close to it; if not, you've made a mistake somewhere).
+
+- **5c.** Plot a histogram of `big_bin_draws_standardized`. To increase the number of histogram bars, set the `breaks` argument in the `hist()` function (e.g., set `breaks=100`). What does the shape of this histogram appear to be? Is this surprising? What could explain this phenomenon? (Hint: rhymes with "Mental Gimmick Serum" ...)
+
+- **5d.** Calculate the proportion of times that an element of `big_bin_draws_standardized` exceeds 1.644854. Is this close to 0.05? 
+
+- **5e.** Either by simulation, or via a built-in R function, compute the probability that a standard normal random variable exceeds 1.644854. Is this close to 0.05? (Hint: for either approach, it would be helpful to look at the help file for the `rnorm()` function.)
+
+Now let's go really big
+===
+
+- **6a.** Let's push R's computational engine a little harder. Design an expression to generate 100 million numbers from $\mathrm{Bin}(10 \times 10^6, 50 \times 10^{-8})$, to be saved in a vector called `huge_bin_draws`, but do not evaluate this command yet. Then ask your lab partner to name three of Justin Bieber's songs and simultaneously evaluate your R command that defines `huge_bin_draws`. Which finished first, R or your partner?  (Note: your partner cannot really win this game. Even if he/she finishes first, he/she still loses.)
+
+- **6b.** Calculate the mean and standard deviation of `huge_bin_draws`. Are they close to what you'd expect? (They should be very close.) Did it take longer to compute these, or to generate `huge_bin_draws` in the first place?
+
+- **6c.** Calculate the median of `huge_bin_draws`. Did this median calculation take longer than the calculating the mean? Is this surprising? 
+
+- **6d.** Calculate *e* to the power of the median of the logs of `huge_bin_draws`, in one line of code. Did this take longer than the median calculation applied to `huge_bin_draws` directly? Is this surprising?
+
+- **6e.** Plot a histogram of of `huge_bin_draws`, again with a large setting of the `breaks` argument (e.g., `breaks=100`). Describe what you see; is this different from before, when we had 2 million draws? **Challenge**: is this surprising? What distribution is this?
+
+Going big with lists
+===
+
+- **7a.** Convert `big_bin_draws` into a list using `as.list()` and save the result as `big_bin_draws_list`. Check that you indeed have a list by calling `class()` on the result. Check also that your list has the right length, and that its 1049th element is equal to that of `big_bin_draws`.
+
+- **7b.** Run the code below, to standardize the binomial draws in the list `big_bin_draws_list`. Note that `lapply()` applies the function supplied in the second argument to every element of the list supplied in the first argument, and then returns a list of the function outputs. Did this `lapply()` command take longer to evaluate than the code you wrote in Q5b? (It should have; otherwise your previous code could have been improved, so go back and improve it.) Why do you think this is the case?
+
+```{r, eval=FALSE}
+big_bin_draws_mean = mean(big_bin_draws)
+big_bin_draws_sd = sd(big_bin_draws)
+standardize = function(x) {
+  return((x - big_bin_draws_mean) / big_bin_draws_sd)
+}
+big_bin_draws_list_standardized_slow = lapply(big_bin_draws_list, standardize)
+```
+
+- **7c.** Run the code below, which again standardizes the binomial draws in the list `big_bin_draws_list`, using `lapply()`. Why is it so much slower than the code in the last question? Think about what is happening each time the function is called.
+
+```{r, eval=FALSE}
+big_bin_draws_mean = mean(big_bin_draws)
+big_bin_draws_sd = sd(big_bin_draws)
+standardize_slow = function(x) {
+  return((x - mean(big_bin_draws)) / sd(big_bin_draws))
+}
+big_bin_draws_list_standardized_slow = lapply(big_bin_draws_list, standardize)
+```
+
+- **7d.** Lastly, let's look at memory useage. The command `object.size(x)` returns the number of bytes used to store the object `x` in your current R session. Find the number of bytes used to store `big_bin_draws` and `big_bin_draws_list`. How many megabytes (MB) is this, for each object? Which object requires more memory, and why do you think this is the case? Remind yourself: why are lists special compared to vectors, and is this property important for the current purpose (storing the binomial draws)?
