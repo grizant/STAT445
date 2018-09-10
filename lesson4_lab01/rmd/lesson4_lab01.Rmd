@@ -1,0 +1,66 @@
+---
+title: "Lesson04: Lab 01"
+author: "AG Schissler"
+date: "9/10/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## I. Opening 
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [lab_01.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_01.Rmd) in RStudio by _either_  
+3a. Copying the text into a new (blank) text file in RStudio or  
+3b. Downloading the .Rmd and opening in RStudio.
+
+### Today learning outcomes
+
+Students will be able to
+
+- Simulate random variables.
+- Use basic R functions.
+- Recall fundamental probability ideas.
+- Use `lapply` to iterate.
+
+## II. Two student questions I'd like to discuss.
+
+1. It is said that there are some lists sapply() cannot simplify. I'm not sure which it can simplify and which it can't.
+
+2. For some packages like ggplot, I should load them to R. Do I have to load the packages every time I run R? Or are they saved in the computer unless I delete the program?
+
+## III. House-keeping / How is everything going?
+
+### Due date survey results
+Friday at 5pm
+42.86% 6
+
+Sunday at 11:59pm, even though the instructor is not able to answer questions over the weekend
+57.14% 8
+
+### Office hours
+
+- Thanks to all for completing the survey.
+- I'll look at the results and post new office hours ASAP.
+- Office hours will resume on tomorrow.
+
+### Other questions?
+
+## IV. Lab 01
+
+- I thought I'd use today's lesson to see where you all are with R and get the first lab under our belt.
+- So please complete the lab today and ask questions as you go.
+- **Hint** You may want to try `cache=T` knitr chunk option for large computations and use RStudio interactively (only knit the entire document once you are ready to produce your final work product).
+
+## VI. Closing
+
+### 3-2-1:
+
+- List your favorite 3 R functions you used today.
+- List 2 types of plots.
+- Explain 1 probability theorem or fact you used today.
