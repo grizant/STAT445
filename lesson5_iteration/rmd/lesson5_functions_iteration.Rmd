@@ -1,5 +1,5 @@
 ---
-title: "Iteration and functions in R"
+title: "Iteration and functions in R, lab_01 con'd"
 author: "AG Schissler"
 date: "9/12/2018"
 output: html_document
@@ -15,49 +15,59 @@ knitr::opts_chunk$set(echo = TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-
-### Iteration two ways: Using `for` and `apply`.
+3. Open your lab_01.Rmd.
 
 ### Today learning outcomes
 
 Students will be able to
 
-- use R vectors.
-- use R matrices.
-- use R factors.
-- use R lists.
-- use data.frames.
+- use the `apply` family of R functions.
+- compare efficiency of R code.
+- compare the probability theory to simulated results
+- use R lists, matrices, and vectors.
+- use and write R functions.
 
-## II. Using vectors and matrices in R 
+## II. Recall Binomial random variable properties
 
-### I do
+Recall some properties for a binomial random variable:
 
-### We do
+$X \sim Bin(n,p)$  
+$\mu = np$  
+$\sigma^2 = np(1-p)$  
+$P(k) = P(X = k) = {n \choose k} p^k(1-p)^{n-k}$  
 
-### You do
+**Hint** use `dbinom` to compute the pmf above.
 
-## III. Using factors in R
+## III. Sample variance versus population variance
 
-### I do
+The variance formula above is for a population, not the sample variance that serves an estimator to the population.
 
-### We do
+The `var` and `sd` functions in R and the unbiased sample estimators that use $n-1$ instead of $n$. 
 
-### You do
+$\hat{var(X)} = 1/(n-1) * \sum_{i=1}^{n} (x_i - \bar{x})^2$
 
-## IV. Using lists in R
+To make the theoretical comparisons in the lab you may want to adjust by the following formula
 
-### I do
+```{r population_sd, eval=FALSE}
+sd_pop <- sqrt( (n-1)/n ) * sd(x)
+```
 
-### We do
+## IV. Clocking R code
 
-### You do
+You're asked to make several time comparisons. You may like to use the `system.time` function.
 
-## V. Using data.frames in R
+```{r clocking}
+system.time(rnorm(n=1e6))
+```
 
-### I do
+## V. 7c
 
-### We do
+There's a typo in Q7c you should use the function `standardize_slow` not just `standardize`.
 
-### You do
+## VI. Lab grading rubric
+
+I'm developing a rubric for how your lab will be graded. I anticipate having that done tomorrow. Please review and let me know if you have any questions. I'll also post solutions in WebCampus Monday to give you feedback.
 
 ## VI. Closing
+
+
