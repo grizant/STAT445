@@ -1,0 +1,54 @@
+\documentclass[11pt,article,landscape]{memoir}
+% Copyright (C) 2013 Andrew Gainer-Dewar <andrew.gainer.dewar@gmail.com>
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either
+% version 1.2 of this license or (at your option) any later
+% version. The latest version of this license is in:
+% http://www.latex-project.org/lppl.txt
+% and version 1.2 or later is part of all distributions of[
+% LaTeX version 1999/12/01 or later.
+
+\usepackage{agd-rubric}
+
+\rubriccourse{}
+\rubricterm{}
+\rubricthing{}
+\rubrictopprompt{}
+
+\begin{document}
+\maketitle
+
+% The argument determines the number of score buckets
+\begin{rubrictable}{4}
+  % Add your \rubricdesc items in increasing order!
+  \rubriccat{A category}{
+    \rubricdesc{Needs Improvement}{
+      Some things
+    }
+    \rubricdesc{Fair}{
+      Other things
+    }
+    \rubricdesc{Good}{
+      Better things
+    }
+    \rubricdesc{Excellent}{
+      Great things
+    }
+  }
+
+  \rubriccat{Another category}{
+    \rubricdesc{Needs Improvement}{
+      Some things
+    }
+    \rubricdesc{Fair}{
+      Other things
+    }
+    \rubricdesc{Good}{
+      Better things
+    }
+    \rubricdesc{Excellent}{
+      Great things
+    }
+  }
+\end{rubrictable}
+\end{document}
