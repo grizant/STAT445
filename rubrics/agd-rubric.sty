@@ -33,6 +33,7 @@
 
 \newcounter{totalcolnum}
 \newcounter{colnum}
+\newcounter{curvalue}
 \newlength{\colwidth}
 \newlength{\firstcolwidth}
 \setlength{\firstcolwidth}{4cm}
@@ -64,8 +65,13 @@
   \end{center}
 }
 
-\newenvironment{rubrictable}[1]{
+
+%% \newenvironment{rubrictable}[1]{
+%% Make the minimum value flexible
+\newenvironment{rubrictable}[2]{
   \setcounter{totalcolnum}{#1}
+  %% new var
+  \setcounter{curvalue}{#2}
   %% \setlength{\colwidth}{\textwidth - \firstcolwidth*\real{2}}
   %% \setlength{\colwidth}{\colwidth / \real{\value{totalcolnum}}}
   \setlength{\colwidth}{\textwidth - \firstcolwidth*\real{1.5} - \timescolwidth*\real{1.5} - \lastcolwidth*\real{1.5}}
@@ -74,8 +80,13 @@
   \begin{center}
     \begin{tabular}{p{\firstcolwidth} | *{\value{totalcolnum}}{p{\colwidth}} | p{\timescolwidth} | p{\lastcolwidth}}
       \toprule
+      %% Start at 0 is the original design
+      %% \forloop{colnum}{0}{\value{colnum} < \value{totalcolnum}}{
+      %% start at min value
       \forloop{colnum}{0}{\value{colnum} < \value{totalcolnum}}{
-      & \textbf{\Large \arabic{colnum}} 
+        %% & \textbf{\Large \arabic{colnum}}
+      & \textbf{\Large \arabic{curvalue}}
+        \setcounter{curvalue}{\value{curvalue} + 1}
       %% }  \\ \midrule
       %% add the last column
       } & $\times$ & Score \\ \midrule
