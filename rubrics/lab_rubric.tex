@@ -1,0 +1,114 @@
+\documentclass[11pt,article,landscape]{memoir}
+% Copyright (C) 2013 Andrew Gainer-Dewar <andrew.gainer.dewar@gmail.com>
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either
+% version 1.2 of this license or (at your option) any later
+% version. The latest version of this license is in:
+% http://www.latex-project.org/lppl.txt
+% and version 1.2 or later is part of all distributions of[
+% LaTeX version 1999/12/01 or later.
+
+\usepackage{agd-rubric}
+
+\rubriccourse{STAT 445-645 Intro to Statistical Computing}
+\rubricterm{Fall 2018}
+\rubricthing{Lab Reports}
+\rubrictopprompt{Name/Lab Number}
+%% \rubricbottomprompt{Total Score}
+
+\begin{document}
+\maketitle
+
+% The argument determines the number of score buckets
+\begin{rubrictable}{4}{1}
+  % Add your \rubricdesc items in increasing order!
+
+  %% Category Description
+  \rubriccat{Point value label}{
+    \rubricdesc{Needs Improvement}{
+      
+    }
+    \rubricdesc{Approaching Standard}{
+      
+    }
+    \rubricdesc{Meeting Standard}{
+      
+    }
+    \rubricdesc{Exceeding Standard}{
+      
+    }
+    \rubrictimes{NA}
+  }
+
+  %% Category 1
+    \rubriccat{1.~Completeness}{
+    \rubricdesc{}{
+      $\leq$ half of the questions are addressed. 
+    }
+    \rubricdesc{}{
+      Most questions are addressed.
+    }
+    \rubricdesc{}{
+      All questions are addressed.
+    }
+    \rubricdesc{}{
+      All questions and challenges are addressed.
+    }
+    \rubrictimes{10}
+  }
+
+  %% Category 2
+    \rubriccat{2.~Accuracy}{
+    \rubricdesc{}{
+      $\leq$ half of the questions are correct. 
+    }
+    \rubricdesc{}{
+      Most questions are correct.
+    }
+    \rubricdesc{}{
+      All questions are correct.
+    }
+    \rubricdesc{}{
+      All questions and challenges are correct.
+    }    \rubrictimes{10}
+  }
+
+    %% Category 3
+    \rubriccat{3.~Presentation}{
+    \rubricdesc{}{
+      R Markdown was not used. Code is not readable (indentation, etc.). Responses are disorganized and corresponding question is \emph{not} easily located. Overall, the document reads poorly.
+    }
+    \rubricdesc{}{
+      R Markdown is used. Code is fairly readable (indentation, etc.). Responses are well organized and corresponding question is easily located. Overall, the document  reads fair.
+    }
+    \rubricdesc{}{
+      R Markdown is used well. Code is commented and readable (indentation, etc.). Responses are well organized and corresponding question is easily located. Figures are appropriately placed. Overall, the document reads well.
+    }
+    \rubricdesc{}{
+      R Markdown is used masterfully, including special formatting. Code is well commented and easily readable (indentation, etc.). Responses are well organized and corresponding question is easily located. Figures are well designed and appropriately placed. Overall, the document is a pleasure to read.
+    }
+    \rubrictimes{5}
+  }
+  
+    %% Category 4
+    \rubriccat{4.~Communication}{
+    \rubricdesc{}{
+       Responses use inappropriate vocabulary, contain frequent grammatical errors, and convey little understanding. Responses are long-winded.
+    }
+    \rubricdesc{}{
+       Responses use appropriate vocabulary, contain frequent grammatical errors, and convey some understanding. Responses are long-winded.
+    }
+    \rubricdesc{}{
+       Responses use appropriate vocabulary and concision, contain little grammatical errors, and convey understanding.
+    }
+    \rubricdesc{}{
+      Responses demonstrate mastery of vocabulary and concision, contain no grammatical errors, and convey deep understanding.
+    }
+    \rubrictimes{5}
+  }
+
+  
+\end{rubrictable}
+
+\huge Total Score (out of 100 points, 120 points possible): \hrulefill
+\end{document}
