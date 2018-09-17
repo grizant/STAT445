@@ -62,3 +62,7 @@ auto/
 # BibTeX
 *.bbl
 *.blg
+
+# Rmd cache and files
+*_cache
+*_files
