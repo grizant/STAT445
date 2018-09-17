@@ -1,0 +1,111 @@
+---
+title: "Lab 02 Data frames, iteration, indexing"
+author: "AG Schissler (modified from Ryan Tibshirani)"
+date: "9/17/2018"
+output: html_document
+---
+
+Name:  
+NSHE ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+
+**This week's agenda**: data frames, basic indexing, with a focus on matrices; some more basic plotting; vectorization; using `for()` loops.
+
+Prostate cancer data set
+===
+
+We're going to look at a data set on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~hastie/ElemStatLearn/)). There are 9 variables measured on these 97 men:
+
+1. `lpsa`: log PSA score
+2. `lcavol`: log cancer volume
+3. `lweight`: log prostate weight
+4. `age`: age of patient
+5. `lbph`: log of the amount of benign prostatic hyperplasia
+6. `svi`: seminal vesicle invasion
+7. `lcp`: log of capsular penetration
+8. `gleason`: Gleason score 
+9. ` pgg45`: percent of Gleason scores 4 or 5 
+
+To load this prostate cancer data set into your R session, and store it as a matrix `pros_dat`:
+
+```{r}
+pros_dat =
+  as.matrix(read.table("http://www.stat.cmu.edu/~ryantibs/statcomp/data/pros.dat"))
+```
+
+Basic indexing and calculations
+===
+
+- **1a.** What are the dimensions of `pros_dat` (i.e., how many rows and how many columns)? Using integer indexing, print the first 6 rows and all columns; again using integer indexing, print the last 6 rows and all columns.
+
+- **1b.** Using the built-in R functions `head()` and `tail()` (i.e., do *not* use integer indexing), print the first 6 rows and all columns, and also the last 6 rows and all columns.
+
+- **1c.** Does the matrix `pros_dat` have names assigned to its rows and columns, and if so, what are they? Use `rownames()` and `colnames()` to find out. Note: these would have been automatically created by the `read.table()` function that we used above to read the data file into our R session. To see where `read.table()` would have gotten these names from, open up the data file: http://www.stat.cmu.edu/~ryantibs/statcomp/data/pros.dat in your web browser. Only the column names here are actually informative.
+
+- **1d.** Using named indexing, pull out the two columns of `pros_dat` that measure the log cancer volume and the log cancer weight, and store the result as a matrix `pros_dat_sub`. (Recall the explanation of variables at the top of this lab.) Check that its dimensions make sense to you, and that its first 6 rows are what you'd expect. Did R automatically assign column names to `pros_dat_sub`?
+
+- **1e.** Using the log cancer weights and log cancer volumes, calculate the log cancer density for the 97 men in the data set (note: by density here we mean weight divided by volume). There are in fact two different ways to do this; the first uses three function calls and one arithmetic operation; the second just uses one arithmetic operation. Note: in either case, you should be able to perform this computation for all 97 men *with a single line of code*, taking advantage of R's ability to vectorize. Write code to do it both ways, and show that both ways lead to the same answer, using `all.equal()`.
+
+- **1f.** Append the log cancer density to the columns of `pros_dat`, using `cbind()`. The new `pros_dat` matrix should now have 10 columns. Set the last column name to be `ldens`. Print its first 6 rows, to check that you've done all this right.
+
+Exploratory data analysis with plots
+===
+
+- **2a.** Using `hist()`, produce a histogram of the log cancer volume measurements of the 97 men in the data set; also produce a histogram of the log cancer weight. In each case, use `breaks=20` as an arugment to `hist()`. Comment just briefly on the distributions you see. Then, using `plot()`, produce a scatterplot of the log cancer volume (y-axis) versus the log cancer weight (x-axis). Do you see any kind of relationship? Would you expect to? **Challenge**: how would you measure the strength of this relationship formally? Note that there is certainly more than one way to do so.
+
+- **2b.** Produce scatterplots of log cancer weight versus age, and log cancer volume versus age. Do you see relationships here between the age of a patient and the volume/weight of his cancer?
+
+- **2c.** Produce a histogram of the log cancer density, and a scatterplot of the log cancer density versus age. Comment on any similarities/differences you see between these plots, and the corresponding ones you produced above for log cancer volume/weight.
+
+- **2d.** Delete the last column, corresponding to the log cancer density, from the `pros_dat` matrix, using negative integer indexing.
+
+A bit of Boolean indexing never hurt anyone
+===
+
+- **3a.** The `svi` variable in the `pros_dat` matrix is binary: 1 if the patient had a condition called "seminal vesicle invasion" or SVI, and 0 otherwise. SVI (which means, roughly speaking, that the cancer invaded into the muscular wall of the seminal vesicle) is bad: if it occurs, then it is believed the prognosis for the patient is poorer, and even once/if recovered, the patient is more likely to have prostate cancer return in the future. Compute a Boolean vector called `has_svi`, of length 97, that has a `TRUE` element if a row (patient) in `pros_dat` has SVI, and `FALSE` otherwise. Then using `sum()`, figure out how many patients have SVI.
+
+- **3b.** Extract the rows of `pros_dat` that correspond to patients with SVI, and the rows that correspond to patients without it. Call the resulting matrices `pros_dat_svi` and `pros_dat_no_svi`, respectively. You can do this in two ways: using the `has_svi` Boolean vector created above, or using on-the-fly Boolean indexing, it's up to you. Check that the dimensions of `pros_dat_svi` and `pros_dat_no_svi` make sense to you.
+
+- **3c.** Using the two matrices `pros_dat_svi` and `pros_dat_no_svi` that you created above, compute the means of each variable in our data set for patients with SVI, and for patients without it. Store the resulting means into vectors called `pros_dat_svi_avg` and `pros_dat_no_svi_avg`, respectively. Hint: for each matrix, you can compute the means with a single call to a built-in R function. What variables appear to have different means between the two groups? 
+
+- **3d.** Consider the 9 "magic denominators" given below. For each of the 9 variables in our data set, compute the difference between its mean in SVI patients and non-SVI patients, divided by the corresponding denominator. For example, for the first variable, `lcavol` or log cancer volume, this is going to be:
+$$
+\frac{\text{lcavol avg for SVI patients} - \text{lcavol avg for non-SVI patients}}
+{\text{denominator #1}},
+$$
+and so on. Store the result of this computation as a vector called `pros_dat_t_stat`. Note: you should be able to perform this computation for all 9 variables *with a single line of code*, taking advantage of R's ability to vectorize. Print the results. For which variables is the absolute value of `pros_dat_t_stat` larger than 2? Again, this should take just a single line of code. **Challenge**: what do you think is being computed here (look at the name of the variable you created!), and what is the significance of the value 2?
+
+```{r}
+magic.denom = c(0.19092077, 0.08803179, 1.91148819, 0.34076326, 0.00000000,
+                0.25730390, 0.15441770, 6.30903678, 0.23021447)
+```
+
+Iterate away (lots of plots ... sorry, graders!)
+===
+
+- **4a.** Take a look at the starter code below. The first line defines an index variable `i` and sets it equal to 1. The second line defines a string `var_name` and sets it equal to a placeholder value "FOO". Edit this line so that `var_name` is set to the column name of the `i`th variable in the `pros_dat` matrix. The third line defines a string `title` based on `var_name` using the `paste()` function, which pastes together two strings (we'll see much more on `paste()` and related functions soon). Write a fourth line which plots a histogram of the `i`th column in `pros_dat`, and passes the additional arguments: `breaks=20`, `main=title` (to set the title), and `xlab=var_name` (to set the x-axis label), to the `hist()` function. Try running this block of 4 lines with multiple different settings of `i` (i.e., change `i=1` to `i=2`, and so on), and check that the output makes sense to you.
+
+```{r}
+i = 1
+var_name = "FOO"
+title = paste("Histogram of", var_name)
+```
+
+- **4b.** Write a `for()` loop to produce a histogram of each column in the `pros_dat` matrix. If it helps, think about doing this in two steps: as the first step, write a `for()` loop that iterates an index variable `i` over the integers between 1 and the number of columns of `pros_dat` (don't just manually write 9 here, pull out the number of columns programmatically), with an empty body. As the second step, paste your solution code for the last question (lines 2 through 4) into the body of the `for()` loop. Once run, the loop should produce 9 histograms for you.
+
+- **4c.** Produce a scatterplot of the log cancer volume versus SVI. Since SVI is binary, you'll notice that we just see two vertical strips of points: one at $x=0$, and the other at $x=1$. R has a special data type that we haven't learned yet, called a "factor", which is specifically designed to handle categorical data. We can (try to) cast any object to a factor using `as.factor()`. Produce a scatterplot of the log cancer volume versus SVI again, but this time, cast the SVI variable to a factor when it is passed to `plot()`. You should notice quite a difference in the result: what is being shown now is called a "boxplot".
+
+- **4d.** Similar to what you did in Q2a: define `i=1`, define `var_name` to be the the column name of the `i`th variable in the `pros.dat` matrix, and define `title` by pasting together `var_name` and "versus SVI" with the `paste()` function. Then, plot the `i`th column in `pros.dat` versus SVI, with the SVI variable being converted to a factor. In the call to `plot()`, pass the additional arguments: `main=title`, `xlab="SVI"`, and `ylab=var_name`. Try running this block of code with multiple different settings of `i`, and check that the output makes sense to you.
+
+- **4e.** Write a `for()` loop to produce boxplots of the columns in `pros_dat` versus SVI, but only for variables in which there is a significant difference between SVI and non-SVI patients. Specifically, we will consider the difference for a variable to be significant if its entry in `pros_dat_t_stat`, as you computed in Q3d, is larger than 2 in absolute value. If it helps, consider breaking down this task into three steps: first, write a `for()` loop that iterates an index variable `i` over the integers between 1 and the number of columns of `pros_dat`. Second, write in the body an `if()` statement that checks whether the `i`th entry of `pros_dat_t_stat` is larger than 2 in absolute value. Third, paste your solution code for the last question (lines 2 through 4) into the body of the `if()` statement. Once run, the loop should produce 6 boxplots.
+
+- **4f.** One of the plots you produced in the last question is kind of useless. Specifically, there is a plot of SVI versus itself, which is not useful. Modify your solution code for the last question so that this plot is excluded. Hint: you can do this by adding to your `if()` statement appropriately, using a Boolean operator. Once run, your loop should produce 5 boxplots. Visually, which variable appears to have the biggest difference between SVI and non-SVI patients? Does this agree with the variable that has the largest absolute value in `pros_dat_t_stat` (apart from SVI, whose value is vacuously infinite)?
+
+My plot is at your command (optional)
+===
+
+- **Challenge.** Use the last code block from this week's lecture as starter code to complete the following task. In the body of a `repeat` loop, prompt the user for a variable name to plot, using `readline()`. Check if the string that you collect from the user is one of the column names in `pros_dat`. Hint: use the `%in%` operator. If the string is indeed one of the column names, produce a histogram of the corresponding variable, with a title and x-axis label set appropriately. If the string is "quit", then break out of the repeat loop. Otherwise, print to the console: "Oops! That's not a variable in my data set." In the Rmd code chunk for your solution code, *make sure to set `eval=FALSE`*, as was done in the Lab_01.Rmd file for setting the seed. *Otherwise your lab file will never finish knitting.* Try out your solution code by running it in your console.
+
+- **Challenge.** Extend your prompting code in the last question to allow for scatterplots as well as histograms, and any other options you deem interesting, that the user might want to specify.
