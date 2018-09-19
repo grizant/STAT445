@@ -1,5 +1,5 @@
 ---
-title: "Lab 02, functions"
+title: "Lab 02: Functions"
 author: "AG Schissler (modified from Ryan Tibshirani)"
 date: "Week of 9/17/2018"
 output: html_document
@@ -17,8 +17,7 @@ This lab is to be done in class (completed outside of class if need be). You can
 
 **This week's agenda**: creating and updating functions; understanding argument and return structures; revisiting Shakespeare's plays; code refactoring.
 
-Huber loss function
-===
+## Huber loss function
 
 The Huber loss function (or just Huber function, for short) is defined as:
 $$
@@ -27,12 +26,11 @@ x^2 & \text{if $|x| \leq 1$} \\
 2|x| - 1 & \text{if $|x| > 1$} 
 \end{cases}
 $$
-This function is quadratic on the interval [-1,1], and linear outside of this interval. It transitions from quadratic to linear "smoothly", and looks like this:  
-![](http://www.stat.cmu.edu/~ryantibs/statcomp/labs/huber.png)  
-It is often used in place of the usual squared error loss for robust estimation. The sample average, $\bar{X}$---which given a sample $X_1,\ldots,X_n$ minimizes the squared error loss $\sum_{i=1}^n (X_i-m)^2$ over all choices of $m$---can be inaccurate as an estimate of $\mathbb{E}(X)$ if the distribution of $X$ is heavy-tailed. In such cases, minimizing Huber loss can give a better estimate. (Interested in hearing more? Come ask one of us, or ask your 401 or 402 Professor!)
+This function is quadratic on the interval [-1,1], and linear outside of this interval. It transitions from quadratic to linear "smoothly".
 
-Some simple function tasks
-===
+It is often used in place of the usual squared error loss for robust estimation. The sample average, $\bar{X}$---which given a sample $X_1,\ldots,X_n$ minimizes the squared error loss $\sum_{i=1}^n (X_i-m)^2$ over all choices of $m$---can be inaccurate as an estimate of $\mathbb{E}(X)$ if the distribution of $X$ is heavy-tailed. In such cases, minimizing Huber loss can give a better estimate.
+
+### Some function tasks
 
 - **1a.** Write a function `huber()` that takes as an input a number $x$, and returns the Huber value $\psi(x)$, as defined above. Hint: the body of a function is just a block of R code, i.e., in this code you can use `if()` and `else()` statements. Check that `huber(1)` returns 1, and `huber(4)` returns 7.
 
@@ -51,85 +49,74 @@ Starting with your solution code to the last question, update your `huber()` fun
 
 - **1e.** Vectorize your `huber()` function, so that the first input can actually be a vector of numbers, and what is returned is a vector whose elements give the Huber evaluated at each of these numbers. Hint: you might try using `ifelse()`, if you haven't already, to vectorize nicely. Check that `huber(x=1:6, a=3)` returns the vector of numbers (1, 4, 9, 15, 21, 27).
 
-- **Challenge.** Your instructor computed the Huber function values $\psi_a(x)$ over a bunch of different $x$ values, stored in `huber.vals` and `x.vals`, respectively. However, the cutoff $a$ was, let's say, lost. Using `huber.vals`, `x.vals`, and the definition of the Huber function, you should be able to figure out the cutoff value $a$, at least roughly. Estimate $a$ and explain how you got there. Hint: one way to estimate $a$ is to do so visually, using plotting tools; there are other ways too.
+- **Challenge.** Your instructor computed the Huber function values $\psi_a(x)$ over a bunch of different $x$ values, stored in `huber_vals` and `x_vals`, respectively. However, the cutoff $a$ was, let's say, lost. Using `huber_vals`, `x_vals`, and the definition of the Huber function, you should be able to figure out the cutoff value $a$, at least roughly. Estimate $a$ and explain how you got there. Hint: one way to estimate $a$ is to do so visually, using plotting tools; there are other ways too.
 
 ```{r}
 x.vals = seq(0, 5, length=21)
-huber.vals = c(0.0000, 0.0625, 0.2500, 0.5625, 1.0000, 1.5625, 2.2500,
+huber_vals = c(0.0000, 0.0625, 0.2500, 0.5625, 1.0000, 1.5625, 2.2500,
                3.0625, 4.0000, 5.0625, 6.2500, 7.5625, 9.0000, 10.5000,
                12.0000, 13.5000, 15.0000, 16.5000, 18.0000, 19.5000, 
                21.0000)
 ```
 
-Shakespeare's complete works
-===
+## Prostate cancer data set
 
-Recall, as in lab/hw from Week 3, that the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare) are available freely from 
-[Project Gutenberg](http://www.gutenberg.org). We've put this text file up at http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt.
+We're going to look at a data set on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~hastie/ElemStatLearn/)). There are 9 variables measured on these 97 men:
 
-Getting lines of text play-by-play
-===
+1. `lpsa`: log PSA score
+2. `lcavol`: log cancer volume
+3. `lweight`: log prostate weight
+4. `age`: age of patient
+5. `lbph`: log of the amount of benign prostatic hyperplasia
+6. `svi`: seminal vesicle invasion
+7. `lcp`: log of capsular penetration
+8. `gleason`: Gleason score 
+9. ` pgg45`: percent of Gleason scores 4 or 5 
 
-- **2a.** Below is the `get.wordtab.from.url()` from lecture. Modify this function so that the string vectors `lines` and `words` are both included as named components in the returned list. For good practice, update the documentation in comments to reflect your changes. Then call this function on the URL for the Shakespeare's complete works (with the rest of the arguments at their default values) and save the result as `shakespeare.wordobj`. Using `head()`, display the first several elements of (definitely not all of!) the `lines`, `words`, and `wordtab` components of `shakespeare.wordobj`, just to check that the output makes sense to you.
+To load this prostate cancer data set into your R session, and store it as a matrix `pros_dat`:
 
 ```{r}
-# get.wordtab.from.url: get a word table from text on the web
-# Inputs:
-# - str.url: string, specifying URL of a web page 
-# - split: string, specifying what to split on. Default is the regex pattern
-#   "[[:space:]]|[[:punct:]]"
-# - tolower: Boolean, TRUE if words should be converted to lower case before
-#   the word table is computed. Default is TRUE
-# - keep.nums: Boolean, TRUE if words containing numbers should be kept in the
-#   word table. Default is FALSE
-# Output: list, containing word table, and some basic numeric summaries
-
-get.wordtab.from.url = function(str.url, split="[[:space:]]|[[:punct:]]",
-                                tolower=TRUE, keep.nums=FALSE) {
-  lines = readLines(str.url)
-  text = paste(lines, collapse=" ")
-  words = strsplit(text, split=split)[[1]]
-  words = words[words != ""]
-    
-  # Convert to lower case, if we're asked to
-  if (tolower) words = tolower(words)
-    
-  # Get rid of words with numbers, if we're asked to
-  if (!keep.nums) 
-    words = grep("[0-9]", words, inv=TRUE, val=TRUE)
-  
-  # Compute the word table
-  wordtab = table(words)
-  
-  return(list(wordtab=wordtab,
-              number.unique.words=length(wordtab),
-              number.total.words=sum(wordtab),
-              longest.word=words[which.max(nchar(words))]))
-}
+pros_dat <-
+  as.matrix(read.table("http://www.stat.cmu.edu/~ryantibs/statcomp/data/pros.dat"))
 ```
 
-- **2b.** Go back and look Q2 of Homework 2, where you located Shakespeare's plays in the lines of text for Shakespeare's complete works. Set `shakespeare.lines = shakespeare.wordobj$lines`, and then rerun your solution code (or the rerun the official solution code, if you'd like) for questions Q2a--Q2c and Q2f of Homework 2, on the lines of text stored in `shakespeare.wordobj$lines`. (Note: you don't rerun the code for Q2d or Q2e, since the code for Q2f will accomplish the same task only without encountering `NA`s). You should end up with two vectors `titles.start` and `titles.end`, containing the start and end positions of each of Shakespeare's plays in `shakespeare.lines`. Print out `titles.start` and `titles.end` to the console.
+### Basic indexing and calculations
 
-- **2c.** Create a list `shakespeare.lines.by.play` of length equal to the number of Shakespeare's plays (a number you should have already computed in the solution to the last question). Using a `for()` loop, and relying on `titles.start` and `titles.end`, extract the subvector of `shakespeare.lines` for each of Shakespeare's plays, and store it as a component of `shakespeare.lines.by.play`. That is, `shakespeare.lines.by.play[[1]]` should contain the lines for Shakespeare's first play, `shakespeare.lines.by.play[[2]]` should contain the lines for Shakespeare's second play, and so on. Name the components of `shakespeare.lines.by.play` according to the titles of the plays.
+- **2a.** What are the dimensions of `pros_dat` (i.e., how many rows and how many columns)? Using integer indexing, print the first 6 rows and all columns; again using integer indexing, print the last 6 rows and all columns. 
 
-- **2d.** Using one of the apply functions, along with `head()`, print the first 4 lines of each of Shakespeare's plays to the console. This should only require one line of code.
+- **2b.** Using the built-in R functions `head()` and `tail()` (i.e., do *not* use integer indexing), print the first 6 rows and all columns, and also the last 6 rows and all columns.
 
-Getting word tables play-by-play
-===
+- **2c.** Does the matrix `pros_dat` have names assigned to its rows and columns, and if so, what are they? Use `rownames()` and `colnames()` to find out. Note: these would have been automatically created by the `read.table()` function that we used above to read the data file into our R session. To see where `read.table()` would have gotten these names from, open up the data file: http://www.stat.cmu.edu/~ryantibs/statcomp/data/pros.dat in your web browser. Only the column names here are actually informative.
 
-- **3a.** Define a function `get.wordtab.from.lines()` to have the same argument structure as `get.wordtab.from.url()`, which recall you last updated in Q2a, except that the first argument of `get.wordtab.from.lines()` should be `lines`, a string vector passed by the user that contains lines of text to be processed. The body of `get.wordtab.from.lines()` should be the same as `get.wordtab.from.url()`, except that `lines` is passed and does not need to be computed using `readlines()`. The output of `get.wordtab.from.lines()` should be the same as `get.wordtab.from.url()`, except that `lines` does not need to be returned as a component. For good practice, incude documentation for your `get.wordtab.from.lines()` function in comments.
+- **2d.** Using named indexing, pull out the two columns of `pros_dat` that measure the log cancer volume and the log cancer weight, and store the result as a matrix `pros_dat_sub`. (Recall the explanation of variables at the top of this lab.) Check that its dimensions make sense to you, and that its first 6 rows are what you'd expect. Did R automatically assign column names to `pros_dat_sub`?
 
-- **3b.** Using a `for()` loop or one of the apply functions (your choice here), run the `get.wordtab.from.lines()` function on each of the components of `shakespeare.lines.by.play`, (with the rest of the arguments at their default values). Save the result in a list called `shakespeare.wordobj.by.play`. That is, `shakespeare.wordobj.by.play[[1]]` should contain the result of calling this function on the lines for the first play, `shakespeare.wordobj.by.play[[2]]` should contain the result of calling this function on the lines for the second play, and so on. 
+- **2e.** Using the log cancer weights and log cancer volumes, calculate the log cancer density for the 97 men in the data set (note: by density here we mean weight divided by volume). There are in fact two different ways to do this; the first uses three function calls and one arithmetic operation; the second just uses one arithmetic operation. Note: in either case, you should be able to perform this computation for all 97 men *with a single line of code*, taking advantage of R's ability to vectorize. Write code to do it both ways, and show that both ways lead to the same answer, using `all.equal()`.
 
-- **3c.** Using one of the apply functions, compute numeric vectors `shakespeare.total.words.by.play` and `shakespeare.unique.words.by.play`, that contain the number of total words and number of unique words, respectively, for each of Shakespeare's plays. Each vector should only require one line of code to compute. Hint: `"[["()` is actually a function that allows you to do extract a named component of a list; e.g., try `"[["(shakespeare.wordobj, "number.total.words")`, and you'll see this is the same as `shakespeare.wordobj[["number.total.words"]]`; you should take advantage of this functionality in your apply call. What are the 5 longest plays, in terms of total word count? The 5 shortest plays?
+- **2f.** Append the log cancer density to the columns of `pros_dat`, using `cbind()`. The new `pros_dat` matrix should now have 10 columns. Set the last column name to be `ldens`. Print its first 6 rows, to check that you've done all this right.
 
-- **3d.** Plot the number of unique words versus number of total words, across Shakeapeare's plays. Set the title and label the axes appropriately. Is there a consistent trend you notice?
+### Exploratory data analysis with plots
 
-Refactoring the word table functions
-===
+- **3a.** Using `hist()`, produce a histogram of the log cancer volume measurements of the 97 men in the data set; also produce a histogram of the log cancer weight. In each case, use `breaks=20` as an arugment to `hist()`. Comment just briefly on the distributions you see. Then, using `plot()`, produce a scatterplot of the log cancer volume (y-axis) versus the log cancer weight (x-axis). Do you see any kind of relationship? Would you expect to? **Challenge**: how would you measure the strength of this relationship formally? Note that there is certainly more than one way to do so. We'll talk about statistical modeling tools later in the course.
 
-- **4.** Look back at `get.wordtab.from.lines()` and `get.wordtab.from.url()`. Note that they overlap heavily, i.e., their bodies contain a lot of the same code. Redefine `get.wordtab.from.url()` so that it just calls `get.wordtab.from.lines()` in its body. Your new `get.wordtab.from.url()` function should have the same inputs as before, and produce the same output as before. So externally, nothing will have changed; we are just changing the internal structure of `get.wordtab.from.url()` to clean up our code base (specifically, to avoid code duplication in our case). This is an example of **code refactoring**. 
+- **3b.** Produce scatterplots of log cancer weight versus age, and log cancer volume versus age. Do you see relationships here between the age of a patient and the volume/weight of his cancer?
 
-    Call your new `get.wordtab.from.url()` function on the URL for Shakespeare's complete works, saving the result as `shakespeare.wordobj2`. Compare some of the components of `shakespeare.wordobj2` to those of `shakespeare.wordobj` (which was computed using the old function definition) to check that your new implementation works as it should.
-    
-- **Challenge.** Check using `all.equal()` whether `shakespeare.wordobj` and `shakespeare.wordobj2` are the same. Likely, this will not return `TRUE`. (If it does, then you've already solved this challenge question!) Modify your `get.wordtab.from.url()` function from the last question, so that it still calls `get.wordtab.from.lines()` to do the hard work, but produces an output exactly the same as the original `shakespeare.wordobj` object. Demonstrate your success by calling `all.equal()` once again.
+- **3c.** Produce a histogram of the log cancer density, and a scatterplot of the log cancer density versus age. Comment on any similarities/differences you see between these plots, and the corresponding ones you produced above for log cancer volume/weight.
+
+- **3d.** Delete the last column, corresponding to the log cancer density, from the `pros_dat` matrix, using negative integer indexing.
+
+### A bit of Boolean indexing never hurt anyone
+
+- **4a.** The `svi` variable in the `pros_dat` matrix is binary: 1 if the patient had a condition called "seminal vesicle invasion" or SVI, and 0 otherwise. SVI (which means, roughly speaking, that the cancer invaded into the muscular wall of the seminal vesicle) is bad: if it occurs, then it is believed the prognosis for the patient is poorer, and even once/if recovered, the patient is more likely to have prostate cancer return in the future. Compute a Boolean vector called `has.svi`, of length 97, that has a `TRUE` element if a row (patient) in `pros_dat` has SVI, and `FALSE` otherwise. Then using `sum()`, figure out how many patients have SVI.
+
+- **4b.** Extract the rows of `pros_dat` that correspond to patients with SVI, and the rows that correspond to patients without it. Call the resulting matrices `pros_dat_svi` and `pros_dat_no_svi`, respectively. You can do this in two ways: using the `has_svi` Boolean vector created above, or using on-the-fly Boolean indexing, it's up to you. Check that the dimensions of `pros_dat_svi` and `pros_dat_no_svi` make sense to you.
+
+- **4c.** Using the two matrices `pros_dat_svi` and `pros_dat_no_svi` that you created above, compute the means of each variable in our data set for patients with SVI, and for patients without it. Store the resulting means into vectors called `pros_dat_svi_avg` and `pros_dat_no_svi_avg`, respectively. Hint: for each matrix, you can compute the means with a single call to a built-in R function. What variables appear to have different means between the two groups? 
+
+### Computing standard deviations using iteration
+
+- **5a.** Take a look at the starter code below. The first line defines an empty vector `pros_dat_svi_sd` of length `ncol(pros.dat)` (of length 9). The second line defines an index variable `i` and sets it equal to 1. Write a third line of code to compute the standard deviation of the `i`th column of `pros_dat_svi`, using a built-in R function, and store this value in the `i`th element of `pros_dat_svi_sd`. 
+ 
+```{r}
+pros_dat_svi_sd = vector(length=ncol(pros_dat))
+i = 1
+```

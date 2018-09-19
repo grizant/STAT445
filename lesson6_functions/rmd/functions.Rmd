@@ -266,7 +266,7 @@ After you write down your design, go ahead and write the sub-functions (here `fi
 
 With practice, this design strategy should become natural.
 
-#### IV. Summary: 3-2-1
+### IV. Summary: 3-2-1
 
 - List/describe 3 revelant R built-in functions you used today
 - Give 2 reasons why to write functions.
