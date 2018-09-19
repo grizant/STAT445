@@ -114,7 +114,7 @@ pros_dat <-
 
 ### Computing standard deviations using iteration
 
-- **5a.** Take a look at the starter code below. The first line defines an empty vector `pros_dat_svi_sd` of length `ncol(pros.dat)` (of length 9). The second line defines an index variable `i` and sets it equal to 1. Write a third line of code to compute the standard deviation of the `i`th column of `pros_dat_svi`, using a built-in R function, and store this value in the `i`th element of `pros_dat_svi_sd`. 
+- **5a.** Take a look at the starter code below. The first line defines an empty vector `pros_dat_svi_sd` of length `ncol(pros_dat)` (of length 9). The second line defines an index variable `i` and sets it equal to 1. Write a third line of code to compute the standard deviation of the `i`th column of `pros_dat_svi`, using a built-in R function, and store this value in the `i`th element of `pros_dat_svi_sd`. 
  
 ```{r}
 pros_dat_svi_sd = vector(length=ncol(pros_dat))
