@@ -1,5 +1,5 @@
 ---
-title: "Lab 02: Functions"
+title: "Lab 02: Functions and the prostate cancere set"
 author: "AG Schissler (modified from Ryan Tibshirani)"
 date: "Week of 9/17/2018"
 output: html_document
@@ -13,9 +13,9 @@ Name:
 NSHE ID:  
 Collaborated with:  
 
-This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Thursday 10pm, this week.
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
 
-**This week's agenda**: creating and updating functions; understanding argument and return structures; revisiting Shakespeare's plays; code refactoring.
+This lab starts the analysis of a prostate cancer data set and we'll come back to it later.
 
 ## Huber loss function
 
@@ -90,7 +90,7 @@ pros_dat <-
 
 - **2d.** Using named indexing, pull out the two columns of `pros_dat` that measure the log cancer volume and the log cancer weight, and store the result as a matrix `pros_dat_sub`. (Recall the explanation of variables at the top of this lab.) Check that its dimensions make sense to you, and that its first 6 rows are what you'd expect. Did R automatically assign column names to `pros_dat_sub`?
 
-- **2e.** Using the log cancer weights and log cancer volumes, calculate the log cancer density for the 97 men in the data set (note: by density here we mean weight divided by volume). There are in fact two different ways to do this; the first uses three function calls and one arithmetic operation; the second just uses one arithmetic operation. Note: in either case, you should be able to perform this computation for all 97 men *with a single line of code*, taking advantage of R's ability to vectorize. Write code to do it both ways, and show that both ways lead to the same answer, using `all.equal()`.
+- **2e.** Using the log cancer weights and log cancer volumes, calculate and store the log cancer density for the 97 men in the data set (note: by density here we mean weight divided by volume). Finally, display the first 6 values. 
 
 - **2f.** Append the log cancer density to the columns of `pros_dat`, using `cbind()`. The new `pros_dat` matrix should now have 10 columns. Set the last column name to be `ldens`. Print its first 6 rows, to check that you've done all this right.
 
@@ -106,7 +106,7 @@ pros_dat <-
 
 ### A bit of Boolean indexing never hurt anyone
 
-- **4a.** The `svi` variable in the `pros_dat` matrix is binary: 1 if the patient had a condition called "seminal vesicle invasion" or SVI, and 0 otherwise. SVI (which means, roughly speaking, that the cancer invaded into the muscular wall of the seminal vesicle) is bad: if it occurs, then it is believed the prognosis for the patient is poorer, and even once/if recovered, the patient is more likely to have prostate cancer return in the future. Compute a Boolean vector called `has.svi`, of length 97, that has a `TRUE` element if a row (patient) in `pros_dat` has SVI, and `FALSE` otherwise. Then using `sum()`, figure out how many patients have SVI.
+- **4a.** The `svi` variable in the `pros_dat` matrix is binary: 1 if the patient had a condition called "seminal vesicle invasion" or SVI, and 0 otherwise. SVI (which means, roughly speaking, that the cancer invaded into the muscular wall of the seminal vesicle) is bad: if it occurs, then it is believed the prognosis for the patient is poorer, and even once/if recovered, the patient is more likely to have prostate cancer return in the future. Compute a Boolean vector called `has_svi`, of length 97, that has a `TRUE` element if a row (patient) in `pros_dat` has SVI, and `FALSE` otherwise. Then using `sum()`, figure out how many patients have SVI.
 
 - **4b.** Extract the rows of `pros_dat` that correspond to patients with SVI, and the rows that correspond to patients without it. Call the resulting matrices `pros_dat_svi` and `pros_dat_no_svi`, respectively. You can do this in two ways: using the `has_svi` Boolean vector created above, or using on-the-fly Boolean indexing, it's up to you. Check that the dimensions of `pros_dat_svi` and `pros_dat_no_svi` make sense to you.
 
@@ -119,4 +119,15 @@ pros_dat <-
 ```{r}
 pros_dat_svi_sd = vector(length=ncol(pros_dat))
 i = 1
+```
+
+- **5b.** Repeat the calculation as in the previous question, but for patients without SVI. That is, produce three lines of code: the first should define an empty vector `pros_dat_no_svi_sd` of length `ncol(pros_dat)` (of length 9), the second should define an index variable `i` and set it equal to 1, and the third should fill the `i`th element of `pros_dat_no_svi_sd` with the standard deviation of the `i`th column of `pros_dat_no_svi`.
+
+- **5c.** Write a `for()` loop to compute the standard deviations of the columns of `pros_dat_svi` and `pros_dat_no_svi`, and store the results in the vectors `pros_dat_svi_sd` and `pros_dat_no_svi_sd`, respectively, that were created above. Note: you should have a single `for()` loop here, not two for loops. And if it helps, consider breaking this task down into two steps: as the first step, write a `for()` loop that iterates an index variable `i` over the integers between 1 and the number of columns of `pros_dat` (don't just manually write 9 here, pull out the number of columns programmatically), with an empty body. As the second step, paste relevant pieces of your solution code from Q5a and Q5b into the body of the `for()` loop. Print out the resulting vectors `pros_dat_svi_sd` and `pros_dat_no_svi_sd` to the console. Comment, just briefly (informally), by visually inspecting these standard deviations and the means you computed in Q4c: which variables exhibit large differences in means between the SVI and non-SVI patients, relative to their standard deviations?
+
+- **5d.** The starter code below partially computes to calculate the standard deviations of the columns of `pros.dat.svi` and `pros_dat_no_svi`, and stores them in `pros_dat_svi_sd_master` and `pros_dat_no_svi_sd_master`, respectively, using `apply()`. Remove `eval=FALSE` as an option to the Rmd code chunk and complete the code. Then check using `all.equal()` that the standard deviations you computed in the previous question equal these "master" copies. Note: use `check.names=FALSE` as a third argument to `all.equal()`, which instructs it to ignore the names of its first two arguments. (If `all.equal()` doesn't succeed in both cases, then you must have done something wrong in computing the standard deviations, so go back and fix them!)
+
+```{r, eval=FALSE}
+pros_dat_svi_sd_master = apply(pros_dat_svi, MARGIN = , FUN = )
+pros_dat_no_svi_sd_master = apply(pros_dat_no_svi, MARGIN = , FUN = )
 ```
