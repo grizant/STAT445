@@ -58,4 +58,8 @@ Lab 03 will walk you through all analysis of this file. Including more motivatio
 
 ## IV. Using the `parallel` package
 
-### V. Summary
+We'll use the `parallel` package to accelerate some simulation. 
+
+## V. Summary
+
+Take aways from your lab feedback?

@@ -46,7 +46,7 @@ T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
 $$
 where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$. We will compute these $t$-statistics for all 9 variables in our data set, where $X$ will play the role of one of the variables for SVI patients, and $Y$ will play the role of this variable for non-SVI patients. Start by computing a vector of the denominators of the t-statistics, called `pros_dat_denom`, according to the formula above. Take advantage of vectorization; this calculation should require just a single line of code. Make sure not to include any hard constants (e.g., don't just manually write 21 here for $n$); as always, programmatically define all the relevant quantities. Then compute a vector of t-statistics for the 9 variables in our data set, called `pros_dat_t_stat`, according to the formula above, and using `pros_dat_denom`. Again, take advantage of vectorization; this calculation should require just a single line of code. Print out the t-statistics to the console. 
 
-- **2b.** Given data $X$ and $Y$ and the t-statistic $T$ as defined the last question, the **degrees of freedom** associated with $T$ is:
+- **1b.** Given data $X$ and $Y$ and the t-statistic $T$ as defined the last question, the **degrees of freedom** associated with $T$ is:
 $$
 \nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
   \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
@@ -54,7 +54,7 @@ $$
 
 Compute the degrees of freedom associated with each of our 9 t-statistics (from our 9 variables), storing the result in a vector called `pros_dat_df`. This might look like a complicated/ugly calculation, but really, it's not too bad: it only involves arithmetic operators, and taking advantage of vectorization, the calculation should only require a single line of code. Hint: to simplify this line of code, it will help to first set short variable names for variables/quantities you will be using, as in `s_x = pros_dat_svi_sd`, `n = nrow(pros_dat_svi)`, and so on. Print out these degrees of freedom values to the console.
 
-- **2c.** The function `pt()` evaluates the distribution function of the t-distribution. E.g.,
+- **1c.** The function `pt()` evaluates the distribution function of the t-distribution. E.g.,
 
 ```{r, eval=FALSE}
 pt(x, df=v, lower.tail=FALSE)
@@ -159,7 +159,7 @@ huge_bin_draws <- rbinom(n = sim_reps, size = bin_n, prob = bin_prob)
 ## your code here
 ```
 
-- **5b.** Initiate a local cluster using the `parallel` package by running the code below:
+- **5b.** Initiate a local cluster using the `parallel` package by running the code below. How many "cores" do you have?
 
 ```{r, eval=FALSE}
 library(parallel)
