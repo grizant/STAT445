@@ -15,11 +15,7 @@ Collaborated with:
 
 This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
 
-## Rationale and learning outcomes
-
-This week we'll go deeper into the prostate cancer data set while reviewing inferential statistical tests, practice text manipulation during an analysis Shakespeare's works, and use the `parallel` package to make use of multi-core processes.
-
-## Prostate cancer data set
+## I. Prostate cancer data set
 
 We're going to revisit the data set on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~hastie/ElemStatLearn/)). There are 9 variables measured on these 97 men:
 
@@ -56,7 +52,7 @@ $$
   \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
 $$
 
-Compute the degrees of freedom associated with each of our 9 t-statistics (from our 9 variables), storing the result in a vector called `pros_dat_df`. This might look like a complicated/ugly calculation, but really, it's not too bad: it only involves arithmetic operators, and taking advantage of vectorization, the calculation should only require a single line of code. Hint: to simplify this line of code, it will help to first set short variable names for variables/quantities you will be using, as in `s_svi = pros_dat_svi_sd`, `n_svi = nrow(pros_dat_svi)`, and so on. Print out these degrees of freedom values to the console.
+Compute the degrees of freedom associated with each of our 9 t-statistics (from our 9 variables), storing the result in a vector called `pros_dat_df`. This might look like a complicated/ugly calculation, but really, it's not too bad: it only involves arithmetic operators, and taking advantage of vectorization, the calculation should only require a single line of code. Hint: to simplify this line of code, it will help to first set short variable names for variables/quantities you will be using, as in `s_x = pros_dat_svi_sd`, `n = nrow(pros_dat_svi)`, and so on. Print out these degrees of freedom values to the console.
 
 - **2c.** The function `pt()` evaluates the distribution function of the t-distribution. E.g.,
 
@@ -67,3 +63,123 @@ pt(x, df=v, lower.tail=FALSE)
 returns the probability that a $t$-distributed random variable, with `v` degrees of freedom, exceeds the value `x`. Importantly, `pt()` is vectorized: if `x` is a vector, and so is `v`, then the above returns, in vector format: the probability that a $t$-distributed variate with `v[1]` degrees of freedom exceeds `x[1]`, the probability that a $t$-distributed variate with `v[2]` degrees of freedom exceeds `x[2]`, and so on. 
 
 Call `pt()` as in the above line, but replace `x` by the absolute values of the $t$-statistics you computed for the 9 variables in our data set, and `v` by the degrees of freedom values associated with these t-statistics. Multiply the output by 2 (for a two-tailed test), and store it as a vector `pros_dat_p_val`. These are called **$p$-values** for the $t$-tests of mean difference between SVI and non-SVI patients, over the 9 variables in our data set. Print out the $p$-values to the console. Identify the variables for which the $p$-value is smaller than 0.05 (hence deemed to have a significant difference between SVI and non-SVI patients). Identify the variable with the smallest $p$-value (the most significant difference between SVI and non-SVI patients).
+
+## II. Shakespeare`s complete works
+
+[Project Gutenberg](http://www.gutenberg.org) offers over 50,000 free online books, especially old books (classic literature), for which copyright has expired. We're going to look at the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare), taken from the Project Gutenberg website. 
+
+To avoid hitting the Project Gutenberg server over and over again, I point you to text file that contains the complete works of William Shakespeare, located [here](http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt). Skim through this text file a little bit to get a sense of what it contains (a whole lot!). 
+
+
+### Reading in text, basic exploratory tasks
+
+- **2a.** Read in the Shakespeare data linked above into your R session with `readLines()`. Make sure you are reading the data file directly from the web (rather than locally, from a downloaded file on your computer). Call the result `shakespeare_lines`. This should be a vector of strings, each element representing a "line" of text. Print the first 5 lines. How many lines are there? How many characters in the longest line? What is the average number of characters per line? How many lines are there with zero characters (empty lines)? Hint: each of these queries should only require one line of code; for the last one, use an on-the-fly Boolean comparison and `sum()`.
+
+- **2b.** Remove the lines in `shakespeare_lines` that have zero characters. Hint: use Boolean indexing. Check that the new length of `shakespeare_lines` makes sense to you.
+
+- **2c.** Collapse the lines in `shakespeare_lines` into one big string, separating each line by a space in doing so, using `paste()`. Call the resulting string `shakespeare_all`. How many characters does this string have? How does this compare to the sum of characters in `shakespeare_lines`, and does this make sense to you?
+
+- **2d.** Split up `shakespeare_all` into words, using `strsplit()` with `split=" "`. Call the resulting string vector (note: here we are asking you for a vector, not a list) `shakespeare_words`. How long is this vector, i.e., how many words are there? Using the `unique()` function, compute and store the unique words as `shakespeare_words_unique`. How many unique words are there?  
+
+- **2e.** Plot a histogram of the number of characters of the words in `shakespeare_words_unique`. You will have to set a large value of the `breaks` argument (say, `breaks=50`) in order to see in more detail what is going on. What does the bulk of this distribution look like to you? Why is the x-axis on the histogram extended so far to the right (what does this tell you about the right tail of the distribution)?
+
+- **2f.** Reminder: the `sort()` function sorts a given vector into increasing order; its close friend, the `order()` function, returns the indices that put the vector into increasing order. Both functions can take `decreasing=TRUE` as an argument, to sort/find indices according to decreasing order. See the code below for an example.
+
+```{r, eval=FALSE}
+set.seed(0)
+(x = round(runif(5, -1, 1), 2))
+sort(x, decreasing=TRUE)
+order(x, decreasing=TRUE)
+```
+
+Using the `order()` function, find the indices that correspond to the top 5 longest words in `shakespeare_words_unique`. Then, print the top 5 longest words themselves. Do you recognize any of these as actual words? **Challenge**: try to pronounce the fourth longest word! What does it mean?
+    
+### Computing word counts
+
+These following questions will motivate the development of function `get_wordtab_from_url` described in the lecture [functions.html](http://www.grantschissler.com/teaching/FA18/STAT445/functions.html).
+
+- **3a.** Using `table()`, compute counts for the words in `shakespeare_words`, and save the result as `shakespeare_wordtab`. How long is `shakespeare_wordtab`, and is this equal to the number of unique words (as computed above)? Using named indexing, answer: how many times does the word "thou" appear? The word "rumour"? The word "gloomy"? The word "assassination"? 
+
+- **3b.** How many words did Shakespeare use just once? Twice? At least 10 times? More than 100 times? 
+
+- **3c.** Sort `shakespeare_wordtab` so that its entries (counts) are in decreasing order, and save the result as `shakespeare_wordtab_sorted`. Print the 25 most commonly used words, along with their counts. What is the most common word? Second and third most common words?
+
+- **3d.** What you should have seen in the last question is that the most common word is the empty string "". This is just an artifact of splitting `shakespeare_all` by spaces, using `strsplit()`. Redefine `shakespeare_words` so that all empty strings are deleted from this vector. Then recompute `shakespeare_wordtab` and `shakespeare_wordtab_sorted`. Check that you have done this right by printing out the new 25 most commonly used words, and verifying (just visually) that is overlaps with your solution to the last question.
+
+- **3e.** As done at the end of the lecture notes, produce a plot of the word counts (y-axis) versus the ranks (x-axis) in `shakespeare_wordtab_sorted`. Set `xlim=c(1,1000)` as an argument to `plot()`; this restricts the plotting window to just the first 1000 ranks, which is helpful here to see the trend more clearly. Do you see [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law) in action, i.e., does it appear that $\mathrm{Frequency} \approx C(1/\mathrm{Rank})^a$ (for some $C,a$)? **Challenge**: either programmatically, or manually, determine reasonably-well-fitting values of $C,a$ for the Shakespeare data set; then draw the curve $y=C(1/x)^a$ on top of your plot as a red line to show how well it fits.
+
+### A tiny bit of regular expressions
+
+- **4a.** There are a couple of issues with the way we've built our words in `shakespeare_words`. The first is that capitalization matters; from Q3c, you should have seen that "and" and "And" are counted as separate words. The second is that many words contain punctuation marks (and so, aren't really words in the first place); to see this, retrieve the count corresponding to "and," in your word table `shakespeare_wordtab`.
+
+The fix for the first issue is to convert `shakespeare_all` to all lower case characters. Hint: recall `tolower()` from Q1b. The fix for the second issue is to use the argument `split="[[:space:]]|[[:punct:]]"` in the call to `strsplit()`, when defining the words. In words, this means: *split on spaces or on punctuation marks*; more precisely, it uses what we call a **regular expression** for the `split` argument. Carry out both of these fixes to define new words `shakespeare.words.new`. Then, delete all empty strings from this vector, and compute word table from it, called `shakespeare.wordtab.new`. 
+
+- **4b.** Compare the length of `shakespeare.words.new` to that of `shakespeare.words`; also compare the length of `shakespeare.wordtab.new` to that of `shakespeare.wordtab`. Explain what you are observing.
+
+- **4c.** Compute the unique words in `shakespeare.words.new`, calling the result `shakespeare.words.new.unique`. Then repeat the queries in Q2e and Q2f on `shakespeare.words.new.unique`. Comment on the histogram---is it different in any way than before? How about the top 5 longest words? 
+
+- **4d.** Sort `shakespeare.wordtab.new` so that its entries (counts) are in decreasing order, and save the result as `shakespeare.wordtab.sorted.new`. Print out the 25 most common words and their counts, and compare them (informally) to what you 
+saw in Q3d. Also, produce a plot of the new word counts, as you did in Q3e. Does Zipf's law look like it still holds?
+
+- **Challenge.** When we use `split="[[:space:]]|[[:punct:]]"` in the call to `strsplit()`, a word like "non-Gaussian" gets split into separate words "non" and "Gaussian". E.g.,
+    ```{r}
+    strsplit("'Hey!' My distribution: it's (super) non-Gaussian!",
+             split="[[:space:]]|[[:punct:]]")[[1]]
+```
+	
+which is not really desirable, since we don't want to consider "it", "s", "non", and "Gaussian" all as separate words. Of course, Shakespeare wouldn't have been talking about Gaussians, but the same idea applies. In fact, you should have seen in your solution to Q4d that "s" was one of the 25 most common words used by Shakespeare in his complete works (no doubt, due to the splitting of words like "it's").
+    
+Modify the regular expression `"[[:space:]]|[[:punct:]]"`, to be used for the `split` argument, so that this doesn't happen. Specifically, design a regular expression that splits on spaces, or on punctuation marks that are at the left or right boundary of a word, meaning:
+
+* they are at the beginning or end of the sentence; or
+* follow a space or are followed by a space; or
+* follow another punctuation mark or are followed by another punctuation mark.
+      
+Using your new regular expression (as the `split` argument, in the call to `strsplit()`), repeat Q4a through Q4d, to compute words and a word table for the Shakespeare data. Comment on what has changed in your latest answers. 
+      
+Hint #1: you will have to read up a bit on regular expressions; there are many possible solutions here using regular expressions. Hint #2: you might find it useful to try out your ideas on the example in the last code chunk; in this example, you want to keep "it's" and "non-Gaussian" intact, but remove all other punctuation marks. 
+
+## III. The power of parallelization
+
+Let's use the `parallel` package to produce multiple `huge_bin_draws` from Lab 01 simultaneously.
+
+Recal the procedure to produce one "huge" simulation.
+
+```{r, eval=FALSE}
+set.seed(44)
+sim_reps <- 100e6
+bin_n <- 10*10^6
+bin_prob <- 50 * 10^-8
+huge_bin_draws <- rbinom(n = sim_reps, size = bin_n, prob = bin_prob)
+```
+
+- **5a.** Now produce 10 such data sets using `sapply` or `replicate`.
+
+```{r}
+## your code here
+```
+
+- **5b.** Initiate a local cluster using the `parallel` package by running the code below:
+
+```{r, eval=FALSE}
+library(parallel)
+
+## Calculate the number of cores
+## leave one core open for the OS to run smoothly
+no_cores <- detectCores() - 1
+
+## Initiate cluster
+cl <- makeCluster(no_cores)
+```
+- **5c.** Now produce and store 10 such data sets using `parSapply`. Check that this was successful (any way you like that doesn't print too much to the console). How much faster was the code execution? Hint: read the discussion on [Stack Overflow](https://stackoverflow.com/), [https://stackoverflow.com/questions/19281010/simplest-way-to-do-parallel-replicate](https://stackoverflow.com/questions/19281010/simplest-way-to-do-parallel-replicate). Be careful to know exactly what each line in the example code is doing.
+
+```{r, eval=FALSE}
+## complete the code below
+parSapply(cl = cl, X=, FUN = )
+```
+
+- **5d.** Always remind to close your cluster when you're done.
+
+```{r, eval=FALSE}
+stopCluster(cl)
+```

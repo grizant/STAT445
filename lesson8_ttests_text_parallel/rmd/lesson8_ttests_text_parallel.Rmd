@@ -1,5 +1,5 @@
 ---
-title: "Week 5: Prostate cancer $t$-tests, Shakespeare, and parallelization"
+title: "Week 5 / Lab 03: Prostate cancer $t$-tests, Shakespeare, and parallelization"
 author: "AG Schissler (modified from Ryan Tibshirani)"
 date: "Monday September 24, 2018"
 output: html_document
@@ -15,262 +15,47 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open [](`lesson8_ttests_text_parallel.Rmd` from website so that you can work along the lecture.
-4. Open `lesson8_ttests_text_parallel.Rmd` from website so that you can work along the lecture.
+3. Open [lesson8_ttests_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/lesson8_ttests_text_parallel/rmd/lesson8_ttests_text_parallel.Rmd) from website so that you can work along the lecture.
+4. Open [lab_03_ttest_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_03_ttest_text_parallel.Rmd) to have the lab available for review.
 
+### This week's agenda
 
-### Why do we need functions?
-
-- Data structures tie related values into one object
-- Functions tie related commands into one object
-- In both cases: easier to understand, easier to work with, easier to build into larger things
-
-**Remember those commands you typed over and over?**
+This week we'll go deeper into the prostate cancer data set while reviewing inferential statistical tests, practice text manipulation during an analysis Shakespeare's works, and use the `parallel` package to make use of multi-core processes.
 
 ### Today learning outcomes
 
 Students will be able to
-- use and write R functions.
 
-## II. Function basics
+- conduct routine statistical inference using built-in R functions.
+- manipulate text data.
+- parallelize code for efficient processing.
 
-From our lectures on text manipulation and regexes:
+## II. Using $t$-tests to infer prostate cancer population differences
 
-```{r}
-# Get Trump's word counts
-trump_lines <- readLines("http://www.stat.cmu.edu/~ryantibs/statcomp/data/trump.txt")
-trump_text <- paste(trump_lines, collapse=" ")
-trump_words <- strsplit(trump_text, split="[[:space:]]|[[:punct:]]")[[1]]
-trump_words <- trump_words[trump_words != ""]
-trump_wordtab <- table(trump_words)
+At the end of Lab 2, you calculated sample means and standard deviations for the two `svi` groups. These quantatities may suggest that the group population means differ for some variable(s). Now we'll formally test whether the population means differ using statistical inference.
 
-# Now do the same for Clinton's speech, etc., etc.
-```
-
-### Creating your own function
-
-Call `function()` to create your own function. Document your function with comments
-
-```{r}
-# get_wordtab_from_url: get a word table from text on the web
-# Input:
-# - str_url: string, specifying URL of a web page 
-# Output: word table, i.e., vector with counts as entries and associated
-#   words as names
-
-get_wordtab_from_url <- function(str_url) {
-  lines <- readLines(str_url)
-  text <- paste(lines, collapse=" ")
-  words <- strsplit(text, split="[[:space:]]|[[:punct:]]")[[1]]
-  words <- words[words != ""]
-  wordtab <- table(words)
-  return(wordtab)
-}
-
-```
-
-### Function structure
-
-The structure of a function has three basic parts:  
-
-- **Inputs** (or **arguments**)  
-- **Body** (code that is executed)
-- **Output** (or **return value**)  
-
-R doesn't let your function have multiple outputs, but you can return a list
-
-### Using your created function
-
-Our created functions can be used just like the built-in ones
-
-```{r}
-# Using our function
-trump_wordtab_new = get_wordtab_from_url(
-  "http://www.stat.cmu.edu/~ryantibs/statcomp/data/trump.txt")
-all(trump_wordtab_new == trump_wordtab)
-
-## YOU DO: choose another website to see result
-
-# Revealing our function's definition
-get_wordtab_from_url
-```
-
-### Returning more than one thing
-
-When creating a function in R, though you cannot return more than one output, you can **return a list**. This (by definition) can contain an arbitrary number of arbitrary objects
-
-```{r}
-# get_wordtab_from_url: get a word table from text on the web
-# Inputs:
-# - str_url: string, specifying URL of a web page 
-# - split: string, specifying what to split on. Default is the regex pattern
-#   "[[:space:]]|[[:punct:]]"
-# - tolower: Boolean, TRUE if words should be converted to lower case before
-#   the word table is computed. Default is TRUE
-# - keep_nums: Boolean, TRUE if words containing numbers should be kept in the
-#   word table. Default is FALSE
-# Output: list, containing word table, and then some basic numeric summaries
-
-get_wordtab_from_url = function(str_url, split="[[:space:]]|[[:punct:]]",
-                                tolower=TRUE, keep_nums=FALSE) {
-  lines = readLines(str_url)
-  text = paste(lines, collapse=" ")
-  words = strsplit(text, split=split)[[1]]
-  words = words[words != ""]
-    
-  # Convert to lower case, if we're asked to
-  if (tolower) words = tolower(words)
-  
-  # Get rid of words with numbers, if we're asked to
-  if (!keep_nums) 
-    words = grep("[0-9]", words, inv=TRUE, val=TRUE)
-  
-  # Compute the word table
-  wordtab = table(words)
-  
-  return(list(wordtab=wordtab,
-              number_unique_words=length(wordtab),
-              number_total_words=sum(wordtab),
-              longest_word=words[which.max(nchar(words))]))
-}
-```
-
----
-
-```{r}
-# Trump's Republican National Convention speech
-trump_wordtab = get_wordtab_from_url(
-  "http://www.stat.cmu.edu/~ryantibs/statcomp/data/trump.txt")
-lapply(trump_wordtab, head)
-
-### YOU TRY: Try on your own url
-```
-
-### Side effects
-
-A **side effect** of a function is something that happens as a result of the function's body, but is not returned. Examples:
-
-- Printing something out to the console 
-- Plotting something on the display 
-- Saving an R data file, or a PDF, etc.
-
-```{r}
-# get_wordtab_from_url: get a word table from text on the web
-# Inputs:
-# - str_url: string, specifying URL of a web page 
-# - split: string, specifying what to split on. Default is the regex pattern
-#   "[[:space:]]|[[:punct:]]"
-# - tolower: Boolean, TRUE if words should be converted to lower case before
-#   the word table is computed. Default is TRUE
-# - keep_nums: Boolean, TRUE if words containing numbers should be kept in the
-#   word table. Default is FALSE
-# - hist: Boolean, TRUE if a histogram of word lengths should be plotted as a
-#   side effect. Default is FALSE
-# Output: list, containing word table, and then some basic numeric summaries
-
-get_wordtab_from_url = function(str_url, split="[[:space:]]|[[:punct:]]",
-                                tolower=TRUE, keep_nums=FALSE, hist=FALSE) {
-  lines = readLines(str_url)
-  text = paste(lines, collapse=" ")
-  words = strsplit(text, split=split)[[1]]
-  words = words[words != ""]
-    
-  # Convert to lower case, if we're asked to
-  if (tolower) words = tolower(words)
-    
-  # Get rid of words with numbers, if we're asked to
-  if (!keep_nums) 
-    words = grep("[0-9]", words, inv=TRUE, val=TRUE)
-  
-  # Plot the histogram of the word lengths, if we're asked to
-  if (hist) 
-    hist(nchar(words), col="lightblue", breaks=0:max(nchar(words)),
-         xlab="Word length")
-  
-  # Compute the word table
-  wordtab = table(words)
-  
-  return(list(wordtab=wordtab,
-              number_unique_words=length(wordtab),
-              number_total_words=sum(wordtab),
-              longest_word=words[which.max(nchar(words))]))
-}
-```
-
-
-```{r}
-# Trump's speech
-trump_wordtab = get_wordtab_from_url(
-  str_url="http://www.stat.cmu.edu/~ryantibs/statcomp/data/trump.txt",
-  hist=TRUE)
-lapply(trump_wordtab, head)
-
-### YOU TRY: Try on your own url
-```
-
-### II. Guided practice: Huber loss function
-
-The notation below defines the Huber loss function (or just Huber function, for short), with cutoff $a$:
+Recall that the **two-sample (unpaired) t-statistic** between data sets $X=(X_1,\ldots,X_n)$ and $Y=(Y_1,\ldots,Y_m)$ is:
 $$
-\psi_a(x) = \begin{cases}
-x^2 & \text{if $|x| \leq a$} \\
-2a|x| - a^2 & \text{if $|x| > a$} 
-\end{cases}
+T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
 $$
-This function is quadratic on the interval $[-a,a]$, and linear outside of this interval. It transitions from quadratic to linear "smoothly".
+where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$.
 
-### Practice writing a function
+The **degrees of freedom** associated with $T$ is:
+$$
+\nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
+  \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
+$$
 
-```{r}
-## WE DO: Write a function for huber loss
-huber <- function(x, a=1) {
-    ## OUR CODE HERE
-}
-```
+## III. Manipulating and analyzing Shakespeare texts
 
-### Plotting practice, side effects 
+### Shakespeare's complete works
 
-- Using `huber()`, create a plot of the Huber function that you see above (with $a=1$). 
+[Project Gutenberg](http://www.gutenberg.org) offers over 50,000 free online books, especially old books (classic literature), for which copyright has expired. We're going to look at the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare), taken from the Project Gutenberg website. 
 
-```{r}
-## YOUR CODE HERE
-```
+To avoid hitting the Project Gutenberg server over and over again, I point you to text file that contains the complete works of William Shakespeare, located [here](http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt). Skim through this text file a little bit to get a sense of what it contains (a whole lot!). 
 
-- Modify the `huber()` function so that, as a side effect, it prints the string "Invented by the great Swiss statistician Peter Huber!" to the console. Hint: use `cat()`. Call your function on an input of your choosing, to demonstrate this side effect.
+Lab 03 will walk you through all analysis of this file. Including more motivation of  the function `get_wordtab_from_url` described in the lecture [functions.html](http://www.grantschissler.com/teaching/FA18/STAT445/functions.html).
 
-```{r}
-## YOUR CODE HERE
-```
+## IV. Using the `parallel` package
 
-## III. Top-down function design
-
-1. Start with the big-picture view of the task
-2. Break the task into a few big parts
-3. Figure out how to fit the parts together
-4. Repeat this for each part
-
-### Start off with a code sketch
-
-You can write top-level code, right away, for your function's design:
-
-```
-# Not actual code
-big_job = function(lots_of_arguments) {
-  first_result = first_step(some_of_the_args)
-  second_result = second_step(first_result, more_of_the_args)
-  final_result = third_step(second_result, rest_of_the_args)
-  return(final_result)
-}
-```
-
-After you write down your design, go ahead and write the sub-functions (here `first_step()`, `second_step()`, `third_step()`). The process may be iterative, in that you may write these sub-functions, then go back and change the design a bit, etc.
-
-With practice, this design strategy should become natural.
-
-### IV. Summary: 3-2-1
-
-- List/describe 3 revelant R built-in functions you used today
-- Give 2 reasons why to write functions.
-- Share the most interesting thing for you today.
-
-
+### V. Summary
