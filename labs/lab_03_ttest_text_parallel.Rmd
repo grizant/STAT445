@@ -1,0 +1,69 @@
+---
+title: "Lab 03: Prostate cancer $t$-tests, Shakespeare, and parallelization"
+author: "AG Schissler (modified from Ryan Tibshirani)"
+date: "Week of 9/23/2018"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+NSHE ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+
+## Rationale and learning outcomes
+
+This week we'll go deeper into the prostate cancer data set while reviewing inferential statistical tests, practice text manipulation during an analysis Shakespeare's works, and use the `parallel` package to make use of multi-core processes.
+
+## Prostate cancer data set
+
+We're going to revisit the data set on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~hastie/ElemStatLearn/)). There are 9 variables measured on these 97 men:
+
+1. `lpsa`: log PSA score
+2. `lcavol`: log cancer volume
+3. `lweight`: log prostate weight
+4. `age`: age of patient
+5. `lbph`: log of the amount of benign prostatic hyperplasia
+6. `svi`: seminal vesicle invasion
+7. `lcp`: log of capsular penetration
+8. `gleason`: Gleason score 
+9. ` pgg45`: percent of Gleason scores 4 or 5 
+
+To load this prostate cancer data set into your R session, and store it as a matrix `pros_dat`:
+
+```{r}
+pros_dat <-
+  as.matrix(read.table("http://www.stat.cmu.edu/~ryantibs/statcomp/data/pros.dat"))
+```
+
+### Computing t-tests using vectorization
+
+At the end of Lab 2, you calculated sample means and standard deviations for the two `svi` groups. These quantatities may suggest that the group population means differ for some variable(s). Now we'll formally test whether the population means differ using statistical inference.
+
+- **1a.** Recall that the **two-sample (unpaired) t-statistic** between data sets $X=(X_1,\ldots,X_n)$ and $Y=(Y_1,\ldots,Y_m)$ is:
+$$
+T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
+$$
+where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$. We will compute these $t$-statistics for all 9 variables in our data set, where $X$ will play the role of one of the variables for SVI patients, and $Y$ will play the role of this variable for non-SVI patients. Start by computing a vector of the denominators of the t-statistics, called `pros_dat_denom`, according to the formula above. Take advantage of vectorization; this calculation should require just a single line of code. Make sure not to include any hard constants (e.g., don't just manually write 21 here for $n$); as always, programmatically define all the relevant quantities. Then compute a vector of t-statistics for the 9 variables in our data set, called `pros_dat_t_stat`, according to the formula above, and using `pros_dat_denom`. Again, take advantage of vectorization; this calculation should require just a single line of code. Print out the t-statistics to the console. 
+
+- **2b.** Given data $X$ and $Y$ and the t-statistic $T$ as defined the last question, the **degrees of freedom** associated with $T$ is:
+$$
+\nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
+  \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
+$$
+
+Compute the degrees of freedom associated with each of our 9 t-statistics (from our 9 variables), storing the result in a vector called `pros_dat_df`. This might look like a complicated/ugly calculation, but really, it's not too bad: it only involves arithmetic operators, and taking advantage of vectorization, the calculation should only require a single line of code. Hint: to simplify this line of code, it will help to first set short variable names for variables/quantities you will be using, as in `s_svi = pros_dat_svi_sd`, `n_svi = nrow(pros_dat_svi)`, and so on. Print out these degrees of freedom values to the console.
+
+- **2c.** The function `pt()` evaluates the distribution function of the t-distribution. E.g.,
+
+```{r, eval=FALSE}
+pt(x, df=v, lower.tail=FALSE)
+```
+
+returns the probability that a $t$-distributed random variable, with `v` degrees of freedom, exceeds the value `x`. Importantly, `pt()` is vectorized: if `x` is a vector, and so is `v`, then the above returns, in vector format: the probability that a $t$-distributed variate with `v[1]` degrees of freedom exceeds `x[1]`, the probability that a $t$-distributed variate with `v[2]` degrees of freedom exceeds `x[2]`, and so on. 
+
+Call `pt()` as in the above line, but replace `x` by the absolute values of the $t$-statistics you computed for the 9 variables in our data set, and `v` by the degrees of freedom values associated with these t-statistics. Multiply the output by 2 (for a two-tailed test), and store it as a vector `pros_dat_p_val`. These are called **$p$-values** for the $t$-tests of mean difference between SVI and non-SVI patients, over the 9 variables in our data set. Print out the $p$-values to the console. Identify the variables for which the $p$-value is smaller than 0.05 (hence deemed to have a significant difference between SVI and non-SVI patients). Identify the variable with the smallest $p$-value (the most significant difference between SVI and non-SVI patients).
