@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="AG Schissler (modified from Ryan Tibshirani)" />
+<meta name="author" content="AG Schissler" />
 
 
 <title>Week 6: Review and Midterm 1</title>
@@ -307,7 +307,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Week 6: Review and Midterm 1</h1>
-<h4 class="author"><em>AG Schissler (modified from Ryan Tibshirani)</em></h4>
+<h4 class="author"><em>AG Schissler</em></h4>
 <h4 class="date"><em>Monday October 1, 2018</em></h4>
 
 </div>
@@ -330,25 +330,13 @@ $(document).ready(function () {
 </div>
 <div id="ii.-exam-format" class="section level2">
 <h2>II. Exam format</h2>
-<div id="administration" class="section level3">
-<h3>Administration</h3>
-<ul>
-<li>Email individual tests?? How to distribute?</li>
-<li>Answer sheet will be provided</li>
-<li>How to scan???</li>
-</ul>
+<p>Our midterm exam will be in class and you will have the entire class period to complete it. The questions will be mostly conceptual and in multiple choice format. Some questions may require you to calculate something. Please bring a calculator in case I decide to not allow <code>R</code> to be used.</p>
+<p>See the checklist below for more details on how to prepare.</p>
 </div>
-<div id="notes" class="section level3">
-<h3>Notes?</h3>
-</div>
-<div id="will-r-be-allowed-how-to-avoid-browsing-the-internet" class="section level3">
-<h3>Will R be allowed? how to avoid browsing the Internet?</h3>
-</div>
-</div>
-<div id="iii.-question-examples" class="section level2">
-<h2>III. Question example(s)</h2>
-<div id="an-exam-question-about-t-tests" class="section level3">
-<h3>An exam question about t-tests</h3>
+<div id="iii.-exam-question-examples" class="section level2">
+<h2>III. Exam question examples</h2>
+<div id="an-exam-question-about-t-tests-with-multiple-correct-choices." class="section level3">
+<h3>An exam question about t-tests with multiple correct choices.</h3>
 <head>
 <style type="text/css">
 body{font-family: Arial, Helvetica, Sans;}
@@ -357,9 +345,6 @@ body{font-family: Arial, Helvetica, Sans;}
 <body>
 <ol>
 <li>
-<h4>
-Question
-</h4>
 The waiting time (in minutes) at the cashier of two supermarket chains with different cashier systems is compared. The following statistical test was performed:
 <div class="p">
 
@@ -426,26 +411,76 @@ False. The test aims at showing that the waiting time at Sparag is longer than a
 </li>
 </ol>
 </div>
-<div id="another-example" class="section level3">
-<h3>Another example</h3>
-</div>
-<div id="another-example-1" class="section level3">
-<h3>Another example</h3>
+<div id="an-exam-question-about-data-types-iteration-memory-with-only-one-correct-choice." class="section level3">
+<h3>An exam question about data types, iteration, memory with only one correct choice.</h3>
+<html>
+<head>
+<style type="text/css">
+body{font-family: Arial, Helvetica, Sans;}
+</style>
+<meta charset="utf-8">
+</head>
+<body>
+<ol>
+<li>
+<p>
+Below are two ways to store the same data in <code>R</code>.
+</p>
+<p>
+Option A:
+</p>
+<pre class="text"><code>x_mat &lt;- matrix(data = 1:10000, nrow = 100)</code></pre>
+<p>
+Option B:
+</p>
+<pre class="text"><code>x_list &lt;- vector(&quot;list&quot;, length = 100)
+x_vec &lt;- 1:10000
+counter &lt;- 1
+for (i in seq(1, 9991, by= 100)) {
+    x_list[[counter]] &lt;- x_vec[i:(i+99)]
+    counter &lt;- counter + 1
+}</code></pre>
+<p>
+Which object requires more memory to store and why?
+</p>
+<br />
+<ol type="a">
+<li>
+Cannot say using the information given.
+</li>
+<li>
+Both <code>x_list</code> and <code>x_mat</code> use the same amount of memory as the data are the same.
+</li>
+<li>
+<code>x_list</code> uses more memory because <code>for</code> loops are slower in <code>R</code>.
+</li>
+<li>
+The <code>x_list</code> object requires more memory as the list stores both the data and data type information for each column.
+</li>
+<li>
+<code>x_mat</code> uses more memory as lists are the most efficient object in <code>R</code>.
+</li>
+</ol>
+<p><br /></p>
 </div>
 </div>
 <div id="iv.-midterm-1-study-checklist" class="section level2">
 <h2>IV. Midterm 1 study checklist</h2>
 <p><a href="https://github.com/grizant/STAT445/blob/master/checklists/midterm1_prep_checklist.pdf">midterm1_prep_checklist.pdf</a></p>
 </div>
-<div id="v.-begin-reviewing-and-constructing-1-pager" class="section level2">
-<h2>V. Begin reviewing and constructing 1-pager</h2>
+<div id="v.-lab-solutions-discussion" class="section level2">
+<h2>V. Lab solutions discussion</h2>
+<p>Let’s discuss any questions that you may have about the labs.</p>
+</div>
+<div id="vi.-begin-reviewing-and-constructing-1-pager" class="section level2">
+<h2>VI. Begin reviewing and constructing 1-pager</h2>
 <p>You may use a single 8.5inx11in gape of notes (front and back).</p>
 </div>
-<div id="vi.-summary" class="section level2">
-<h2>VI. Summary</h2>
+<div id="vii.-summary" class="section level2">
+<h2>VII. Summary</h2>
 <ul>
-<li>What did you learn?</li>
-<li>What do you need to do?</li>
+<li>What other action items should you add to your preparation checklist?</li>
+<li>When <em>exactly</em> are you going to prepare for the exam?</li>
 </ul>
 </div>
 

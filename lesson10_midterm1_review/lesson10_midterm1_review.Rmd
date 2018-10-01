@@ -1,6 +1,6 @@
 ---
 title: "Week 6: Review and Midterm 1"
-author: "AG Schissler (modified from Ryan Tibshirani)"
+author: "AG Schissler"
 date: "Monday October 1, 2018"
 output: html_document
 ---
@@ -23,19 +23,13 @@ This week we'll review and assess our mastery of the content presented so far.
 
 ## II. Exam format
 
-### Administration
+Our midterm exam will be in class and you will have the entire class period to complete it. The questions will be mostly conceptual and in multiple choice format. Some questions may require you to calculate something. Please bring a calculator in case I decide to not allow `R` to be used.
 
-- Email individual tests?? How to distribute?
-- Answer sheet will be provided
-- How to scan???
+See the checklist below for more details on how to prepare.
 
-### Notes?
+## III. Exam question examples
 
-### Will R be allowed? how to avoid browsing the Internet?
-
-## III. Question example(s)
-
-### An exam question about t-tests
+### An exam question about t-tests with multiple correct choices.
 
 <head>
 <style type="text/css">
@@ -47,7 +41,6 @@ body{font-family: Arial, Helvetica, Sans;}
 
 <ol>
 <li>
-<h4>Question</h4>
 The waiting time (in minutes) at the cashier of two supermarket
 chains with different cashier systems is compared. The following
 statistical test was performed:
@@ -125,20 +118,66 @@ False. The test aims at showing that the waiting time at Sparag is longer than a
 </li>
 </ol>
 
-### Another example
+### An exam question about data types, iteration, memory with only one correct choice.
 
+<html>
 
-### Another example
+<head>
+<style type="text/css">
+body{font-family: Arial, Helvetica, Sans;}
+</style>
+<meta charset="utf-8">
+</head>
+
+<body>
+
+<ol>
+<li>
+<p>Below are two ways to store the same data in <code>R</code>.</p>
+<p>Option A:</p>
+<pre class="text"><code>x_mat &lt;- matrix(data = 1:10000, nrow = 100)</code></pre>
+<p>Option B:</p>
+<pre class="text"><code>x_list &lt;- vector(&quot;list&quot;, length = 100)
+x_vec &lt;- 1:10000
+counter &lt;- 1
+for (i in seq(1, 9991, by= 100)) {
+    x_list[[counter]] &lt;- x_vec[i:(i+99)]
+    counter &lt;- counter + 1
+}</code></pre>
+<p>Which object requires more memory to store and why?</p>
+<br/>
+<ol type="a">
+<li>
+Cannot say using the information given.
+</li>
+<li>
+Both <code>x_list</code> and <code>x_mat</code> use the same amount of memory as the data are the same.
+</li>
+<li>
+<code>x_list</code> uses more memory because <code>for</code> loops are slower in <code>R</code>.
+</li>
+<li>
+The <code>x_list</code> object requires more memory as the list stores both the data and data type information for each column.
+</li>
+<li>
+<code>x_mat</code> uses more memory as lists are the most efficient object in <code>R</code>.
+</li>
+</ol>
+<br/>
 
 ## IV. Midterm 1 study checklist
 
 [midterm1_prep_checklist.pdf](https://github.com/grizant/STAT445/blob/master/checklists/midterm1_prep_checklist.pdf)
 
-## V. Begin reviewing and constructing 1-pager
+## V. Lab solutions discussion
+
+Let's discuss any questions that you may have about the labs.
+
+## VI. Begin reviewing and constructing 1-pager
 
 You may use a single 8.5inx11in gape of notes (front and back).
 
-## VI. Summary
+## VII. Summary
 
-- What did you learn?
-- What do you need to do?
+- What other action items should you add to your preparation checklist?
+- When *exactly* are you going to prepare for the exam?
