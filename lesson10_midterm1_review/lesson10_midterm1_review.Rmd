@@ -15,51 +15,130 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open [lesson10_midterm1_review.Rmd](https://github.com/grizant/STAT445/blob/master/lesson8_ttests_text_parallel/rmd/lesson8_ttests_text_parallel.Rmd) from website so that you can work along the lecture.
-4. Open [lab_03_ttest_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_03_ttest_text_parallel.Rmd) to have the lab available for review.
+3. Open [lesson10_midterm1_review.Rmd](https://github.com/grizant/STAT445/blob/master/lesson10_midterm1_review/lesson10_midterm1_review.Rmd) from website so that you can work along the lecture.
 
 ### This week's agenda
 
-This week we'll go deeper into the prostate cancer data set while reviewing inferential statistical tests, practice text manipulation during an analysis Shakespeare's works, and use the `parallel` package to make use of multi-core processes.
+This week we'll review and assess our mastery of the content presented so far.
 
-### Today learning outcomes
+## II. Exam format
 
-Students will be able to
+### Administration
 
-- conduct routine statistical inference using built-in R functions.
-- manipulate text data.
-- parallelize code for efficient processing.
+- Email individual tests?? How to distribute?
+- Answer sheet will be provided
+- How to scan???
 
-## II. Using $t$-tests to infer prostate cancer population differences
+### Notes?
 
-At the end of Lab 2, you calculated sample means and standard deviations for the two `svi` groups. These quantatities may suggest that the group population means differ for some variable(s). Now we'll formally test whether the population means differ using statistical inference.
+### Will R be allowed? how to avoid browsing the Internet?
 
-Recall that the **two-sample (unpaired) t-statistic** between data sets $X=(X_1,\ldots,X_n)$ and $Y=(Y_1,\ldots,Y_m)$ is:
-$$
-T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
-$$
-where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$.
+## III. Question example(s)
 
-The **degrees of freedom** associated with $T$ is:
-$$
-\nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
-  \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
-$$
+### An exam question about t-tests
 
-## III. Manipulating and analyzing Shakespeare texts
+<head>
+<style type="text/css">
+body{font-family: Arial, Helvetica, Sans;}
+</style>
+</head>
 
-### Shakespeare's complete works
+<body>
 
-[Project Gutenberg](http://www.gutenberg.org) offers over 50,000 free online books, especially old books (classic literature), for which copyright has expired. We're going to look at the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare), taken from the Project Gutenberg website. 
+<ol>
+<li>
+<h4>Question</h4>
+The waiting time (in minutes) at the cashier of two supermarket
+chains with different cashier systems is compared. The following
+statistical test was performed:
+<div class="p"><!----></div>
+<pre>
+	Two&nbsp;Sample&nbsp;t-test
+data:&nbsp;&nbsp;Waiting&nbsp;by&nbsp;Supermarket
+t&nbsp;=&nbsp;1.147,&nbsp;df&nbsp;=&nbsp;111,&nbsp;p-value&nbsp;=&nbsp;0.1269
+alternative&nbsp;hypothesis:&nbsp;true&nbsp;difference&nbsp;in&nbsp;means&nbsp;is&nbsp;greater&nbsp;than&nbsp;0
+95&nbsp;percent&nbsp;confidence&nbsp;interval:
+&nbsp;-0.3592692&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inf
+sample&nbsp;estimates:
+&nbsp;mean&nbsp;in&nbsp;group&nbsp;Sparag&nbsp;mean&nbsp;in&nbsp;group&nbsp;Consumo&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.764750&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.959496&nbsp;
+</pre>
+<div class="p"><!----></div>
+Which of the following statements are correct? (Significance level 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>5</mn><mi>%</mi></mrow></math>)
+<div class="p"><!----></div>
+<br/>
+<ol type="a">
+<li>
+The absolute value of the test statistic is larger than 1.96.
+</li>
+<li>
+A one-sided alternative was tested.
+</li>
+<li>
+The 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi></mrow></math>&nbsp;value is larger than 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>0</mn><mo>.</mo><mn>05</mn></mrow></math>.
+</li>
+<li>
+The test shows that the waiting time is longer at Sparag  than at Consumo.
+</li>
+<li>
+The test shows that the waiting time is shorter at Sparag than at Consumo.
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
 
-To avoid hitting the Project Gutenberg server over and over again, I point you to text file that contains the complete works of William Shakespeare, located [here](http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt). Skim through this text file a little bit to get a sense of what it contains (a whole lot!). 
+<br/>
+<ol type="a">
+<li>
+False. The absolute value of the test statistic is equal to 1.147.
+</li>
+<li>
+True. The test aims at showing that the difference of means is  larger than 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>0</mn></mrow></math>.
+</li>
+<li>
+True. The 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi></mrow></math>&nbsp;value is equal to 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>0</mn><mo>.</mo><mn>127</mn></mrow></math>.
+</li>
+<li>
+False.  The test result is not significant (
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi><mo>&ge;</mo><mn>0</mn><mo>.</mo><mn>05</mn></mrow></math>).
+</li>
+<li>
+False. The test aims at showing that the waiting time at Sparag is longer than at Consumo. The test result ist not significant (
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi><mo>&ge;</mo><mn>0</mn><mo>.</mo><mn>05</mn></mrow></math>).
+</li>
+</ol>
+<br/>
+</li>
+</ol>
 
-Lab 03 will walk you through all analysis of this file. Including more motivation of  the function `get_wordtab_from_url` described in the lecture [functions.html](http://www.grantschissler.com/teaching/FA18/STAT445/functions.html).
+### Another example
 
-## IV. Using the `parallel` package
 
-We'll use the `parallel` package to accelerate some simulation. 
+### Another example
 
-## V. Summary
+## IV. Midterm 1 study checklist
 
-Take aways from your lab feedback?
+[midterm1_prep_checklist.pdf](https://github.com/grizant/STAT445/blob/master/checklists/midterm1_prep_checklist.pdf)
+
+## V. Begin reviewing and constructing 1-pager
+
+You may use a single 8.5inx11in gape of notes (front and back).
+
+## VI. Summary
+
+- What did you learn?
+- What do you need to do?
