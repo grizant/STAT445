@@ -1,0 +1,65 @@
+---
+title: "Week 6: Review and Midterm 1"
+author: "AG Schissler (modified from Ryan Tibshirani)"
+date: "Monday October 1, 2018"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [lesson10_midterm1_review.Rmd](https://github.com/grizant/STAT445/blob/master/lesson8_ttests_text_parallel/rmd/lesson8_ttests_text_parallel.Rmd) from website so that you can work along the lecture.
+4. Open [lab_03_ttest_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_03_ttest_text_parallel.Rmd) to have the lab available for review.
+
+### This week's agenda
+
+This week we'll go deeper into the prostate cancer data set while reviewing inferential statistical tests, practice text manipulation during an analysis Shakespeare's works, and use the `parallel` package to make use of multi-core processes.
+
+### Today learning outcomes
+
+Students will be able to
+
+- conduct routine statistical inference using built-in R functions.
+- manipulate text data.
+- parallelize code for efficient processing.
+
+## II. Using $t$-tests to infer prostate cancer population differences
+
+At the end of Lab 2, you calculated sample means and standard deviations for the two `svi` groups. These quantatities may suggest that the group population means differ for some variable(s). Now we'll formally test whether the population means differ using statistical inference.
+
+Recall that the **two-sample (unpaired) t-statistic** between data sets $X=(X_1,\ldots,X_n)$ and $Y=(Y_1,\ldots,Y_m)$ is:
+$$
+T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
+$$
+where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$.
+
+The **degrees of freedom** associated with $T$ is:
+$$
+\nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
+  \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
+$$
+
+## III. Manipulating and analyzing Shakespeare texts
+
+### Shakespeare's complete works
+
+[Project Gutenberg](http://www.gutenberg.org) offers over 50,000 free online books, especially old books (classic literature), for which copyright has expired. We're going to look at the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare), taken from the Project Gutenberg website. 
+
+To avoid hitting the Project Gutenberg server over and over again, I point you to text file that contains the complete works of William Shakespeare, located [here](http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt). Skim through this text file a little bit to get a sense of what it contains (a whole lot!). 
+
+Lab 03 will walk you through all analysis of this file. Including more motivation of  the function `get_wordtab_from_url` described in the lecture [functions.html](http://www.grantschissler.com/teaching/FA18/STAT445/functions.html).
+
+## IV. Using the `parallel` package
+
+We'll use the `parallel` package to accelerate some simulation. 
+
+## V. Summary
+
+Take aways from your lab feedback?
