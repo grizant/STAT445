@@ -1,0 +1,183 @@
+---
+title: "Lab 04: Reading and cleaning data"
+author: "AG Schissler (modified from Ryan Tibshirani)"
+date: "Week of 10/08/2018"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+set.seed(10)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+
+**This week's agenda**: reading in data, cleaning data, reordering data, merging data, restructuring data
+
+Reading in and cleaning 
+===
+- **1a.** We first read in the two datasets we will be using in this lab.
+Use the `read.table()` function to read into R the dataset found 
+at `http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat` and call
+this dataset `sprint_m_df`. Likewise, read into R the dataset found at
+`http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.w.dat` and call
+this dataset `sprint_w_df`. Use the appropriate arguments in the `read.table()`
+so `sprint_m_df` is a dataset with 282 rows and 8 variables, and
+`sprint_w_df` is a dataset with 2018 rows and 8 variables. 
+Print the dimensions of `sprint_m_df` and `sprint_w_df`. 
+Also, print the first 3 rows of both data frames.
+For this question, we will require you to set the `stringsAsFactors` argument 
+in `read.table()` to be `TRUE`.
+
+**Reponse 1a.**
+
+- **1b.** As we set in the previous question, the function `read.table()` treated the values in the `Wind` column as factors. (It would've treated it as characters otherwise.)
+We want to convert these factors to numerics. 
+Converting factors to numerics can be an annoyingly 
+frustrating task in general, so it's good to practice it. 
+These next two questions will guide you on how to do this.
+We provide a variable `input_value` below, which is a string `4,8`. 
+Use functions you have seen in previous weeks to convert `input_value`
+to contain the numeric `4.8` instead.
+(Hint: There are multiple
+ways to do this. Perhaps the most familiar way for most students will
+be to use `strsplit()` to separate `input_value` by the comma, and then use
+`paste()` function to concatenate the `4` with the `8` with a `.` in the middle,
+and then use the `as.numeric()` function afterwards.)
+Print the final value of `input_value` and check its class to ensure it is a numeric.
+
+```{r}
+input_value = "4,8"
+```
+
+**Reponse 1a.**
+
+- **1c.** 
+Now we will write a function to repeatedly apply the strategy described in Question 1b
+in a vector.
+Below is a factor variable `wind_measurements` for you 
+to play around with, as a testing ground. 
+Write a function `factor_to_numeric()` that takes in a vector of factors and outputs
+a vector of corresponding numerics. For example, on the below example,
+`factor_to_numeric(wind_measurements)` should return `c(-2.0, 0.0, 0.6, 1.7)` (or
+`c(-2, 0, 0.6, 1.7)`, either form is acceptable).
+(Note: There are certain nuiances you might encounter here.)
+Check that your output is a vector of numeric using the `class()` function and print
+this result.
+
+```{r}
+wind_measurements = as.factor(c("-2,0", "0,0", "0,6", "+1,7"))
+wind_measurements
+```
+
+- **1d.** Using `factor_to_numeric()`, convert the `Wind` column of `sprint_m_df` and `sprint_w_df` into numeric variables. However, you might get exactly one `NA` from this process in `sprint_w_df` (or get no `NA`s depending on you how wrote your function). If you do, what was the wind entry that failed to be converted into a numeric (hence becoming `NA`)? In words, can you describe why this `NA` occurred? (This will
+require you to reload the `sprint_w_df` from the beginning to see what certain values
+in the `Wind` column were before we used the `factor_to_numeric()`.) 
+You can manually fix this `NA`.
+Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
+afterwards.
+
+- **1e.** For each of the men's and women's data frames, plot the the 100m sprint time versus the wind measurement, where each point is a solid black dot.
+Label the axes and title the plot appropriately. Do you notice a trend---does more wind assistance mean faster sprint times? 
+Where do the fastest men's time, and for the fastest women's time, lie among this trend? (Remark: there's an interesting story behind the wind measurement that was recorded for the fastest women's time, you might enjoy reading about it online ...)
+
+Reordering data
+====
+
+- **2a.** Notice that the `Birthdate` and `Date` columns in both data frames 
+are currently strings that follow the format `DAY.MONTH.YEAR`. Write a function
+called `date_to_vector()` that takes in a string in either the `Birthdate`
+and `Date` column and outputs a numeric 
+of the form `DAY + (MONTH)*10^2 + (YEAR)*10^4`. For example, `date_to_numeric("16.08.2009")`
+should return the numeric `20090816`. Then, use one of the `apply` functions to iteratively
+use `date_to_numeric()` on both the `Birthdate` and `Date` columns in both the `sprint_m_df` and `sprint_w_df`
+data frames, replacing its values. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
+afterwards. (Note: Notice that the dates in `Birthdate` have only the last two numbers
+of the year, while `Date` has all four numbers of the year (i.e., `86` vs. `1986`). Your
+code should handle this.)
+
+- **2b.** We now want to reorder both data frames in chronological order
+of `Date`. Reorder both `sprint_m_df` and `sprint_w_df` in chronological order
+so the first race to happen is the first row. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
+afterwards.
+
+
+- **2c.** Create a column in both `sprint_m_df` and `sprint_w_df` called
+`City_Date`, which are characters that
+are the concatenation the `City` and `Date` columns. Print out the first 6 lines of `sprint_m_df` and `sprint_w_df`
+afterwards. For example, if the `City` is `Tokyo` and `Date` is `19641015`,
+then `City_Date` should be `Tokyo_19641015`.
+Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
+afterwards.
+
+- **2d.** We now want to remove all duplicated sprints in each of `sprint_m_df` and
+`sprint_w_df`. Specifically, if multiple sprints (rows) in `sprint_m_df`
+occur on the same `City_Date`, we will only keep the fastest sprint
+and discard the rest. Do the same with `sprint_w_df`.
+Make sure at the end, all the rows in `sprint_m_df` and `sprint_w_df` are
+still sorted in order of `Date`. If multiple sprints occur on the same date, then
+sort those sprints alphabetically by `City`. Your final `sprint_m_df` should have 1180 rows and 9 variables, while `sprint_w_df` should have 921 rows and 9 variables.
+We will not give you explicit guidance on this question, but writing this as
+a function is highly suggested. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df` afterwards. *One hint*: You may want to look into the `base` R function `duplicated`.
+
+
+- **2e.** Check that in both `sprint_m_df` and `sprint_w_df`, the values in `City_Date` column only once (i.e., there are no duplicated values). 
+Do this in a way that you find suitable, but when you Knit this Lab,
+the results that demonstrate this claim should be visible in the HTML file.
+
+Merging data
+===
+
+- **3a.** In preparation of merging `sprint_m_df` and `sprint_w_df`, we first
+want to find all the sprints that occur in the same race in both data frames.
+Specifically, remove all the rows in `sprint_m_df` that have a `City_Date`
+that does not occur in `sprint_w_df`. Likewise, remove all the rows in `sprint_w_df` that have a `City_Date` that does not occur in `sprint_m_df`.
+Then, remove the `City` and `Date` columns in both data frames.
+(Hint: You might be interested in the `%in%` function in R. Try looking this up
+to see what it does.) In the end, both `sprint_m_df` and `sprint_w_df` should have 385 rows and 7 columns. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
+afterwards.
+
+
+- **3b.** We now will complete the manual merge of `sprint_m_df` and `sprint_w_df`. 
+Here are the sequence steps to do: First, check the order of values in `City_Date` in
+`sprint_m_df` match exactly with those in `sprint_w_df`. Second, use the `cbind()`
+function appropriately to create a new data frame `sprint_df` that has 13 columns.
+The first column should be `City_Date`, the next 6 columns should contain all the
+remaining columns from `sprint_m_df`, and the last 6 columns should contain all the
+remaining columns form `sprint_w_df`. Of course, each row should correspond to
+sprints from the same `City_Date`. Print out the first 3 lines of `sprint_df` 
+afterwards.
+
+- **3c.** Now, we will use the `merge()` function to essentially
+the same thing as in Question 3b. Use one line to merge
+`sprint_m_df` and `sprint_w_df` by `City_Date`. Call this
+resulting data frame `sprint_df2`. This data frame should have
+385 rows and 13 columns.
+Be sure to set the arguments of `merge()` appropriately so the
+columns from `sprint_m_df` are suffixed by `_m` and the columns
+for `sprint_w_df` are suffixed by `_w`. For example,
+the columns `Rank_m` and `Rank_w` should exist in `sprint_df2`.
+Print out the first 3 lines of `sprint_df2` 
+afterwards. Do these values match those in `sprint_df` visually?
+
+
+- **3d.** Plot the `Time_w` variable versus the `Time_m` variable from the data frame `sprint_df2`, with appropriately labeled axes and an appropriate title. This plot is showing the women's versus men's times from the common track meets---is there a positive correlation here, i.e., is there a "track meet effect"? This might suggest that there is something about the track meet itself (e.g., the weather, the atmosphere, the crowd, the specific way the track has been constructed/set up, some combination of these) that helps sprinters run faster. 
+Then, use the `cor.test()` function to determine if there is a significant correlation between `Time_w` and `Time_m` at a significance
+level of 0.05 based on the `p.value`. Use the default
+settings of this function. (You might want to read the documentation of this function if it is unfamiliar to you.)
+
+
+- **Challenge** To analyze distinguish between the wind factors from other factors, we will regress `Wind_m` and `Time_w` onto `Time_m`.
+Determine whether or not each variable `Wind_m` and `Time_w` is a significant variable for predicting `Time_m` on average, at a 0.05
+significance level.
+Use the `lm()` function followed by the `summary()` function to do this. (If you are unfamiliar with either functions, be sure the read the documentations for these functions.)
+
+Write a at-most-3 sentence summary of your conclusion of what you infer based on the analysis performed in Question 3d and this regression analysis.
+
+
+
+
