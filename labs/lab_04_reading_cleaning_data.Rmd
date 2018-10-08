@@ -11,7 +11,7 @@ set.seed(10)
 ```
 
 Name:  
-Andrew ID:  
+NSHE ID:  
 Collaborated with:  
 
 This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
