@@ -15,8 +15,8 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open [lesson8_ttests_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/lesson8_ttests_text_parallel/rmd/lesson8_ttests_text_parallel.Rmd) from website so that you can work along the lecture.
-4. Open [lab_03_ttest_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_03_ttest_text_parallel.Rmd) to have the lab available for review.
+3. Open [lesson12_importing_data.Rmd](https://github.com/grizant/STAT445/blob/master/lesson12_importing_data/rmd/lesson12_importing_data.Rmd) from website so that you can work along the lecture.
+4. Open [lab_04_reading_cleaning_data.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_04_reading_cleaning_data.Rmd) to have the lab available for review.
 
 ### This week's agenda
 
@@ -34,10 +34,61 @@ Students will be able to
 ## II. Midterm 1 feedback
 
 - Exam Analysis: summary scores
+
+```{r}
+eval_data <- read.table("/Users/alfred/OneDrive - University of Nevada, Reno/Teaching/STAT_445-645/git_private/tests/Midterm1-2018-10-03/nops_eval.csv", sep=";", quote="", header=T,stringsAsFactors = F)
+
+## remove names
+eval_data <- eval_data[,-(1:3)]
+str(eval_data[,2:8])
+```
+
+```{r}
+summary(eval_data[, "points"])
+```
+
 - Question analysis Scatterplots 
-- PCA? Need to make sure I can say something intelligent
-- Offer: Replace Midterm 1 with ??? Midterm 2? Avg of midterms? Final Exam? Will midterm 2 be cumulative? How to do that?
-- Email score report. Create groups in gmail (or outlook may be in system?) since only way to send attachment.
+
+```{r, fig.height = 16}
+###########################################################
+## Correlate individual question scores with rest of the exam
+
+check_data <- eval_data[,grep("check", names(eval_data))]
+str(check_data)
+
+cor_values <- NULL
+par(mfrow = c(5,4))
+for (j in 1:ncol(check_data)) {
+    tmp_question = check_data[, j]
+    tmp_rest = rowSums(check_data[, -j])
+    if (var(tmp_question) > 0) {
+        tmp_cor = round(cor(tmp_rest, tmp_question), 3)
+    } else tmp_cor = 0
+    cor_values <- c(cor_values, tmp_cor)
+    plot(tmp_question, tmp_rest, main=paste0("Question ",j,"\nr = ",tmp_cor),
+         xlab = "Question score", ylab = "Rest of Exam")
+    if (tmp_cor != 0) {abline(lm(tmp_rest ~ tmp_question))}
+    ## text(x = (max(tmp_question) - min(tmp_question))/2, y = max(tmp_rest) - sd(tmp_rest), round(cor(tmp_rest, tmp_question), 2))
+}
+
+```
+
+```{r}
+
+new_denom <- 18
+eval_data$adj_points <- round( 100 * (eval_data[, "points"]/5) / new_denom, 0)
+
+summary(eval_data$adj_points)
+hist(eval_data$adj_points, breaks = 10)
+
+letter_grade <- cut(eval_data$adj_points, c(0, 60, 70, 80, 90, Inf), right=FALSE, labels=c("F", LETTERS[4:1]))
+table(letter_grade)
+
+```
+
+- Discuss the PCA.
+- I'll email your score report soon. Please check that your report was properly scanned.
+- Offer: Replace Midterm 1 with your final exam test grade.
 
 ## III. Reading/writing data
 
@@ -107,15 +158,11 @@ Note that `quote=FALSE`, signifying that no quotes should be put around the prin
 
 ## IV. Lab 04
 
-- link to new lab
-- Example responses in Lab 04 (Alvina/Ryan)
+- Example responses in Lab 04.
 - Hand back lab rubrics
 
-## V. Grad Project (while UG work on lab)
+## V. Summary
 
-- link to instructions, posted on website/github
--
-
-## VI. Summary
-
-
+3 new R functions
+2 stats ideas
+1 action item for you to do.
