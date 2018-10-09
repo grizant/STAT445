@@ -1,0 +1,83 @@
+---
+title: "Week 7 / Lab 04: Reading, ordering, merging data"
+author: "AG Schissler (modified from Ryan Tibshirani)"
+date: "Wednesday October 10, 2018"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [lesson13_merging_data_lab04_projects.Rmd](TODO) from website so that you can work along the lecture.
+4. Open [lab_04_reading_cleaning_data.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_04_reading_cleaning_data.Rmd) to have the lab available.
+
+### This week's agenda
+
+- Importing, ordering, and merging data
+- Learning from the assessment
+- Get grad projects going
+
+### Today's learning outcomes
+
+Students will be able to
+
+- reorder data sets in R
+- merge data sets in R
+
+## II. Reordering and merging data sets
+
+### `merge()`
+
+The `merge()` function tries to merge two data frames according to common columns, as in: `merge(x, y, by.x="SomeXCol", by.y="SomeYCol")`, to join two data frames `x`, `y`, by matching the columns "SomeXCol" and "SomeYCol"
+
+- Default (no `by.x`, `by.y` specified) is to match all columns with common names
+- Output will be a new data frame that has all the columns of both data frames 
+- If you know databases, then `merge()` is doing a JOIN.
+
+## Using `order()` and manual tricks versus `merge()`
+
+- Reordering is easier to grasp; `merge()` takes some learning
+- Reordering is simplest when there's only one column to merge on; `merge()` handles many columns
+- Reorderng is simplest when the data frames are the same size; `merge()` handles different sizes automatically
+
+## III. Lab 04
+
+445 students, please continue collaboratively working on your lab.
+
+## IV. Grad projects
+
+You must complete a project for 20% of your grade. There will be a written and oral component. I encourage you to work in groups up to 3 (I'll ask you to tell me who contributed what to the project --- so try to be somewhat balanced).
+
+### Requirements
+
+1. You must use R.
+2. You can develop the article (written report) using whatever format you'd like and would be helpful in your field of study. Math/Stat majors $\LaTeX$ or RMarkdown is preferred. Word is acceptable.
+3. Your slides can be in any format: RMarkdown (to HTML, ioslides, beamer), Beamer, PowerPoint, Keynote, etc.
+4. Target a short article $\approx 6$ pages, single-spaced, 11-point font. It's fine with me if you have a journal or other specific format you'd like to use.
+5. You must follow our data analytic workflow: (1) Import (or generate data), (2) organize, (3) clean, (4) explore, (5) conduct statistical inference (using computational techniques), and (6) polish and report.
+6. You can either select a research question first then find data or find data then mine/explore to generate a research question. In either case, you have to conduct a literature review to see what others' have done in the field.
+7. Your research question ideally should be novel --- it doesn't have to be journal quality or earth-shattering, but it should be harder than searching the Internet for a half an hour. I can help with this.
+
+### Let's review the rubrics.
+
+[Project written report rubric](https://github.com/grizant/STAT445/blob/master/rubrics/Final_project_written_rubric.pdf)
+
+[Project presentation rubric](https://github.com/grizant/STAT445/blob/master/rubrics/Final_project_written_rubric.pdf)
+
+### Notes
+
+- There may be project milestones added to your labs to keep you on track.
+- Any questions?
+
+## V. Summary
+
+- 645: Mind map your thoughts about your project to generate ideas and associations (and to see gaps where you have questions).
+
+- 445: Write a one-sentence summary of things you learned today.
