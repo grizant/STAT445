@@ -52,6 +52,7 @@ Print the final value of `input_value` and check its class to ensure it is a num
 
 ```{r}
 input_value = "4,8"
+gsub(",",".",input_value)
 ```
 
 **Reponse 1a.**
@@ -74,12 +75,7 @@ wind_measurements = as.factor(c("-2,0", "0,0", "0,6", "+1,7"))
 wind_measurements
 ```
 
-- **1d.** Using `factor_to_numeric()`, convert the `Wind` column of `sprint_m_df` and `sprint_w_df` into numeric variables. However, you might get exactly one `NA` from this process in `sprint_w_df` (or get no `NA`s depending on you how wrote your function). If you do, what was the wind entry that failed to be converted into a numeric (hence becoming `NA`)? In words, can you describe why this `NA` occurred? (This will
-require you to reload the `sprint_w_df` from the beginning to see what certain values
-in the `Wind` column were before we used the `factor_to_numeric()`.) 
-You can manually fix this `NA`.
-Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
-afterwards.
+- **1d.** Using `factor_to_numeric()`, convert the `Wind` column of `sprint_m_df` and `sprint_w_df` into numeric variables, if needed. However, you might get exactly one `NA` from this process in `sprint_w_df` (or get no `NA`s depending on you how wrote your function). If you do, what was the wind entry that failed to be converted into a numeric (hence becoming `NA`)? In words, can you describe why this `NA` occurred? (This will require you to reload the `sprint_w_df` from the beginning to see what certain values in the `Wind` column were before we used the `factor_to_numeric()`.)  You can manually fix this `NA`. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df` afterwards.
 
 - **1e.** For each of the men's and women's data frames, plot the the 100m sprint time versus the wind measurement, where each point is a solid black dot.
 Label the axes and title the plot appropriately. Do you notice a trend---does more wind assistance mean faster sprint times? 
@@ -90,7 +86,7 @@ Reordering data
 
 - **2a.** Notice that the `Birthdate` and `Date` columns in both data frames 
 are currently strings that follow the format `DAY.MONTH.YEAR`. Write a function
-called `date_to_vector()` that takes in a string in either the `Birthdate`
+called `date_to_numeric()` that takes in a string in either the `Birthdate`
 and `Date` column and outputs a numeric 
 of the form `DAY + (MONTH)*10^2 + (YEAR)*10^4`. For example, `date_to_numeric("16.08.2009")`
 should return the numeric `20090816`. Then, use one of the `apply` functions to iteratively
@@ -108,11 +104,8 @@ afterwards.
 
 - **2c.** Create a column in both `sprint_m_df` and `sprint_w_df` called
 `City_Date`, which are characters that
-are the concatenation the `City` and `Date` columns. Print out the first 6 lines of `sprint_m_df` and `sprint_w_df`
-afterwards. For example, if the `City` is `Tokyo` and `Date` is `19641015`,
-then `City_Date` should be `Tokyo_19641015`.
-Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
-afterwards.
+are the concatenation the `City` and `Date` columns. For example, if the `City` is `Tokyo` and `Date` is `19641015`, then `City_Date` should be `Tokyo_19641015`.
+Print out the first 3 lines of `sprint_m_df` and `sprint_w_df` afterwards.
 
 - **2d.** We now want to remove all duplicated sprints in each of `sprint_m_df` and
 `sprint_w_df`. Specifically, if multiple sprints (rows) in `sprint_m_df`
