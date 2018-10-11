@@ -1,0 +1,89 @@
+---
+title: "Lab 05: Reading and cleaning data"
+author: "AG Schissler (modified from Ryan Tibshirani)"
+date: "Week of 10/15/2018"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+set.seed(10)
+```
+
+Name:  
+NSHE ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+
+Learning outcomes
+===
+
+Students will be able to use the `apply` family of functions to explore data numerically
+Students will be able to compare `for` loops to `apply` functions.
+
+Crime data set
+===
+
+We're going to look at a data set containing the number of assaults, murders, and rapes per 100,000 residents, in each of the 50 US states in 1973. This comes from a built-in data frame called `USArrests`. We'll rename this to `crime_df` and append a column that gives the region for each state, from the built-in vector `state.region`. You can learn more about this crime data set by typing `?USArrests` into your R console.
+
+```{r}
+crime_df = data.frame(USArrests, Region = state.region)
+```
+
+Data frame basics
+===
+
+- **1a.** Report the number of rows of `crime_df`, and print its first 6 rows. Using the functions `is.data.frame()` and `is.matrix()`, confirm that it is a data frame, and not a matrix.
+
+- **1b.** We're ready to start investigating the differences between data frames and matrices. Use the `as.matrix()` function to convert `crime_df` into a matrix, calling the result `crime_mat`. Print the first 6 rows of `crime_mat`. Next, convert only the first 4 columns of `crime_df` into a matrix, and call the result `crime_mat_noregion`. Print the first 6 rows of `crime_mat_noregion`. Take a look at the first 6 rows of `crime_df`, `crime_mat`, and `crime_mat_noregion`. There is something unsatisfactory about `crime_mat`. What is it and why did this happen? If you need some guidance, try using the `class()` function to figure out the class of the first in each of the three objects.
+
+- **1c.** We now move to another difference between data frames and matrices, with regard to column access/indexing. Let's start with something more typical. You can access the `Murder` column of `crime_df` by typing in `crime_df[,"Murder"]`. Print the result to the console. Then, try using this same strategy to access the `Murder` column of `crime_mat_noregion`. Also print this result. Describe the difference (if any) between the two results.
+
+- **1d.** Let's try a different way to access columns. You can access the `Murder` column of `crime_df` by also typing in `crime_df$Murder`. Print out the result (it should be the same as the one in Q1c). Try using this same strategy to access `Murder` column of `crime_mat_noregion`. Describe the difference (if any) between the two results. Note: you will need to set `error=TRUE` as an option in this code chunk to allow R Markdown to knit your lab, despite the the error you will encounter here.
+
+- **1e.** Lastly, we'll demonstrate another difference between data frames and matrices, with regard to column additions. Compute a vector called `TotalCrime` of length 50 that gives the sum of the values in `Murder`, `Assault` and `Rape` for each of the 50 states. The first element of `TotalCrime` should give the total crime in Alabama, the second element should give that in Alaska, etc. Do not use a `for()` loop for this; use `rowSums()` instead. Now, add `TotalCrime` as a column to `crime_df`, and make sure your new column is named `TotalCrime` in the data frame. Note: there are many ways to do this. Print the first 6 rows of the new `crime_df` data frame.
+
+- **1f.** Add the `TotalCrime` vector to as a new column to `crime_mat_noregion`, and make sure this column is named appropriately. Note: unlike the last question, there are not many ways to do this, there is only one. Print the first 6 rows of the new `crime_mat_noregion` matrix.
+
+Apply functions versus `for()` loops
+===
+
+The purpose of the next several questions is to help you internalize how the apply functions---specifically, `apply()`, `sapply()`, `lapply()`, and `tapply()`---are essentially convenient ways to write `for()` loops. 
+
+Here's an example to get us started. Consider the following list, called `lis`, which contains 4 vectors of 5 randomly generated numbers.
+
+```{r}
+set.seed(44)
+lis = list(rnorm(5), rnorm(5), rnorm(5), rnorm(5))
+lis
+```
+
+Suppose we wanted to compute the mean of each vector (so we're looking for 4 numbers). We could do this using a `for()` loop in the following way, storing the results in `mean_vector`.
+
+```{r}
+mean_vector = vector(length=length(lis), mode="numeric")
+for (i in 1:length(lis)) {
+  mean_vector[i] = mean(lis[[i]])
+}
+mean_vector
+```
+
+We could also do this using a call to `sapply()`, in the following simpler way, storing the result as `mean_vector2`. This gives us the same exact answer.
+
+```{r}
+mean_vector2 = sapply(lis, mean)
+all.equal(mean_vector, mean_vector2)
+```
+
+We're going to ask you to emulate this for each of 3 other apply functions (`lapply()`, `apply()` and `tapply()`) in the next 3 questions. Your goal will be to compute something using one of the apply functions or a `for()` loop, and show they are the same. The tricky part here will be formatting the `for()` loop properly to match exactly the apply function's output.
+
+- **2a.** Compute the standard deviation of each of the 4 vectors in `lis`, in two ways. For the first way use `lapply()`, in just one line of code, and call the result `sd_list`. For the second, use a `for()` loop, and call the result `sd_list2`. Use `all.equal()` to show that `sd_list` and `sd_list2` are the same. Hint: to construct an empty list of length `n`, you can use the command `vector(length=n, mode="list")`.
+
+- **2b.** Using `crime_mat_noregion`, compute the maximum value in each of the 5 columns, in two ways. For the first way, use `apply()`, in just one line of code, and call the result `max_vector`. For the second, use a `for()` loop, and call the result `max_vector2`. Use `all.equal()` to show that `max_vector` and `max_vector2` are equal. Hint: this is a bit tricky because you'll need to add names to `max_vector2` in order to get `all.equal()` to return `TRUE` (or use the `use.names` parameter).
+
+- **2c.** Using `crime_df`, compute the minimum value of `Murder` within each of the four regions (Northeast, South, North Central, and West), in two ways. For the first way, use `tapply()`, in just one line of code, and call the result `min_vector`. For the second, use a `for()` loop, and call the result `min_vector2`. Use `all.equal()` to show `min_vector` and `min_vector2` are equal. Hint: the trickiest part to figure out here is how to get the order of values in `min_vector` and `min_vector2` to be the same. Use `levels(crime_df$Region)` to dictate the order of regions in `min_vector2`. You'll also have to cast `min_vector2` to be the same data structure as `min_vector`.
+
+- **2d.** Compute the quantiles of the `Murder` column in `crime_mat_noregion` using the `quantile()` function, and print the result to the console. Now compute the quantiles of each of the columns of `crime_mat_noregion`, using `apply()` and `quantile()`, in just one line of code. Store the resulting matrix as `quant_mat`, print it out to the console, and comment on its dimensions and row and column names. Now compute the 10%, 20%, etc., through 90% quantiles of `Murder` column with a single call to `quantile()`, and print the result to the console. Hint: look at the documentation for `quantile()` to figure out what argument to set in order to achieve this result. Do the same for each column of `crime_mat_noregion`, using `apply()` and `quantile()`, and passing additional arguments as appropriate. Store the resulting matrix as `quant_mat2`, and print it out to the console. Lastly (sorry to do this to you, but you probably guessed we would ask), replicate this with a `for()` loop, calling the result `quant_mat3`. Check using `all.equal()` that `quant_mat2` and `quant_mat3` match. Hint: you'll have to set the row and columns names of `quant_mat3` appropriately.
+
+- **Challenge** Use the `dplyr` package within the `tidyverse` to construct a matching `min_vector3` from part Q2c. Also compute the quantiles of `Murder` (as in Q2d), but within each of the four regions. See this [page](https://dplyr.tidyverse.org/) to get started and there are DataCamp modules on this.
