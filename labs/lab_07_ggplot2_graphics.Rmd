@@ -106,3 +106,11 @@ More text manipulations, and histograms
 - **4b.** Plot a histogram of `sprint_ages`, with break locations occuring at every age in between 17 and 40. Color the histogram to your liking; label the x-axis, and title the histogram appropriately. What is the mode, i.e., the most common age? Also, describe what you see around the mode: do we see more sprinters who are younger, or older? 
 
 - **Challenge.** Repeat Q3 but for the women's sprint data, arriving at vector `sprint_w_ages`. Then plot a histogram of `sprint_ages`, now with `probability=TRUE` (so it is on the probability scale, rather than raw frequency scale). Overlay a histogram of `sprint_w_ages`, also with `probability=TRUE`. Set the break locations so that the plot captures the full range of the very youngest to the very oldest sprinter present among both men and women. Your code should determine these limits programmatically. Choose colors of your liking, but use transparency as appropriate so that the shapes of both histograms are visible; label the x-axis, and title the histogram appropriately. Add a legend to the histogram, identifying the histogram bars from the men and women. Compare, roughly, the shapes of the two histograms: is there a difference between the age distributions of the world's fastest men and fastest women? 
+
+STAT 645 Project milestone (20 points)
+===
+
+1. Announce your project team of 1 to 3 members.
+2. Submit or describe the dataset you will analyze. 
+  * Include a data dictonary: What (and what type of data) are your variables? What are the observational units? How many observations and variables? Are the data from an experiment or observational?
+3. Pose a preliminary research question(s) and a research hypothesis(es).
