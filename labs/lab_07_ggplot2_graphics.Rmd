@@ -27,13 +27,12 @@ Students will be able to apply the concept of vizualization layers (grammer of g
 Overall goal
 ===
 
-Reproduce the plots from Lab 06 using `ggplot2`, when possible. If it is not possible, explain why not. I'm going to leave the instructions from Lab 06 below to remind you, but do *not* follow the instructions for base graphics. 
-
+Reproduce the plots from Lab 06 using `ggplot2`, when possible. If it is not possible, explain why not. I'm going to leave the instructions from Lab 06 below to remind you, but do *not* follow the instructions for base graphics. You will likely find this [page](https://ggplot2.tidyverse.org/) describing `ggplot2` and its extensions useful.
 
 Plot basics
 ===
 
-- **1a.** Please explain: why does the `plot()` result with with `type="p"` look normal, but the `plot()` result with `type="l"` look abnormal, having crossing lines? Then: modify the code below (hint: modify the definition of `x`), so that the lines on the second plot do not cross. 
+- **1a.** Please explain: why does the `plot()` result with with `type="p"` look normal, but the `plot()` result with `type="l"` look abnormal, having crossing lines? Then: modify the code below (hint: modify the definition of `x`), so that the lines on the second plot do not cross. Make sure to use your newly defined `x` for the rest of the lab.
 
 ```{r}
 n = 50
@@ -48,15 +47,13 @@ plot(x, y, type="l")
 
 - **1c.** The `xlim` and `ylim` arugments can be used to change the limits on the x-axis and y-axis, repsectively. Each argument takes a vector of length 2, as in `xlim = c(-1, 0)`, to set the x limit to be from -1 to 0. Plot `y` versus `x`, with the x limit set to be from -1 to 1, and the y limit set to be from -5 to 5. Assign x and y labels "Trimmed x" and "Trimmed y", respectively.
 
-- **1d.** Again plot `y` versus `x`, only showing points whose x values are between -1 and 1. But this time, define `x_trimmed` to be the subset of `x` between -1 and 1, and define `y_trimmed` to be the corresponding subset of `y`. Then plot `y_trimmed` versus `x_trimmed` without setting `xlim` and `ylim`: now you should see that the y limit is (automatically) set as "tight" as possible. Hint: use logical indexing to define `x_trimmed`, `y_trimmed`.
-
-- **1e.** The `pch` argument, recall, controls the point type in the display. In the lecture examples, we set it to a single number. But it can also be a vector of numbers, with one entry per point in the plot. So, e.g., 
+- **1d.** The `pch` argument controls the point type in the display. It can be a single number or also a vector of numbers, with one entry per point in the plot. So, e.g., 
     ```{r}
     plot(1:10, 1:10, pch=1:10)
     ```
     displays the first 10 point types. If `pch` is a vector whose length is shorter than the total number of points to be plotted, then its entries are recycled, as appropriate. Plot `y` versus `x`, with the point type alternating in between an empty circle and a filled circle. 
     
-- **1f.** The `col` argument, recall, controls the color the points in the display. It operates similar to `pch`, in the sense that it can be a vector, and if the length of this vector is shorter than the total number of points, then it is recycled appropriately. Plot `y` versus `x`, and repeat the following pattern for the displayed points: a black empty circle, a blue filled circle, a black empty circle, a red filled circle.
+- **1e.** The `col` argument controls the color the points in the display. It operates similar to `pch`, in the sense that it can be a vector, and if the length of this vector is shorter than the total number of points, then it is recycled appropriately. Plot `y` versus `x`, and repeat the following pattern for the displayed points: a black empty circle, a blue filled circle, a black empty circle, a red filled circle.
 
 Adding to plots
 ===
@@ -79,7 +76,7 @@ y2 = x^2 + rnorm(n)
 Fastest 100m sprint times
 ===
 
-Below, we read in a data set of the 2988 fastest times recorded for the 100m sprint, in men's track. (Usain Bolt may be slowing down now ... but he was truly one of a kind!) We also read in a data set of the 2137 fastest times recorded for the 100m, in women's track. Both of these data sets were scraped from http://www.alltime-athletics.com/m_100ok.htm (this website was apparently last updated in November 2017).
+Below, we read in a data set of the 2988 fastest times recorded for the 100m sprint, in men's track. (Usain Bolt may be slowing down now ... but he was truly one of a kind!) We also read in a data set of the 2018 fastest times recorded for the 100m, in women's track. Both of these data sets were scraped from http://www.alltime-athletics.com/m_100ok.htm (this website was apparently last updated in November 2017).
 
 ```{r}
 sprint_m_dat = read.table(
