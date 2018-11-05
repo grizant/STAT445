@@ -1,0 +1,98 @@
+---
+title: "Week 11 (Lesson 20, 21): Review and Midterm 2"
+author: "AG Schissler"
+date: "Monday November 5, 2018"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [lesson20_midterm2_review.Rmd](https://github.com/grizant/STAT445/blob/master/lesson20_midterm2_review/lesson20_midterm2_review.Rmd) from website so that you can work along the lecture.
+
+### This week's agenda
+
+This week we'll review and assess our mastery of the content presented so far.
+
+## II. Exam format
+
+Our midterm exam will be in class and you will have the entire class period to complete it. The test is comprehensive, but will focus on the last 4 weeks (Unit II: Working with Data). The questions will be mostly conceptual and in multiple choice format. I may require you to calculate something. Please bring a calculator in case.
+See the checklist below for more details on how to prepare.
+
+## III. Lab 04 discussion (reading, cleaning, merging data)
+
+### Review essential concepts
+
+- reading in: headers, delimiters, special characters
+- checking read in: head, dim, str
+- cleaning data: replacing characters
+- converting characters, factors, numerics
+- reordering: indexing using `order` 
+- finding duplicates
+- merging data with `merge`, `cbind`, `rbind`
+
+### Any specific questions from the solutions?
+
+## IV. Lab 05 discussion (using `apply` to summarize data numerically)
+
+### Review essential concepts
+
+- comparing `apply` family to `for` loops
+- using `apply`
+- using `sapply`
+- using `tapply`
+- using `lapply`
+- summarizing by `quantile` and `summary`
+
+### Any specific questions from the solutions?
+
+## V. Lab 06 discussion (`base` graphics) 
+
+### Review essential concepts
+
+- changing the type of plot (scatterplot, lineplot, etc)
+- `cex` argument
+- limits of plot
+- `pch` argument
+- `col` argument
+- organizing data for plotting (e.g. `sort`), changing data types
+- working with `legend`
+- working with layers in base graphics
+- using `rect` to highlight regions of a plot
+- labeling and annotating plots
+
+### Any specific questions from the solutions?
+
+## VI. Lab 07 discussion (`ggplot2` graphics)
+
+### Review essential concepts
+
+- organizing data for `ggplot2` (e.g. collecting vectors into data frames)
+- using the `ggplot2` function to specify the data and core aesthetic mapping
+- adding layers to `ggplot2` objects
+- generating factors to provide variables to map aesthetic (e.g. colors, shapes, etc)
+- labeling and annotating `ggplot2` plots
+
+### Any specific questions from the solutions?
+
+I can't be too detailed as the lab is still pending.
+
+## VII. Midterm 1 study checklist
+
+[midterm2_prep_checklist.pdf](https://github.com/grizant/STAT445/blob/master/checklists/midterm2_prep_checklist.pdf)
+
+## VIII. Begin reviewing/constructing 1-pager or work on lab 07
+
+You may use two 8.5in x 11in pages of notes (front and back).
+
+## IX. Summary
+
+- What other action items should you add to your preparation checklist?
+- When *exactly* are you going to prepare for the exam?
