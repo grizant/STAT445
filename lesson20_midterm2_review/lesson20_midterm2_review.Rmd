@@ -62,7 +62,7 @@ See the checklist below for more details on how to prepare.
 - limits of plot
 - `pch` argument
 - `col` argument
-- organizing data for plotting (e.g. `sort`), changing data types
+- organizing data for plotting (e.g. `sort`), changing plot types
 - working with `legend`
 - working with layers in base graphics
 - using `rect` to highlight regions of a plot
