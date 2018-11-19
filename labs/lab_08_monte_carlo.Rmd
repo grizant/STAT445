@@ -1,29 +1,231 @@
 ---
-title: "Lab 07: Exploring data with ggplot2"
+title: "Lab 08: Simulation, randomization tests, and MC integration"
 author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Week of 10/29/2018"
+date: "Week of 11/19/2018"
 output: html_document
 ---
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
-set.seed(44)
 ```
 
 Name:  
 NSHE ID:  
 Collaborated with:  
 
-This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, **next week** due to the holiday.
 
-Learning outcomes
-===
+## Learning outcomes
 
-Students will be able to use advanced R plotting tools, including ggplot2
-Students will be able to apply the concept of vizualization layers (grammer of graphics)
+1. Students will be able to conduct a simulation-based power analysis.
+2. Students will be able to conduct a randomization (permutation) test.
+3. Students will be able to integrate using Monte Carlo.
 
-STAT 645 Project milestone (20 point deduction if not completed)
-===
+## 1. Conducting a simulation-based power analysis
+
+We are going to continue the drug effect model that was discussed in the
+"Simulation" lecture. That is, we will simulate the effects of using a drug
+and not using a drug to see hypothetically. This will allow us to investigate
+how different parameters of our model affect the number of subjects needed to 
+observe a significant difference without calculating complicated math.
+
+Suppose that there is a new drug that can be optionally given before chemotherapy. 
+We follow the setup given in the "Simulation" lecture.
+We believe those who aren’t given the drug experience a reduction in tumor size of percentage
+$$
+X_{\mathrm{no\,drug}} \sim 100 \cdot \mathrm{Exp}(\mathrm{mean}=R), 
+\;\;\; R \sim \mathrm{Unif}(0,1),
+$$
+whereas those who were given the drug experience a reduction in tumor size of percentage
+$$
+X_{\mathrm{drug}} \sim 100 \cdot \mathrm{Exp}(\mathrm{mean}=2).
+$$
+Here $\mathrm{Exp}$ denotes the exponential distribution, and $\mathrm{Unif}$ the uniform distribution. Now consider the following scenario. In the following questions, we will set up a way to simulate this model.
+  
+- **1a.** The first function we write will generate the simulation
+data. Write a function called `simulate_data(n, mu_drug)` that
+produces measurements in the drug and no drug groups. Your function
+should take two inputs: `n`, the sample size (i.e., number of subjects
+in each group), with a default value of 60; and `mu_drug`, the mean
+for the exponential distribution that defines the drug tumor reduction
+measurements, with a default value of 2. Your function should return a
+list with two vectors called `no_drug` and `drug`. Each of these two
+vectors should have length `n`, containing the percentage reduction in
+tumor size under the appropriate condition (not taking the drug or
+taking the drug). (Hint: This function should use `rexp`
+appropriately.)
+
+- **1b.** We will now use `simulate_data()` for different seed
+settings to see if we are properly generating data. Run
+`simulate_data()` without any arguments (hence, relying on the default
+values of `n` and `mu_drug`), and store the results in `results_1`.
+Print out the first 6 values in both the `results_1$no_drug` and
+`results_1$drug` vectors. Now, run `simulate_data()` again, and store
+its value in `results_2`. Again, print out the first 6 values in both
+the `results_2$no.drug` and `results_2$drug` vectors. We have
+effectively simulated two hypothetical datasets. Hence, the values in
+each of these 4 vectors should all be different.
+
+- **1c.** Even though we simulated two datasets (each with completely
+different values), we would still like to ensure that in both
+datasets, the mean value of `no_drug` is roughly the same across all
+datasets, and the value of `drug` is value the same across all
+datasets. Compute the following three numbers: the absolute difference
+in the mean values of `no_drug` between `response_1` and `response_2`,
+the absolute difference in the mean values of `drug` between
+`response_1` and `response_2`, and the absolute difference in mean
+values of `no_drug` and `drug` in `response_1`. Of these three
+numbers, which one is the largest, and does this make sense? (Hint: By
+absolute difference, we mean you should compute the difference and
+then take the absolute value.)
+
+- **1d.** Now, we want to visualize the dataset. Fortunately, the code
+to visualize the dataset is already provided for you in the
+"Simulation" lecture, but it is not written as a function. We will
+write a function `plot_data(data)` that does this. This function has
+one input: `data` with no default value. `data` represents the dataset
+that `simulate_data()` generates. Follow the code in the "Simulation" lecture (where you will only need to make minor modifications) so `plot_data(data)` visualizes `data`. Specifically, your function will plot two histograms, one for `data$no_drug` (in gray) and `data$drug` (in red) with the same 20 bins, overlay a
+density curve for each histogram in the appropriate colors, and plot a
+legend.
+
+- **1e.** We will now use `plot_data()` to plot three different
+datasets (and thus make three different plots). Run `plot_data()` on
+`results_1`. Then, `plot_data()` on `results_2`. As mentioned in
+Question 1b and 1c, these datasets should be different. Hence, their
+respective plots should not be exactly the same, but they should look
+"similar". Then, in one line, generate a new dataset using
+`simulate_data()` where `n` is 1000 and `mu_drug` is 1.1, and plot the
+data using `plot_data()`. In one or two sentences, describe some major
+differences that you see between this third plot and the first two
+plots.
+
+- **1f.** In the next section to come, we will be generating many
+hypothetical datasets to see how many subjects we need to observe a
+difference between taking the drug and not taking the drug. To do
+this, we will write a function called `simulate_difference()`, which
+takes in the same two arguments as `simulate_data()`, which are `n`
+and `mu_drug`, both of which use the same default parameters as
+`simulate_data()`. This function will generate a new dataset using
+`simulate_data()` using the appropriate inputs, and compute the
+difference in means between `drug` and `no_drug` (no absolute value).
+That is, the mean value of `drug` minus the mean value of `no_drug`.
+Your function should return this value. Run this function twice with
+no arguments (hence, using the default parameters) to see that your
+function is returning different numbers, and run the function once
+with `n=1000` and `mu_drug=10`. Print out all 3 return values. This
+last value should be substantially larger than the first two.
+
+### Investigating your simulation
+
+With your simulation set up, we can now investigate how the parameters
+of our simulation (namely, `n` and `mu_drug`) affect the outcomes.
+While the relationship between `n`, `mu_drug` and the outcome of
+`simulate_difference()` are not too hard to mathematically derive in
+this particular lab, you can imagine much more complicated models
+where it's easier to simulate the model instead of mathematically
+deriving the answer.
+
+The next few questions will work with this hypothetical: suppose we
+work for a drug company that wants to put this new drug out on the
+market. In order to get FDA approval, your company must demonstrate
+that the patients who had the drug had **on average** a reduction in
+tumor size **at least 100 percent greater than** those who didn't
+receive the drug, or in math: $$ \overline{X}_{\mathrm{drug}} -
+\overline{X}_{\mathrm{no\,drug}} \geq 100. $$ Your drug company wants
+to spend as little money as possible. They want the smallest number n
+such that, if they were to run a clinical trial with n patients in
+each of the drug / no drug groups, they would likely succeed in
+demonstrating that the effect size (as above) is at least 100. Of
+course, the result of a clinical trial is random; your drug company is
+willing to take "likely" to mean **successful with probability 0.95**,
+i.e., successful in 190 of 200 hypothetical clinical trials (though
+only 1 will be run in reality).
+
+- **2a.** Following the code sketch provided in the "Simulation"
+lecture, write a function called `rep_sim`. This function
+takes in 4 arguments, `nreps` (the number of repetitions, with default
+value of 200), `n` and `mu_drug` (the values needed for
+`simulate_difference()`, with the same default values) and `seed`
+(with default value `NULL`). This function should run
+`simulate_differences()` `nreps` number of times, and then return the
+number of success, i.e., the number of times that the output of
+`simulate_difference()` exceeds 100. Demonstrate your function works
+by using it on `mu_drug = 1.5`. (Note: While you could use a for-loop
+(shown in lecture) or one of the `apply` functions, for this
+question, you can also use the `replicate` function. Be sure to check
+the documentation for `replicate` if you are unfamiliar with it.
+Essentially, `replicate` takes in two arguments, the number of
+replications you want to perform and the expression you are
+replicating.)
+
+- **2b.** We will now investigate the effect of `n`, where `mu_drug`
+is fixed to be 2. For each value of the input `n` (the sample size) in
+between 5 and 100 (inclusive), run your function `rep_sim`. You can do
+this using a for-loop or one of the `apply` functions, and store the
+number of success in a vector. So to be clear, for each sample size in
+between 5 and 100, you should have a corresponding number of
+successes. Plot the number of successes versus the sample size, and
+label the axes appropriately. Based on your simulation, what is the
+smallest sample size for which the number of successes is 190 or more?
+
+- **2c.** Now suppose your drug company told you they only had enough
+money to enlist 20 subjects in each of the drug / no drug groups, in
+their clinical trial. They then asked you the following question: how
+large would `mu_drug` have to be, the mean proportion of tumor
+reduction in the drug group, in order to have probability 0.95 of a
+successful drug trial? Run a simulation, much like your simulation in
+the last problem, to answer this question. Specifically, similar to
+before, for each value of the input `mu_drug` in between 0 and 5, in
+increments of 0.25, run your function `rep_sim()`, with `n=20` and
+`nreps = 200`. Plot the number of successes versus the value of
+`mu_drug`, and label the axes appropriately. What is the smallest
+value of `mu_drug` for which the number of successes exceeds 190?
+
+- **2d.** In this last question, we will be modifying the simulation
+setup and see how it changes the results we observe. Here, we will not
+provide you with the step-by-step details of how to explicitly change
+the setup, and this question is a prelude to the homework questions.
+Here is the new setup: suppose we start with `n=5` subjects (as
+before, this means 5 subjects with the drug, 5 subjects without the
+drug). We compute the difference in means between using the drug and
+not using the drug (just like before). If this difference is equal to
+or larger than 100, we declare success and stop. Here is the change:
+if the difference is smaller than 100, we collect 5 new subjects with
+the drug and 5 new subjects without the drug. Then, once again, we
+compute the difference in means between the subjects with the drug and
+the subjects without the drug, and we declare success if this
+difference is equal to or larger than 100. We keep incrementing by 5
+new subjects with the drug and without the drug until we have a total
+of 60 subjects with the drug and 60 subjects without the drug. If we
+*still* do not observe a difference in means larger than 100 at this
+point, then we declare the a failure. Change the functions
+`simulate_data()`, `simulate_difference()` and `rep_sim()` if
+necessary to accommodate this new scheme. Then, similar to Question
+2a, run this simulation with 200 repetitions with `mu_drug = 1.5`, and
+print out how many success there were. How does this number compare
+with the result in Question 2a?
+
+## 2. Randomization (permutation) test
+
+The built-in R data set `chickwts` records weights in grams of six groups of newly attached chicks that are fed different supplements. Conduct randomization tests to assess two claims:
+
+- **3a.** Assess the claim that the "soybean" and "linseed" groups have different (population) average weights. Interpret the results in words, numerical evidence, and plot(s).
+
+- **3b.** Assess the claim that the "soybean" and "linseed" groups have different (population) median weights. Interpret the results in words, numerical evidence, and plot(s).
+
+## 3. MC Integration
+
+Use Monte Carlo integration to estimate the following integrals. Compare with the exact answer, if known.
+
+- **4a.** $\int_1^3 x^2 dx$
+- **4b.** $\int_0^3 sin(e^x)dx$
+- **4c.** $\int_0^2 \frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx$
+
+Use Monte Carlo integration to estimate the following double integral. 
+
+- **4d.** $\int_0^1 \int_0^1 cos(x-y) dx dy$
+
+## STAT 645 Project milestone (20 point deduction if not completed)
 
 Copy your code from your project files to show your doing this, but do not evaluate here.
 
