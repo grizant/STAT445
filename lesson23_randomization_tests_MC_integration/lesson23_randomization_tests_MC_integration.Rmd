@@ -15,7 +15,7 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open [lesson22_simulation.Rmd](https://github.com/grizant/STAT445/blob/master/lesson22_simulation/lesson22_simulation.Rmd) from website so that you can work along the lecture.
+3. Open [lesson23_randomization_tests_MC_integration.Rmd](https://github.com/grizant/STAT445/blob/master/lesson23_randomization_tests_MC_integration/lesson23_randomization_tests_MC_integration.Rmd) from website so that you can work along the lecture.
 
 ### This week's agenda
 
