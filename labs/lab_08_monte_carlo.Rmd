@@ -220,6 +220,8 @@ Use Monte Carlo integration to estimate the following integrals. Compare with th
 - **4b.** $\int_0^3 sin(e^x)dx$
 - **4c.** $\int_0^2 \frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx$
 
+- **Challenge.** Use Monte Carlo integration to estimate $\int_0^1 \int_0^1 cos(x-y) dx dy$.
+  
 ## STAT 645 Project milestone (20 point deduction if not completed)
 
 Copy your code from your project files to show your doing this, but do not evaluate here.
