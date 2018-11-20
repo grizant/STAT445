@@ -62,7 +62,7 @@ values of `n` and `mu_drug`), and store the results in `results_1`.
 Print out the first 6 values in both the `results_1$no_drug` and
 `results_1$drug` vectors. Now, run `simulate_data()` again, and store
 its value in `results_2`. Again, print out the first 6 values in both
-the `results_2$no.drug` and `results_2$drug` vectors. We have
+the `results_2$no_drug` and `results_2$drug` vectors. We have
 effectively simulated two hypothetical datasets. Hence, the values in
 each of these 4 vectors should all be different.
 
@@ -71,10 +71,10 @@ different values), we would still like to ensure that in both
 datasets, the mean value of `no_drug` is roughly the same across all
 datasets, and the value of `drug` is value the same across all
 datasets. Compute the following three numbers: the absolute difference
-in the mean values of `no_drug` between `response_1` and `response_2`,
+in the mean values of `no_drug` between `results_1` and `results_2`,
 the absolute difference in the mean values of `drug` between
-`response_1` and `response_2`, and the absolute difference in mean
-values of `no_drug` and `drug` in `response_1`. Of these three
+`results_1` and `results_2`, and the absolute difference in mean
+values of `no_drug` and `drug` in `results_1`. Of these three
 numbers, which one is the largest, and does this make sense? (Hint: By
 absolute difference, we mean you should compute the difference and
 then take the absolute value.)
@@ -181,11 +181,10 @@ increments of 0.25, run your function `rep_sim()`, with `n=20` and
 `mu_drug`, and label the axes appropriately. What is the smallest
 value of `mu_drug` for which the number of successes exceeds 190?
 
-- **2d.** In this last question, we will be modifying the simulation
+- **Challenge** In this last question, we will be modifying the simulation
 setup and see how it changes the results we observe. Here, we will not
 provide you with the step-by-step details of how to explicitly change
-the setup, and this question is a prelude to the homework questions.
-Here is the new setup: suppose we start with `n=5` subjects (as
+the setup. Here is the new setup: suppose we start with `n=5` subjects (as
 before, this means 5 subjects with the drug, 5 subjects without the
 drug). We compute the difference in means between using the drug and
 not using the drug (just like before). If this difference is equal to
