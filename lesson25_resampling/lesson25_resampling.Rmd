@@ -1,0 +1,123 @@
+---
+title: "Week 14, Lesson 25: Resampling technique"
+author: "AG Schissler"
+date: "Monday November 26, 2018"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open lesson25_resampling.Rmd from website so that you can work along the lecture.
+
+### This week's agenda
+
+Digging into more computational methods of inference and computation, including
+
+1) Jacknife
+2) Bootstrap
+3) Maximum Likelihood Estimation
+
+## II. Bootstrap
+
+Efron introduced the bootstrap in 1979. Since then there have been 1000+ theoretical papers assessing whether you can trust the boostrap. The answer is in most but not all cases the bootstrap works. It provides fully automatic inference (an algorithm). Rather than writing everything in math notation (since Efron and Hastie 2016 for clean way to do this), we'll discuss the algorithm below.
+
+### An R program for the nonparametric bootstrap 
+
+Modified from Efron and Hastie 2016, Algorithm 10.1.
+
+```{r}
+do_boot <- function(x, B, func, ...){
+    ## x is a data vector or matrix (with each row a case)
+    ## B is the number of bootstrap replicates
+    ## func is a R function that inputs a data vector
+    ## or matrix and returns a numeric number or vector
+    ## ... other arguments for func
+    x <- as.matrix(x)
+    n <- nrow(x)
+    f0 = func(x, ...) ## get size of output
+    fmat <- matrix(0, length(f0), B)
+    for (b in 1:B) {
+        i = sample(1:n, n, replace = TRUE)
+        fmat[, b] <- func(x[i, ], ...)
+    }
+    drop(fmat)
+}
+```
+
+### Example from Rizzo 2006
+
+```{r}
+require(bootstrap)
+str(law)
+cor(law$LSAT, law$GPA)
+## for all 82 schools
+cor(law82$LSAT, law82$GPA)
+```
+
+```{r}
+set.seed(44)
+cor_boot <- do_boot(x = law, B = 2000, func = cor)[2,]
+hist(cor_boot, prob = TRUE)
+print(se_cor_boot <- sd(cor_boot))
+```
+
+### The bootstrap estimation of bias
+
+If $\hat{\theta}$ is an unbiased estimator of $\theta$, then $E[\hat{\theta}] = \theta$. So the bias of the estimator is
+
+$$
+bias(\hat{\theta}) = \theta) = E[\hat{\theta} - \theta] = E[\hat{\theta}] - \theta
+$$
+
+which can be estimated using the sample mean from the bootstrap samples minus the estimate of $\theta$ from the whole sample.
+
+$$
+\hat{bias(\hat{\theta})} = \bar{\hat{\theta}^*} - \hat{\theta}
+$$
+
+```{r}
+## bias is
+mean(cor_boot) - cor(law$LSAT, law$GPA)
+```
+
+### Using the `boot` packge
+
+Also try the `boot` package for more exotic bootstrap estimates and confidence intervals. confidence intervals .
+
+```{r}
+require(boot)
+r <- function(x, i) {
+    ## want correlation between columns 1 and 2
+    cor(x[i,1], x[i,2])
+}
+boot_obj <- boot(data = law, statistic = r, R = 2000)
+print(boot_obj)
+str(boot_obj)
+```
+
+### Bootstrap confidence intervals
+
+```{r}
+boot::boot.ci(boot.out = boot_obj, conf = 0.95)
+```
+
+Note that BCa = "bias correct" and "adjusted for acceleration".
+
+## III. Jacknife
+
+The Jacknife was introduced by Quenouille (1956) and Tukey (1958). 
+
+## IV. Continue working on Lab 8, time permitting
+
+## V. Summary
+
+- Summarize the Jacknife procedure in 1-3 simple sentences.
+- Summarize the Bookstrap procedure in 1-3 simple sentences.
