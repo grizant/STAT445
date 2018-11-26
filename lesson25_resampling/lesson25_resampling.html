@@ -333,11 +333,19 @@ $(document).ready(function () {
 </ol>
 </div>
 </div>
-<div id="ii.-jacknife" class="section level2">
-<h2>II. Jacknife</h2>
+<div id="ii.-overview" class="section level2">
+<h2>II. Overview</h2>
+<p>A central element of statistical inference is the <em>standard error</em>. If an algorithm has produced an estimate of a parameter of interest (for example: the sample mean, sample median, sample correlation), then we’d like to answer, “How accurate is the estimate”? Under certain assumptions (like iid), we have formulas for the standard errors of the most commonly-used statistics.</p>
+<p>What do you do when you don’t have a formula? You can try to derive something or use a general algorithm to give you an estimate.</p>
+<ol start="3" style="list-style-type: upper-roman">
+<li>Jackknife</li>
+</ol>
+<p>The Jackknife was introduced by Quenouille (1956) and Tukey (1958). The basic idea is to remove each case, one at a time, and produce a new statistic. Then you can the <span class="math inline">\(n\)</span> samples estimate the standard error.</p>
+<p>The jacknife has some issues with bias and relies on approximate directional derivatives. I don’t recommend it’s use in practice often.</p>
 </div>
-<div id="iii.-bootstrap" class="section level2">
-<h2>III. Bootstrap</h2>
+<div id="iii.-the-nonparametric-bootstrap" class="section level2">
+<h2>III. The Nonparametric Bootstrap</h2>
+<p>Another approach the estimating the standard error of a statistic is the bootstrap.</p>
 <p>Efron introduced the bootstrap in 1979. Since then there have been 1000+ theoretical papers assessing whether you can trust the boostrap. The answer is in most but not all cases the bootstrap works. It provides fully automatic inference (an algorithm). Rather than writing everything in math notation (since Efron and Hastie 2016 for clean way to do this), we’ll discuss the algorithm below.</p>
 <div id="an-r-program-for-the-nonparametric-bootstrap" class="section level3">
 <h3>An R program for the nonparametric bootstrap</h3>
@@ -452,6 +460,9 @@ print(boot_obj)</code></pre>
 ## 95%   ( 0.4682,  0.9625 )   ( 0.3350,  0.9425 )  
 ## Calculations and Intervals on Original Scale</code></pre>
 <p>Note that BCa = “bias correct” and “adjusted for acceleration”.</p>
+</div>
+<div id="lets-try-some-more-examples-to-get-a-feel-for-the-bootstrap" class="section level3">
+<h3>Let’s try some more examples to get a feel for the bootstrap</h3>
 </div>
 </div>
 <div id="iv.-continue-working-on-lab-8-time-permitting" class="section level2">

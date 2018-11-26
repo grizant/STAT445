@@ -25,7 +25,21 @@ Digging into more computational methods of inference and computation, including
 2) Bootstrap
 3) Maximum Likelihood Estimation
 
-## II. Bootstrap
+## II. Overview
+
+A central element of statistical inference is the *standard error*. If an algorithm has produced an estimate of a parameter of interest (for example: the sample mean, sample median, sample correlation), then we'd like to answer, "How accurate is the estimate"? Under certain assumptions (like iid), we have formulas for the standard errors of the most commonly-used statistics. 
+
+What do you do when you don't have a formula? You can try to derive something or use a general algorithm to give you an estimate.
+
+III. Jackknife
+
+The Jackknife was introduced by Quenouille (1956) and Tukey (1958). The basic idea is to remove each case, one at a time, and produce a new statistic. Then you can the $n$ samples estimate the standard error. 
+
+The jacknife has some issues with bias and relies on approximate directional derivatives. I don't recommend it's use in practice often.
+
+## III. The Nonparametric Bootstrap
+
+Another approach the estimating the standard error of a statistic is the bootstrap.
 
 Efron introduced the bootstrap in 1979. Since then there have been 1000+ theoretical papers assessing whether you can trust the boostrap. The answer is in most but not all cases the bootstrap works. It provides fully automatic inference (an algorithm). Rather than writing everything in math notation (since Efron and Hastie 2016 for clean way to do this), we'll discuss the algorithm below.
 
@@ -111,9 +125,11 @@ boot::boot.ci(boot.out = boot_obj, conf = 0.95)
 
 Note that BCa = "bias correct" and "adjusted for acceleration".
 
-## III. Jacknife
+### Let's try some more examples to get a feel for the bootstrap
 
-The Jacknife was introduced by Quenouille (1956) and Tukey (1958). 
+```{r}
+
+```
 
 ## IV. Continue working on Lab 8, time permitting
 
