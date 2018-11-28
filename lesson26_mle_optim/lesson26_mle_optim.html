@@ -357,8 +357,25 @@ curve(f, from = 1, to = 5)</code></pre>
 <li>Stop when <span class="math inline">\(b^\prime - a^\prime\)</span> is small enough (when the length is smaller than a pre-set tolerance).</li>
 </ol>
 <p>The minimzer is then given as the midpoint of the final interval. The maximum error = <span class="math inline">\((b^\prime - a^\prime) / 2\)</span>.</p>
+<p>The algorithm makes use of the golden ratio,</p>
+<p><span class="math display">\[
+\phi = \frac{1 + \sqrt{5}}{2}.
+\]</span></p>
+<p>Note that <span class="math inline">\(1/\phi = \phi - 1\)</span> and <span class="math inline">\(1/\phi^2 = 1 - 1/\phi\)</span>.</p>
+<p>Two reasons for this;</p>
+<ol style="list-style-type: decimal">
+<li>It makes the selection of “probe points” efficient, by avoiding selecting wide intervals. You can learn more about this at the <a href="https://en.wikipedia.org/wiki/Golden-section_search">wiki</a> page. This leads to rapid convergence.</li>
+<li>When the ratio is judiciously used, you don’t have to re-evaluate the function multiple times. For example, if you locate interior points at <span class="math inline">\(x_1 = b-(b-a)/\phi\)</span> and <span class="math inline">\(x_2 = a + (b-a)/\phi\)</span> then</li>
+</ol>
+<span class="math display">\[\begin{align}
+x_1^{\prime} &amp;= b - (b-a^{\prime})/\phi \\
+ &amp;= b - (b-x_1)/\phi \\
+ &amp;= b - (b-a)/\phi^2 \\
+ &amp;= a + (b -a)/\phi \\
+ &amp;= x_2
+\end{align}\]</span>
 <pre class="r"><code>golden &lt;- function(f, a, b, tol = 1e-7) {
-    ratio &lt;- 2 / (sqrt(5) + 1)
+    ratio &lt;- 2 / (sqrt(5) + 1) ## 1/phi, aka &quot;silver ratio&quot;.
     x1 &lt;- b - ratio * (b - a)
     x2 &lt;- a + ratio * (b - a)
 
@@ -426,7 +443,7 @@ L(\hat{\theta}) = f(x_1,\ldots,x_n | \hat{\theta}) = \max_{\theta \in \Theta} f(
 <p>Suppose <span class="math inline">\(Y_1,Y_2\)</span> are iid with density <span class="math inline">\(f(y)= \theta e^{-\theta y}, y &gt; 0\)</span>. Find the MLE of <span class="math inline">\(\theta\)</span>.</p>
 <p>By independence,</p>
 <p><span class="math display">\[
-L(\theta) = (\theta e^{-\theta y_1}) (\theta e^{-\theta y_2}) = \theta^2 e^{\theta(y_1+y_2)}.
+L(\theta) = (\theta e^{-\theta y_1}) (\theta e^{-\theta y_2}) = \theta^2 e^{-\theta(y_1+y_2)}.
 \]</span></p>
 <p>Then <span class="math inline">\(l(\theta)=2log\theta-\theta(y_1+y_2)\)</span>. So we have</p>
 <p><span class="math display">\[

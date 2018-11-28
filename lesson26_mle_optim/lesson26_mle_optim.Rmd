@@ -58,10 +58,33 @@ The golden search method is an interative method, which involves the following s
 
 The minimzer is then given as the midpoint of the final interval. The maximum error = $(b^\prime - a^\prime) / 2$.
 
+The algorithm makes use of the golden ratio,
+
+$$
+\phi = \frac{1 + \sqrt{5}}{2}.
+$$
+
+Note that $1/\phi = \phi - 1$ and $1/\phi^2 = 1 - 1/\phi$.
+
+Two reasons for this;
+
+1) It makes the selection of "probe points" efficient, by avoiding selecting wide intervals. You can learn more about this at the [wiki](https://en.wikipedia.org/wiki/Golden-section_search) page. This leads to rapid convergence.
+2) When the ratio is judiciously used, you don't have to re-evaluate the function multiple times. For example, if you locate interior points at $x_1 = b-(b-a)/\phi$ and $x_2 = a + (b-a)/\phi$ then
+
+\begin{align}
+x_1^{\prime} &= b - (b-a^{\prime})/\phi \\
+ &= b - (b-x_1)/\phi \\
+ &= b - (b-a)/\phi^2 \\
+ &= a + (b -a)/\phi \\
+ &= x_2
+\end{align}
+
+
+
 
 ```{r}
 golden <- function(f, a, b, tol = 1e-7) {
-    ratio <- 2 / (sqrt(5) + 1)
+    ratio <- 2 / (sqrt(5) + 1) ## 1/phi, aka "silver ratio".
     x1 <- b - ratio * (b - a)
     x2 <- a + ratio * (b - a)
 
@@ -142,7 +165,7 @@ Suppose $Y_1,Y_2$ are iid with density $f(y)= \theta e^{-\theta y}, y > 0$. Find
 By independence, 
 
 $$
-L(\theta) = (\theta e^{-\theta y_1}) (\theta e^{-\theta y_2}) = \theta^2 e^{\theta(y_1+y_2)}.
+L(\theta) = (\theta e^{-\theta y_1}) (\theta e^{-\theta y_2}) = \theta^2 e^{-\theta(y_1+y_2)}.
 $$
 
 Then $l(\theta)=2log\theta-\theta(y_1+y_2)$. So we have
