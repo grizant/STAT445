@@ -1,0 +1,111 @@
+---
+title: "Week 15, Lesson 27: Markov Chain Monte Carlo"
+author: "AG Schissler"
+date: "Monday December 3, 2018"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open lesson27_mcmc.Rmd from website so that you can work along the lecture.
+
+### This week's agenda
+
+Digging into more computational methods of inference and computation, including
+
+1) Students will be able to simulate a basic Markov Chain
+2) Students will be able use a Markov Chain Monte Carlo to sample a target distribution 
+2) Students will be able use a Markov Chain Monte Carlo to perform Bayesian inference
+3) Students will be able to use statistical computing techniques to make inferences in Lab 09
+
+## II. Markov Chain simulation
+
+From Braun and Murdock 2018, Markov chains are sequences of random variables $X_0, X_1, \ldots$ where the distribution of $X_{t+1}$, conditional on all previous values, depends only on $X_t$. They are commonly used to model systems with short memories, such as the stock market. When $X_t$ is a discrete random variable with a finite number of states $1,\ldots,n$, you can write the conditional distributions in an $n \times n$ matrix $P$. Where each entry $P_{ij}$ holds the conditional probability that $X_{t+1}=j$ given that $X_t = i$.
+
+An interesting fact about Markov chains is that they have an *invariant distribution*, also called a *stationary distribution*. This is a distribution $P(X_t = i) =\pi_i$ such that if $X_t$ is drawn from the invariant distribution and updated using the transition matrix $P$, then the marginal distribution of $X_{t+1}$ will also be from the invariant distribution.
+
+### Example: using Monte Carlo to find an invariant distribution
+
+Consider a disease model with 3 stages. Stage 1 is healthy, Stage 2 is mild disease, and Stage 3 is severe disease. Healthy individuals remain healthy with probability 0.99 and develop mild disease with prob 0.01. Individuals with mild disease become healthy with prob 0.5, stay mild with prob 0.4, and become severely ill with prob 0.1. Finally those with severe disease stay severely sick with prob 0.75 and progress to mild status with prob 0.25.
+
+This setting describes a Markov chain with $n=3$ states. The transition matrix is given by
+
+$$
+  P =
+  \left[ {\begin{array}{ccc}
+   0.99 & 0.01 & 0.00 \\
+   0.50 & 0.40 & 0.10 \\
+   0.00 & 0.25 & 0.75 \\
+  \end{array} } \right]
+$$
+
+We'll simulate two individuals for 10000 steps: one who starts healthy and one who begins with severe disease.
+
+```{r}
+simreps <- 10000
+P <- matrix(data = c(0.99, 0.01, 0, 0.5, 0.4, 0.1, 0, 0.25, 0.75), nrow = 3, byrow = TRUE)
+n <- nrow(P)
+X <- numeric(simreps)
+## for a healthy person at time 1
+X[1] <- 1
+
+for (t in 1:(simreps-1)) {
+    X[t + 1] <- sample(x = 1:n, size = 1, prob = P[X[t], ])
+}
+
+cat("Healthy person to start")
+table(X)
+table(X) / length(X)
+
+## for a severly ill person at time 1
+X[1] <- 3
+
+for (t in 1:(simreps-1)) {
+    X[t + 1] <- sample(x = 1:n, size = 1, prob = P[X[t], ])
+}
+
+cat("Serevely ill person to start")
+table(X)
+table(X) / length(X)
+```
+
+### You try
+
+Play with different number of steps to understand short term and long term behavior in the above problem.
+
+## III. Markov Chain Monte Carlo (MCMC) to sample a target distribution
+
+For *some* $P$ matrices, if $X_0$ is drawn from **any** distribution, then the marginal distribution of $X_t$ for large $t$ approximates the invariant distribution. This fact is used in MCMC methods to draw values with distribution close to $\pi_i$ even when $\pi_i$ can't be calculated directly.
+
+### The Metropolis Algorithm
+
+The Tale of King Markov from R. McElreath's *Statistical Rethinking*
+
+[slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-fall-2017-lecture-10)
+
+More formally, 
+
+The proposal distribution must be chosen so that the generated chain will converge to a stationary distribution --- the target distribution. A proposal distribution with the same support as the target distribution will generally satisify regularity conditions (irreducibility, positive recurrence, and aperiodicity) to guarantee convergence.
+
+So it is only necessary to know the density of the target distribution up to a constant!
+
+### Example Rizzo 2006
+
+Rayleigh distribution
+
+## IV. Begin working on Lab 09, time permitting
+
+## V. Summary
+
+
+
+
+
