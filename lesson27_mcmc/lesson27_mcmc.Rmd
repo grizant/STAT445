@@ -85,21 +85,121 @@ Play with different number of steps to understand short term and long term behav
 
 For *some* $P$ matrices, if $X_0$ is drawn from **any** distribution, then the marginal distribution of $X_t$ for large $t$ approximates the invariant distribution. This fact is used in MCMC methods to draw values with distribution close to $\pi_i$ even when $\pi_i$ can't be calculated directly.
 
-### The Metropolis Algorithm
+### The Metropolis-Hastings Algorithm (1970)
 
 The Tale of King Markov from R. McElreath's *Statistical Rethinking*
 
-[slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-fall-2017-lecture-10)
+[McElreath's slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-fall-2017-lecture-10)
 
-More formally, 
+More formally (adapted from Rizzo 2006),
+
+The *Metropolis-Hastings sampler* generates a Markov chain $\{X_0, X_1, \ldots \}$ as follows:
+
+1. Choose a proposal distribution $g(\cdot | X_t)$, subject to regularity conditions discussed below.  
+2. Generate $X_0$ from distribution $g$.  
+3. Repeat (until chain has convergened to a stationary distribution):  
+	(a) Generate $Y$ from $g(\cdot | X_t)$.  
+	(b) Generate $U$ from Uniform(0,1).
+	(c) If  
+	$$
+	U \leq \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}
+	$$
+accept $Y$ and set $X_{t+1} = Y$; otherwise set $X_{t+1} = X_t$.  
+	(d) Increment $t$.
+
+Observe that in step (3c) the candidate point $Y$ is accepted with probability
+	$$
+	\alpha (X_t, Y) = min \left( 1, \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)} \right),
+	$$
+
+So it is only necessary to know the density of the target distribution $f$ up to a constant!
+
+The algorithm is designed so that the stationary distribution of the chain is $f$.
 
 The proposal distribution must be chosen so that the generated chain will converge to a stationary distribution --- the target distribution. A proposal distribution with the same support as the target distribution will generally satisify regularity conditions (irreducibility, positive recurrence, and aperiodicity) to guarantee convergence.
 
-So it is only necessary to know the density of the target distribution up to a constant!
+### The Metropolis Sampler (1953)
 
-### Example Rizzo 2006
+Note that Metropolis-Hastings is a generalized of the slightly older Metropolis algorithm.
 
-Rayleigh distribution
+In the Metropolis algorithm, proposal distribution $g$ must be symmetric. I.e., $g(X|Y)=g(Y|X)$.
+
+Then the acceptance ratio
+
+	$$
+	r(X_t, Y) = \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}
+	$$
+	
+simplies to 
+
+	$$
+	r(X_t, Y) = \frac{f(Y)}{f(X_t)}.
+	$$
+
+This generalization provides greater efficiency (more rapid convergence to the stationary distribution) in certain cases.
+
+### Example from Rizzo 2006, the Rayleigh distribution
+
+Let's use the M-H algorithm to generate a sample from the Rayleigh distribution. The Rayleigh distribution has density
+
+$$
+f(x) = \frac{x}{\sigma^2}e^{-x^2/(2\sigma^2)}, x \geq 0, \sigma > 0 
+$$
+
+The Rayleigh distribution is used to model lifetimes subject to rapid aging. The mode is $\sigma$, $E[X] = \sigma \sqrt{\pi / 2}$ and $Var(X) = \sigma^2 (4-\pi) /2$.
+
+For the proposal distribution, try the chi-squared distribution with degrees of freedom of $X_t$.
+
+In R,
+
+```{r}
+## define Rayleigh density
+f <- function(x, sigma) {
+    if (any(x < 0)) return(0)
+    stopifnot(sigma > 0)
+    return((x / sigma^2) * exp(-x^2 / (2*sigma^2)))
+}
+
+## construct the chain
+m <- 10000
+sigma <- 4
+x <- numeric(m)
+x[1] <- rchisq(1, df = 1)
+k <- 0 ## rejections to investigate efficiency
+u <- runif(m) ## acceptance probabilities
+
+for (i in 2:m) {
+    xt <- x[i-1]
+    y <- rchisq(1, df = xt)
+    num <- f(y, sigma) * dchisq(xt, df = y)
+    den <- f(xt, sigma) * dchisq(y, df = xt)
+    if (u[i] <= num/den) {
+        x[i] <- y 
+    } else {
+        ## y is rejected
+        x[i] <- xt
+        k <- k + 1
+    }
+}
+
+print(k) / m
+```
+
+```{r}
+## go past burn-in
+index <- 9000:10000
+y1 <- x[index]
+plot(index, y1, type = "l", main = "", ylab = "x")
+```
+
+Check the expected value.
+
+```{r}
+## expected value
+mean(y1)
+## in theory
+sigma * sqrt(pi /2)
+```
 
 ## IV. Begin working on Lab 09, time permitting
 
