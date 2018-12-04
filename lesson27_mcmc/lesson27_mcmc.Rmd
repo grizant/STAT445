@@ -23,8 +23,8 @@ Digging into more computational methods of inference and computation, including
 
 1) Students will be able to simulate a basic Markov Chain
 2) Students will be able use a Markov Chain Monte Carlo to sample a target distribution 
-2) Students will be able use a Markov Chain Monte Carlo to perform Bayesian inference
-3) Students will be able to use statistical computing techniques to make inferences in Lab 09
+3) Students will be able use a Markov Chain Monte Carlo to perform Bayesian inference
+4) Students will be able to use statistical computing techniques to make inferences in Lab 09
 
 ## II. Markov Chain simulation
 
@@ -126,15 +126,15 @@ In the Metropolis algorithm, proposal distribution $g$ must be symmetric. I.e., 
 
 Then the acceptance ratio
 
-	$$
-	r(X_t, Y) = \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}
-	$$
+$$
+ r(X_t, Y) = \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}
+$$
 	
 simplies to 
 
-	$$
-	r(X_t, Y) = \frac{f(Y)}{f(X_t)}.
-	$$
+$$
+ r(X_t, Y) = \frac{f(Y)}{f(X_t)}.
+$$
 
 This generalization provides greater efficiency (more rapid convergence to the stationary distribution) in certain cases.
 

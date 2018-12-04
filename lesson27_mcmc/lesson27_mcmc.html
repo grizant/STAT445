@@ -434,13 +434,13 @@ cat(&quot;Serevely ill person to start&quot;)</code></pre>
 <p>Note that Metropolis-Hastings is a generalized of the slightly older Metropolis algorithm.</p>
 <p>In the Metropolis algorithm, proposal distribution <span class="math inline">\(g\)</span> must be symmetric. I.e., <span class="math inline">\(g(X|Y)=g(Y|X)\)</span>.</p>
 <p>Then the acceptance ratio</p>
-<pre><code>$$
-r(X_t, Y) = \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}
-$$</code></pre>
+<p><span class="math display">\[
+ r(X_t, Y) = \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}
+\]</span></p>
 <p>simplies to</p>
-<pre><code>$$
-r(X_t, Y) = \frac{f(Y)}{f(X_t)}.
-$$</code></pre>
+<p><span class="math display">\[
+ r(X_t, Y) = \frac{f(Y)}{f(X_t)}.
+\]</span></p>
 <p>This generalization provides greater efficiency (more rapid convergence to the stationary distribution) in certain cases.</p>
 </div>
 <div id="example-from-rizzo-2006-the-rayleigh-distribution" class="section level3">
