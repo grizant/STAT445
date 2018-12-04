@@ -1,0 +1,75 @@
+---
+title: "Lab 09: Bootstrap, MLE, MCMC"
+author: "AG Schissler"
+date: "Week of 12/03/2018"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+NSHE ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, **next** week.
+
+Learning outcomes
+===
+
+1) Students will be able to (SWBAT) use the bootstrap.
+2) SWBAT find maximum likelihood estimators (MLE).
+3) SWBAT use a Markov Chain Monte Carlo to sample a target distribution.
+4) SWBAT will be able use a Markov Chain Monte Carlo to perform Bayesian inference.
+
+## Bootstrap
+
+We'll study the behavior of the bootstrap through simulation. 
+
+- **1a.** First let's consider the bootstrap's behavior for a large sample. Simulate a random sample of size ($n$) 40 from a normal distribution with mean ($\mu$)30 and standard deviation ($\sigma) $5.
+
+```{r, 1a}
+set.seed(11)
+## your code here
+
+```
+
+- **1b.** Now construct a bootstrap distribution of the sample mean with bootstrap replicates of $B=2000$. How well does the bootstrap estimate of the standard error of the sample mean agree with the theoretical value $SE(\bar{x})=\sigma / \sqrt{n}$? Also comment on the bias on the bootstrap procedure.
+
+```{r, 1b}
+set.seed(12)
+## your code here
+
+```
+
+- **1c.** Now let's consider the bootstrap's behavior for a small sample. Simulate a random sample of size ($n$) 5 from a normal distribution with mean ($\mu$)30 and standard deviation ($\sigma) $5.
+
+```{r, 1c}
+set.seed(13)
+## your code here
+
+```
+
+- **1d.** Repeat Q1b for the small sample.
+
+```{r, 1d}
+set.seed(14)
+## your code here
+
+```
+
+- **Challenge** Explore various sample sizes. What is the minimum $n$ you would recommend for data from this distribution and statistic (the sample mean)? How did you arrive at this conclusion?
+
+```{r, 1challenge}
+set.seed(15)
+## your code here
+
+```
+
+## MLE
+
+## MCMC sampler
+
+## MCMC posterior
+
