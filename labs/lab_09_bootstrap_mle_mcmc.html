@@ -323,10 +323,9 @@ Collaborated with:</p>
 <li>Students will be able to (SWBAT) use the bootstrap.</li>
 <li>SWBAT find maximum likelihood estimators (MLE).</li>
 <li>SWBAT use a Markov Chain Monte Carlo to sample a target distribution.</li>
-<li>SWBAT will be able use a Markov Chain Monte Carlo to perform Bayesian inference.</li>
 </ol>
-<div id="bootstrap" class="section level2">
-<h2>Bootstrap</h2>
+<div id="studying-bootstrap-performance" class="section level2">
+<h2>1. Studying bootstrap performance</h2>
 <p>We’ll study the behavior of the bootstrap through simulation.</p>
 <ul>
 <li><strong>1a.</strong> First let’s consider the bootstrap’s behavior for a large sample. Simulate a random sample of size (<span class="math inline">\(n\)</span>) 40 from a normal distribution with mean (<span class="math inline">\(\mu\)</span>)30 and standard deviation ($) $5.</li>
@@ -334,17 +333,106 @@ Collaborated with:</p>
 <pre class="r"><code>set.seed(11)
 ## your code here</code></pre>
 <ul>
-<li><strong>2a.</strong> Now construct a bootstrap distribution of the sample mean with bootstrap replicates of <span class="math inline">\(B=2000\)</span>. How well does the bootstrap estimate of the standard error of the sample mean agree with the theoretical value <span class="math inline">\(SE(\bar{x})=\sigma / \sqrt{n}\)</span>?</li>
+<li><strong>1b.</strong> Now construct a bootstrap distribution of the sample mean with bootstrap replicates of <span class="math inline">\(B=2000\)</span>. How well does the bootstrap estimate of the standard error of the sample mean agree with the theoretical value <span class="math inline">\(SE(\bar{x})=\sigma / \sqrt{n}\)</span>? Also comment on the bias on the bootstrap procedure.</li>
 </ul>
+<pre class="r"><code>set.seed(12)
+## your code here</code></pre>
+<ul>
+<li><strong>1c.</strong> Now let’s consider the bootstrap’s behavior for a small sample. Simulate a random sample of size (<span class="math inline">\(n\)</span>) 5 from a normal distribution with mean (<span class="math inline">\(\mu\)</span>)30 and standard deviation ($) $5.</li>
+</ul>
+<pre class="r"><code>set.seed(13)
+## your code here</code></pre>
+<ul>
+<li><strong>1d.</strong> Repeat Q1b for the small sample.</li>
+</ul>
+<pre class="r"><code>set.seed(14)
+## your code here</code></pre>
+<ul>
+<li><strong>Challenge</strong> Explore various sample sizes. What is the minimum <span class="math inline">\(n\)</span> you would recommend for data from this distribution and statistic (the sample mean)? How did you arrive at this conclusion?</li>
+</ul>
+<pre class="r"><code>set.seed(15)
+## your code here</code></pre>
 </div>
-<div id="mle" class="section level2">
-<h2>MLE</h2>
+<div id="mle-and-the-bootstrap-modifiied-from-rizzo-2006" class="section level2">
+<h2>2. MLE and the bootstrap (modifiied from Rizzo 2006)</h2>
+<p>Refer to the air-conditioning data set <code>aircondit</code> provided in the <code>boot</code> package. The 12 observations are the times between failures of air conditioning equipment.</p>
+<pre class="r"><code>library(boot)
+t(aircondit)</code></pre>
+<pre><code>##       1 2 3  4  5  6  7  8   9  10  11  12
+## hours 3 5 7 18 43 85 91 98 100 130 230 487</code></pre>
+<ul>
+<li><strong>2a</strong> Model the failure using an exponential distribution, <span class="math inline">\(Exp(\lambda)\)</span>. Obtain the MLE of the hazard rate <span class="math inline">\(\lambda\)</span> using the <code>mle</code> function in the <code>stat4</code> package.</li>
+</ul>
+<pre class="r"><code>## your code here</code></pre>
+<ul>
+<li><strong>2b</strong> Use the bootstrap to estimate the bias and standard error of the estimate.</li>
+</ul>
+<pre class="r"><code>set.seed(22)
+## your code here</code></pre>
 </div>
-<div id="mcmc-sampler" class="section level2">
-<h2>MCMC sampler</h2>
+<div id="mcmc-sampler-modified-from-rizzo-2006" class="section level2">
+<h2>3. MCMC sampler (modified from Rizzo 2006)</h2>
+<p>Refer to the Metropolis-Hastings sampling of the Rayleigh distribution with <span class="math inline">\(\sigma=4\)</span> (in <a href="https://github.com/grizant/STAT445/blob/master/lesson27_mcmc/lesson27_mcmc.Rmd">lesson27_mcmc.Rmd</a>.</p>
+<ul>
+<li><strong>3a</strong> Repeat the example using the proposal distribution <span class="math inline">\(Y \sim Gamma(X_t, 1)\)</span> (shape parameter X_t and rate parameter 1). Comment on the apparent efficiency based on the proportion of rejected samples.</li>
+</ul>
+<pre class="r"><code>set.seed(31)
+## your code here</code></pre>
+<ul>
+<li><strong>3b</strong> Plot the last 1000 samples in a line graph. Comment on any visual differences between your plot and the plot in the lecture.</li>
+</ul>
+<pre class="r"><code>## your code here</code></pre>
 </div>
-<div id="mcmc-posterior" class="section level2">
-<h2>MCMC posterior</h2>
+<div id="random-walk-metropolis" class="section level2">
+<h2>4. Random Walk Metropolis</h2>
+<p>The <em>random walk Metropolis</em> sampler is an example of a Metropolis sampler. Suppose the candidate point <span class="math inline">\(Y\)</span> is generated from a symmetric proposal distribution <span class="math inline">\(g(Y|X_t)=g(|X_t-Y|)\)</span>. Then at each iteration, a random increment <span class="math inline">\(Z\)</span> is generated from <span class="math inline">\(g(\cdot)\)</span>, and <span class="math inline">\(Y\)</span> is defined by <span class="math inline">\(Y = X_t + Z\)</span>. For example, the random increment might be normal with zero mean, so that the candidate point is <span class="math inline">\(Y|X_t \sim Normal(X_t, \sigma^2)\)</span> for some fixed <span class="math inline">\(\sigma^2 &gt; 0\)</span>.</p>
+<p>The convergence of the random walk Metropolis is often sensitive to the scale parameter (<span class="math inline">\(\sigma\)</span> above) in the proposal distribution. When the variance is too large, the chain rejects too often. When too small, the chain accepts too often (behaves like a true random walk). This question will investigate the choice of scale parameter when using a random walk Metropolis to simulate from a Student <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(\nu\)</span> degrees of freedom.</p>
+<ul>
+<li><strong>4a</strong> Complete the code below to write a function <code>get_chain_rw_metropolis</code> that takes four parameters <code>nu</code> (the degrees of freedom for the target <span class="math inline">\(t\)</span> distribution), <code>sigma</code> (the standard deviation for the Normal proposal distribution), <code>x0</code> (the initial point in the chain), and <code>N</code> (the length of the chain). Hint: use <code>dt</code>.</li>
+</ul>
+<pre class="r"><code>get_chain_rw_metropolis &lt;- function(nu, sigma, x0, N) {
+    x &lt;- numeric(N)
+    ## set the initial value
+    ## your code here
+
+    ## get probabilities for acceptance decision
+    ## your code here
+
+    ## count rejections
+    k &lt;- 0
+
+    ## construct the chain
+    for (i in 2:N) {
+        ## generate a proposed point
+        ## your code here
+
+        ## compute the acceptance ratio and compare to the acceptance probability
+        ## your code here
+
+        ## update the chain and increment number of rejections
+        ## your code here
+        
+    }
+    return(list(x = x, k = k))
+}</code></pre>
+<ul>
+<li><strong>4b</strong> Now generate four chains with different variances <span class="math inline">\(\sigma^2\)</span> of the proposal distribution. Use the values provided below and complete the code chunk.</li>
+</ul>
+<pre class="r"><code>nu &lt;- 4 ## degrees of freedom in the target Student t distribution
+N &lt;- 2000
+sigma &lt;- c(0.05, 0.5, 2, 16)
+x0 &lt;- 25
+
+set.seed(42)
+## your code here</code></pre>
+<ul>
+<li><strong>4c</strong> Roberts, Gelman, and Gilks (1997) recommend that the rejection rates in the range <span class="math inline">\([0.15, 0.5]\)</span> for good performance. Explore the rejection rates for each chain. Which chain(s) are performing well?</li>
+</ul>
+<pre class="r"><code>## your code here</code></pre>
+<ul>
+<li><strong>4d</strong> Finally, plot your four chains in one plot (either use <code>par</code> or panel with <code>ggplot2</code>). Provide reference lines at the 2.5% and 97.5% quantiles on each plot (hint: use <code>qt</code>). Comment on each plot.</li>
+</ul>
+<pre class="r"><code>## your code here</code></pre>
 </div>
 </div>
 
