@@ -1,0 +1,131 @@
+%A simple LaTeX syllabus template by Luke Smith.
+%I believe this is a variation of a template I got by Mike Hammond...?
+
+%\documentclass[11pt,twocolumn]{article}
+\documentclass[11pt,onecolumn]{article}
+\usepackage{hyperref}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{gb4e}
+%\usepackage[margin=.75in]{geometry}
+\usepackage{textcomp}
+\pagenumbering{gobble}
+%% \usepackage[utf8]{inputenc}
+%% \usepackage[english]{babel}
+%% \usepackage[usenames, dvipsnames]{color}
+
+%paragraph formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\usepackage{url}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\titlespacing\subsection{0in}{\parskip}{\parskip}
+\titlespacing\section{0in}{\parskip}{\parskip}
+
+%Just fill these in to fill in the basic syllabus information.
+\newcommand{\coursename}{Introduction to Statistical Computing - STAT 445/645}
+\newcommand{\semester}{Fall 2019}
+\newcommand{\roomnumb}{DMSC 106}
+\newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
+\newcommand{\myname}{A.~Grant Schissler}
+%\newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
+\newcommand{\myemail}{aschissler@unr.edu}
+\newcommand{\office}{DMSC 224}
+\newcommand{\officehours}{Tue/Wed 4-5pm, or by appointment}
+% \newcommand{\university}{The University of Nevada, Reno}
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{\textbf{\coursename}}
+% \author{{\university}---{\semester}---{\roomnumb}---{\classtimes}}
+\author{{\semester}---{\roomnumb}---{\classtimes}}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+\vspace{-0.25in}
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+\begin{center}
+\begin{tabular}{llll}
+\textbf{Instructor}:&\myname & \textbf{Contact}:&\href{mailto:\myemail}{\myemail}, 775-784-4661 (office)\\
+\textbf{Office}:&\office & \textbf{Hours}:&\officehours\\
+\end{tabular}
+\end{center}
+
+\section*{Catalog Description}
+Introduction to statistical computing; data visualization and manipulation; document creation; graphics; simulation techniques; parallel computing; estimation; optimization; advanced statistical methods.
+
+\section*{400-level Student Learning Outcomes}
+
+\begin{description}
+\item[UG1] Students will be able to implement statistical simulation, re-sampling techniques, and maximum likelihood estimation. 
+\item[UG2] Students will be able to conduct a simulation-based power analysis. 
+\item[UG3] Students will be able to write professional quality reports and computer code.
+\item[GRAD1] Students will be able to use statistical computing methods to complete a research project and effectively communicate their findings.
+\end{description}
+
+\section*{Course outcomes}
+
+Students will be able to $\ldots$
+
+\begin{enumerate}
+  \itemsep0em 
+%% \item use R and RStudio.
+%% \item produce HTML, PDF, or Word documents using R Markdown.
+%% \item install R packages for computing tasks.
+%% \item use R help functions.
+%% \item use R vectors.
+%% \item use R factors.
+%% \item use R lists.
+%% \item use \textsc{data.frames}.
+%% \item control flow in R using conditionals, etc..
+%% \item iterate using loops in R.
+%% \item iterate using the \textsc{apply} family.
+%% \item manipulate numeric and text data using base R utilities.
+%% \item write functions in R.
+%% \item benchmark/profile R code.
+%% \item write parallel R code.
+%% \item import data from flat files, including .csv, .txt, .xlsx.
+%% \item clean data for data analysis.
+%% \item conduct an exploratory data analysis.
+%% \item visualize data.
+%% \item implement the graphic of graphics.
+%% \item generate pseudo-random numbers.
+%% \item simulate data via Monte Carlo techniques.
+%% \item conduct simulation-based hypothesis tests.
+%% \item conduct a simulation-based power analysis.
+%% \item integrate functions using Monte Carlo techniques.
+%% \item use re-sampling for statistical inference (bootstrap, jackknife).
+%% \item use maximum likelihood estimation for statistical inference.
+%% \item use Markov Chain Monte Carlo (MCMC) to sample from probability distributions.
+
+%%   Revised shorter list 26 Aug 2019
+
+\item use R to perform basic coding tasks (e.g., data structures, flow, iteration, functions).
+  \item use R Markdown to produce high quality, reproducible documentation of data analyses.
+  \item use R to import and clean data.
+  \item use R to conduct an exploratory data analysis, numerically and visually.
+  \item use R to conduct simulation (Monte Carlo) studies (e.g. error rates, power analyses, integration).
+  \item use R to perform statistical inference, such as
+\begin{itemize}
+\item Maximum Likelihood Estimation (MLE)
+\item Randomization/Permutation tests
+\item Bootstrap (re-sampling)
+  \item Markov Chain Monte Carlo (MCMC)
+\end{itemize}
+    \item apply computational statistics to real world data.
+\end{enumerate}
+
+
+\end{document}
