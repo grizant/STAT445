@@ -67,3 +67,6 @@ auto/
 # Rmd cache and files
 *_cache
 *_files
+
+# MS office temp files
+^~*
