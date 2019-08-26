@@ -12,7 +12,7 @@ library(scales)
 library(tidyverse)
 ```
 
-## I. Opening (25 min)
+## I. Opening (10 min)
 
 ### Think-pair-share (5 min)
 
@@ -44,13 +44,13 @@ anim_save("assets/gapminder.gif")
 
 ![](assets/gapminder.gif)
 
-### Discuss as a group what trends are shown by this choice of vizulations. (10 min)
+### Discuss as a group what trends are shown by this choice of vizulations.
 
 - How do trends change over time?
 - How do continents compare?
 - Other thoughts?
 
-### Opening thoughts on stats computing (10 min)
+### Opening thoughts on stats computing
 
 - Modern statistical work relies on computing to manage data, clean/organize data, run analyses, summarize data, visualize data, estimate parameter,s conduct inference, prototype new methods, evaluate methods, compute quantities (almost always some type of integral or optimization), document/reproduce analyzes, and building reports/papers/talks.
 
@@ -85,7 +85,9 @@ Let's go around the room and everyone please (briefly) introduce your partner(s)
 
 ### TA/Grader: Alex Knudson, stats grad student
 
-Alex, please introduce yourself.
+- Alex will be here on Wednesday and you'll get to know him.
+- He graciously offered to help with any questions you may have with the content (please to do not email him regarding grading).
+- Email him at aknudson@nevada.unr.edu to get his support (within reason please!).
 
 ### Instructor: A. Grant Schissler, PhD
 
@@ -112,7 +114,7 @@ Please, please, ask anything on your mind (about the class) --- anxieties, hopes
 
 Assume good will among everyone here. **Ask Questions** and **Work Together** --- these are the most important reasons for class time.
 
-## III. Course expectations and learning outcomes (25 min)
+## III. Course expectations and learning outcomes (20 min)
 
 - Focus is on statistical computing ideas and techniques, both conceptually and practically.
 - Using R is largely a skill and development takes effort and deliberate practice. This cannot be **passively** obtained by listening alone. So you'll code in R and Rmarkdown from the first day!
@@ -149,7 +151,7 @@ pie
 Out-of-class activities depend on many individual factors. I'd regard these expected durations to be on the low end (it will likely take a bit longer).
 
 ```{r}
-outclass_dat <- read_excel("../course_materials/Spring2019_outside_class_schedule.xlsx")
+outclass_dat <- read_excel("../course_materials/Fall2019_outside_class_schedule.xlsx")
 ## str(outclass_dat)
 
 ## drop 'None' category
@@ -181,7 +183,7 @@ cat(mean(sum_dat$Minutes)/60, "hours")
 
 ### Syllabus
 
-[syllabus](https://github.com/grizant/Intro_Bayes_Course/blob/develop/syllabus/STAT446-646-Intro-to-Bayesian-Statistics-syllabus.pdf)
+[syllabus](https://github.com/grizant/STAT445/blob/master/syllabus/tex/STAT445-645-Intro-to-Stats-Computing-syllabus.pdf)
 
 Think-pair-share
 
@@ -189,9 +191,9 @@ Think-pair-share
 2. Pair up and share your thought with your neighbor(s).
 3. Share with the whole group.
 
-### Detailed learning outcomes
+### Let's review our student learning outcomes (SLOs)
 
-[learning outcomes](https://github.com/grizant/Intro_Bayes_Course/blob/develop/course_materials/Intro-to-Bayesian-Statistics_learning_outcomes.pdf)
+[learning outcomes](https://github.com/grizant/STAT445/blob/master/course_outcomes/tex/STAT445-645-Intro-to-Stats-Computing-course_outcomes_FA19.pdf)
 
 You can always ask, "How does this activity relate to the learning outcomes?". 
 
@@ -199,11 +201,10 @@ You can always ask, "How does this activity relate to the learning outcomes?".
 
 Points are aligned with my valuation of the learning outcomes according to this matrix.
 
-[Intro_Bayes_Course_course_assessment_plan.xlsx](https://github.com/grizant/Intro_Bayes_Course/blob/develop/course_materials/Intro_Bayes_Course_course_assessment_plan.xlsx)
-
+[Intro_Bayes_Course_course_assessment_plan.xlsx](https://github.com/grizant/STAT445/blob/master/course_materials/Fall2019_StatComp_course_assessment_plan.xlsx)
 
 ```{r}
-points_dat <- read_excel("~/OneDrive - University of Nevada, Reno/Teaching/Bayes_course/git_public/course_materials/Spring2019_points_time.xlsx")
+points_dat <- read_excel("../course_materials/Fall2019_points_time.xlsx")
 ## str(outclass_dat)
 
 ## scatterplot
@@ -212,15 +213,20 @@ sp
 
 ```
 
-### Course resources
 
-#### Website
+#### Term project
+
+645 students are required to complete a term project with my guidance. More on this next time.
+
+## IV. Course resources (20 min)
+
+### Website
 
 Let's tour the website:
 
-[course website](http://www.grantschissler.com/teaching/SP19/STAT429/).
+[course website](http://www.grantschissler.com/teaching/SP19/STAT445/).
 
-#### Canvas (WebCampus)
+### Canvas (WebCampus)
 
 - Course announcements
 - Official assignments and due dates
@@ -229,17 +235,32 @@ Let's tour the website:
 - Secure file sharing
 - Another way to message the instructor
 
-#### DataCamp for online modules
+### DataCamp for online modules
 
-[datacamp.com](https://www.datacamp.com/home)
+- DataCamp is a Data Science instructional program
+- I've designed a course of study for you.
+- But you all have different experiences -- I'll try to personalize as needed.
+- DataCamp works on all devices.
+- DataCamp assignments should take between 3-4 hours a week.
+- (Hopefully) you can earn special certificates in DataCamp for your resume/CV.
+- If you only have access to assigned modules, I'll add "optional" modules. WebCampus will reflect the true assigned modules, indicated by DataCamp:<Module name>.
+- You may want to bring headphones to class if you have time to listen to online modules.
 
-Only three modules assigned, but DataCamp has a wealth of tutorials to supplement any gaps in your preparation or to accelerate your learning.
+### I do
+- I'll log in and point of a few features (modules, skill tracks, etc.)
+- [Datacamp](https://www.datacamp.com/).
+- Let's check out the assigned and recommended modules [DC modules doc](https://github.com/grizant/STAT445/blob/master/DataCamp/tex/STAT445-645-Intro-to-Stats-Computing-DataCampModules.pdf).
+- I'll store some DataCamp code in a .R script to show how to take notes as you go.
 
-#### Term project
+### We do
+1. Please log in. 
+2. What modules do you have access to? Only those assigned? 
 
-629 students are required to complete a term project with my guidance. More on this soon.
+### You do
+- Play around and let me know if you have any questions.
+- Store some DataCamp code in a .R script.
 
-#### Github
+#### Github for the course (for those in the know)
 
 [https://github.com/grizant/Intro_Bayes_Course/tree/develop](https://github.com/grizant/Intro_Bayes_Course/tree/develop)
 
