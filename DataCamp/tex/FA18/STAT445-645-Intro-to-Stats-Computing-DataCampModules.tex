@@ -1,0 +1,113 @@
+%A simple LaTeX syllabus template by Luke Smith.
+%I believe this is a variation of a template I got by Mike Hammond...?
+
+%\documentclass[11pt,twocolumn]{article}
+\documentclass[11pt,onecolumn]{article}
+\usepackage{hyperref}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{gb4e}
+%\usepackage[margin=.75in]{geometry}
+\usepackage{textcomp}
+\pagenumbering{gobble}
+%% \usepackage[utf8]{inputenc}
+%% \usepackage[english]{babel}
+%% \usepackage[usenames, dvipsnames]{color}
+
+%paragraph formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\usepackage{url}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\titlespacing\subsection{0in}{\parskip}{\parskip}
+\titlespacing\section{0in}{\parskip}{\parskip}
+
+%Just fill these in to fill in the basic syllabus information.
+\newcommand{\coursename}{Introduction to Statistical Computing - STAT 445/645}
+\newcommand{\semester}{Fall 2018}
+\newcommand{\roomnumb}{DMSC 106}
+\newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
+\newcommand{\myname}{A.~Grant Schissler}
+%\newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
+\newcommand{\myemail}{aschissler@unr.edu}
+\newcommand{\office}{DMSC 224}
+\newcommand{\officehours}{Tue 2:30pm-3:30pm, Wed 1:30pm-2:20pm, or by appointment}
+% \newcommand{\university}{The University of Nevada, Reno}
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{\textbf{\coursename\\DataCamp modules}}
+% \author{{\university}---{\semester}---{\roomnumb}---{\classtimes}}
+\author{{\semester}---{\roomnumb}---{\classtimes}}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+\vspace{-0.25in}
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+\begin{center}
+\begin{tabular}{llll}
+\textbf{Instructor}:&\myname & \textbf{Contact}:&\href{mailto:\myemail}{\myemail}, 775-784-4661 (office)\\
+\textbf{Office}:&\office & \textbf{Hours}:&\officehours\\
+\end{tabular}
+\end{center}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+\section*{DataCamp modules}
+\begin{center}
+  \begin{tabular}{|p{0.05\linewidth}|p{0.45\linewidth}|p{0.5\linewidth}|}
+    \hline
+    Week & Required & Supplementary \\
+    \hline
+    \hline
+    1 & Introduction to R & Working with RStudio I, II; Reporting in RMarkdown; Introduction to Git \\
+    \hline
+    2 & Intermediate R & \\
+    \hline
+    3 & Writing functions in R & \\
+    \hline
+    4 & Writing efficient R Code & Parallel Programming in R \\ 
+    \hline
+    5 & Intermediate R - practice & \\
+    \hline
+    \hline
+    6 & Importing Data in R (Part 1) & Importing Data in R (Part 2) \\ 
+    \hline
+    7 & Cleaning data in R & Data manipulation in R with \textsc{dplyr} \\
+    \hline
+    8 & Exploratory Data Analysis in R & Introduction to the \textsc{tidyverse}; Working with data in the \textsc{tidyverse} \\
+    \hline
+    9 & Data visualization with \textsc{ggplot2} Part I & ggplot2 Part II, III; Data visualization in R; Data Visualization in R with lattice \\
+    \hline
+    10 & Importing \& cleaning data in R - Case Studies &  \\
+    \hline
+    \hline
+    11 & Foundations of probability &  \\
+    \hline
+    12 & Foundations of inference &  \\
+    \hline
+    13 & & \\
+    \hline
+    14 & & \\
+    \hline
+    15 & & \\
+    \hline
+    \hline
+    16 & & \\
+    \hline
+\end{tabular}
+\end{center}
+
+\end{document}
