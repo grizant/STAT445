@@ -1,4 +1,4 @@
-Course materials for STAT 445/645 Intro to Statistical Computing
+##Course materials for STAT 445/645 Intro to Statistical Computing
 
 What's here?
 - Checklists: Review the checklists for labs and midterms to make sure you don't miss anything and do your best.
