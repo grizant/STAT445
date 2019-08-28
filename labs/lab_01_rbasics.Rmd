@@ -8,7 +8,7 @@ Name:
 NSHE ID:
 Collaborated with:
 
-This lab is to be completed both within and outside class. You're encouraged collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday, September 8, 2019 by 11:59pm.
+This lab is to be completed both within and outside class. You're encouraged collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday, September 15, 2019 by 11:59pm.
 
 ```{r}
 ## For reproducibility --- don't change this!
