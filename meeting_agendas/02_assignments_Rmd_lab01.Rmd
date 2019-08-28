@@ -1,0 +1,126 @@
+---
+title: "Assignments, Using R Markdown, Start Lab 01"
+author: "A. Grant Schissler"
+date: "08/28/2019"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+## I. Opening (5-10 min)
+
+1) Please go to the course website [http://www.grantschissler.com/teaching/FA19/STAT445/](http://www.grantschissler.com/teaching/FA19/STAT445/).
+
+2) Download the .Rmd (R Markdown) file that produces this meeting agenda [02_assignments_Rmd_lab01.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/02_assignments_Rmd_lab01.Rmd)
+
+It's a little since it is on a github repo. A couple of options:
+
+- Click the `Raw` button and then use File -> Save As -> text file -> rename to .Rmd without .txt extension.
+- Click the `Raw` button and copy/paste all the text into a fresh text file or .Rmd file (more on this later).
+- Clone the repo.
+
+3) Be ready to render the html from the file later.
+
+4) While you are on the page, you can also check on the updated calendar, especially the Midterm dates (9/30, 11/4).
+
+## II. Assignments (20 - 30 min)
+
+### Let's review our student learning outcomes (SLOs)
+
+[learning outcomes](https://github.com/grizant/STAT445/blob/master/course_outcomes/tex/STAT445-645-Intro-to-Stats-Computing-course_outcomes_FA19.pdf)
+
+You can always ask, "How does this activity relate to the learning outcomes?". 
+
+### Point-based grading system
+
+Points are aligned with my valuation of the learning outcomes according to this matrix.
+
+[Intro_Bayes_Course_course_assessment_plan.xlsx](https://github.com/grizant/STAT445/blob/master/course_materials/Fall2019_StatComp_course_assessment_plan.xlsx)
+
+### Datacamp
+
+#### Information
+- You should have an email invite to the course (the one listed in MyNevada). Email me if not.
+- 13 modules. You may work at your own pace. But to get 10/10 you must finish by the due date in Canvas/DataCamp (these should be the same --- let me know if you find any mismatches).
+- No partial credit. Must complete whole assignemnt (course) to get ANY credit.
+- Late is worth 50%. Please email me when you complete a late module.
+- All late modules are due by Sunday, December 8, 2019 by 11:59pm.
+- 2 lowest scores will be dropped.
+
+#### Let's take a look
+- I'll log in and point of a few features (modules, skill tracks, etc.)
+- [Datacamp](https://www.datacamp.com/).
+- Let's check out the assigned and recommended modules [DC modules doc](https://github.com/grizant/STAT445/blob/master/DataCamp/tex/STAT445-645-Intro-to-Stats-Computing-DataCampModules.pdf).
+- I'll store some DataCamp code in a .R script to show how to take notes as you go.
+
+### Lab assignments
+
+- Answer the question precisely and stop! Be accurate, concise, and clear.
+- Always submit both the rmd and html file into Canvas. Be sure your Rmd renders to that document! It must "compile".
+- [lab rubric](https://github.com/grizant/STAT445/blob/master/rubrics/lab_rubric.pdf)
+- [lab checklist](https://github.com/grizant/STAT445/blob/master/checklists/lab_checklist.pdf)
+- Examples (renamed and edited from Fall 2018). Sorry I can't share itdirectly (links are local and will broken for you).  
+
+[lab_example1](/Users/alfred/OneDrive - University of Nevada, Reno/Teaching/STAT_445-645/FA18_student_work/example_student_labs/lab_example1.html)
+[lab_example2](/Users/alfred/OneDrive - University of Nevada, Reno/Teaching/STAT_445-645/FA18_student_work/example_student_labs/lab_example2.html)
+[lab_example3](/Users/alfred/OneDrive - University of Nevada, Reno/Teaching/STAT_445-645/FA18_student_work/example_student_labs/lab_example3.html)
+
+- Teaching note: I use a method called *interleaving* to help concepts/skills stick. Labs are integrated experiences with simulation (Unit 3) starting from the first lab. We'll focus on certain topics in the schedule, but we'll be "doing" all the topics the entire course. It's challenging, yet at the end of the course you'll be confident in your abilities and knowledge. More on this strategy and others [UofA Learning to Learn](https://academicaffairs.arizona.edu/l2l).
+
+## III. R Markdown (10 min)
+
+### Overview
+
+- YAML heading specifies output type (e.g. html, pdf, Word)
+- `knitr` code chunks execute `R` code and knitrs code, output, and other text/symbols together.
+- Actually many languages are supported:
+
+```{r, echo=TRUE}
+## This is how a comment appears.
+names(knitr::knit_engines$get())
+```
+
+- Also renders $\LaTeX$. For example,
+
+One of the most celebrated tests in statistics is due to Kolmogorov in 1933. The *Kolmogorov-Smirnoff (KS) statistic* is:
+$$
+\sqrt{\frac{n}{2}} \sup_{x} |F_n(x)-G_n(x)|
+$$
+
+- RStudio is not required. But it is the easiest way. I acutally use ESS mode in Emacs with custom macro to render quickly. I like to preview my work in a browser (Chrome) and use an auto-refresh plug-in.
+
+#### I do
+
+Watch me render the html for this meeting agenda using RStudio.
+
+#### We do
+
+Let's all do that now.
+
+## IV. Lab 01 (Rest of class except last 5 minutes)
+
+- Alex, please introduce your self.
+
+- Alex and I will circulate the room and assist. Sometimes I'll stop your work to address the whole group if common issues are found, etc.
+
+- Please begin your first computer assignment --- Lab 01 R Basics!
+
+Open [lab_01_rbasics.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_01_rbasics.Rmd) in RStudio
+
+## V. Closing (5 min). 
+
+### I'm traveling from 9/1 to 9/12. 
+
+- Please work on your labs and DataCamp. 
+- Class will be run by Alex and it is a great opportunity to work together (no one can have any schedule conflicts during class time).
+- By the way, office hours will be Tue/Wed 4-5pm upon my return. Always feel free to set up an appointment also.
+
+
+### Think-Pair-Share
+
+- Describe the different components of an R Markdown document and their role.
+- Discuss the advantages of R Markdown over copying and pasting output into a Word or other document.
+
+
