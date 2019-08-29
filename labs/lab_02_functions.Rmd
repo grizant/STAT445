@@ -1,7 +1,7 @@
 ---
-title: "Lab 02: Functions and the prostate cancere set"
+title: "Lab 02: Functions and the prostate cancer set"
 author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Week of 9/17/2018"
+date: "Due of 9/22/2019"
 output: html_document
 ---
 
@@ -13,7 +13,7 @@ Name:
 NSHE ID:  
 Collaborated with:  
 
-This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file and raw Rmd file on Canvas, by Sunday 9/22, 11:59pm.
 
 This lab starts the analysis of a prostate cancer data set and we'll come back to it later.
 
