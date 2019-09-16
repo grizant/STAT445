@@ -1,7 +1,7 @@
 ---
 title: "Functions"
-author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Monday September 17, 2018"
+author: "AG Schissler"
+date: "Monday September 16, 2019"
 output: html_document
 ---
 
@@ -15,8 +15,7 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open functions.Rmd from website so that you can work along the lecture.
-
+3. Open our meeting agenda 06_functions_lab02.Rmd from website so that you can work along the lecture.
 
 ### Why do we need functions?
 
@@ -266,7 +265,11 @@ After you write down your design, go ahead and write the sub-functions (here `fi
 
 With practice, this design strategy should become natural.
 
-### IV. Summary: 3-2-1
+### IV. Please continue working Lab 02 with any available time
+
+[lab_02_functions.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_02_functions.Rmd)
+
+### V. Summary: 3-2-1
 
 - List/describe 3 revelant R built-in functions you used today
 - Give 2 reasons why to write functions.
