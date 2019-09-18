@@ -1,0 +1,74 @@
+---
+title: "Project Organization & Lab 01"
+author: "Alex Knudson"
+date: "09/03/2019"
+output: html_document
+---
+
+```{r setup, include=TRUE, echo=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+## I. Opening (<5 min)
+
+- Grant is traveling this week and next
+- I will be covering during his absence
+
+## II. Project Organization (10-15 min)
+
+### Why does organization matter?
+
+- Consistency
+- Reproducibility
+- [Cookiecutter Data Science](https://drivendata.github.io/cookiecutter-data-science/)
+- Cut down on fragmentation
+- What else?
+
+### Rstudio's Answer: Project File / Directory
+
+- Keep everything needed for a project in one place
+- Keeps track of project preferences
+- Sets the *working directory* to the project directory
+- Consolidation / Compartmentalization
+
+### Using Lab 01 as an Example
+
+- This method exclusively uses Rstudio
+- I will talk about some other workflow settings
+
+1. Setting/viewing global (rstudio) options
+    - R Sessions, workspace, and history
+    - Code editing and display
+    - Appearance
+    - Pane Layout
+2. Creating a project
+    - Top right > New Project...
+    - New (Existing) Directory > New Project
+    - Give it a name and select a location
+3. Putting your files in the project directory
+    - Copy/Paste
+    - `mv`, `cp`
+    - Drag and drop
+4. (Optional) Backing up to Google, OneDrive, or a *Git* repository
+    - You have unlimited cloud storage through UNR with Google Drive or Microsoft OneDrive
+    - Git repositories keep track of the changes you make to files
+    - Never be embarassed because you forgot your laptop or flash drive
+
+### Real Example: Psychometric Data Analysis
+
+- Many data files
+- Many scripts
+- Reports
+- Notebooks
+- Models
+- Documentation & References
+- Logging
+
+- Github / Bitbucket repository
+- NOT in adherance with [R Packages](https://r-pkgs.org/) structure
+
+## III. Lab 01 (Rest of class)
+
+- I will be walking around and answering questions
+- You may consult with your neighbors
+- Everyone must have their own lab to turn in

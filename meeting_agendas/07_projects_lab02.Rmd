@@ -1,0 +1,51 @@
+---
+title: "Projects and Lab 02"
+author: "AG Schissler"
+date: "Wednesday September 18, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open our meeting agenda [lab_02_functions.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_02_functions.Rmd) from website so that you can work along the lecture.
+
+## II. Projects, final exam, and poster session
+
+### Project poster expectations
+
+- project organization pdf [project tasks](https://github.com/grizant/STAT445/blob/master/project/Intro-to-Stats-Comp_project_organization.pdf)
+- poster guidelines [poster guidelines](https://github.com/grizant/STAT445/blob/master/project/poster_guidelines.pdf)
+- poster rubric [poster rubric](https://github.com/grizant/STAT445/blob/master/project/poster_rubric.pdf)
+- also provide all code that produced the results (within reason). Email or point me to your git repo.
+- poster printing procedures. I'm making arrangements with the Knowledge Center and update you soon.
+
+### Examples from previous classes
+
+Note these links only work from the git repo directory.  
+
+- [Best in Bayes Class SP19](assets/alex_k_bayes_freq_presentation.pdf)  
+
+- [Good example1](assets/Acevedo_poster_draft2.pdf)  
+
+- [Good example2](assets/poster_karla_nasim_sohel.pdf)  
+
+
+### III. Please continue working Lab 02
+
+[lab_02_functions.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_02_functions.Rmd)
+
+### IV. Summary: 3-2-1
+
+- List/describe 3 revelant R built-in functions you used today
+- Give 2 reasons why to write functions.
+- Share the most interesting thing for you today.
+
+
