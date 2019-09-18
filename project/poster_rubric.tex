@@ -1,0 +1,87 @@
+%A simple LaTeX syllabus template by Luke Smith.
+%I believe this is a variation of a template I got by Mike Hammond...?
+
+%\documentclass[11pt,twocolumn]{article}
+\documentclass[11pt,onecolumn]{article}
+\usepackage{hyperref}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{gb4e}
+%\usepackage[margin=.75in]{geometry}
+\usepackage{textcomp}
+\pagenumbering{gobble}
+%% \usepackage[utf8]{inputenc}
+%% \usepackage[english]{babel}
+%% \usepackage[usenames, dvipsnames]{color}
+
+%paragraph formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\usepackage{url}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\titlespacing\subsection{0in}{\parskip}{\parskip}
+\titlespacing\section{0in}{\parskip}{\parskip}
+
+%Just fill these in to fill in the basic syllabus information.
+\newcommand{\coursename}{Introduction to Statistical Computing\\Term Project}
+\newcommand{\semester}{Fall 2019}
+\newcommand{\roomnumb}{DMS 106}
+\newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
+\newcommand{\myname}{A.~Grant Schissler}
+%\newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
+\newcommand{\myemail}{aschissler@unr.edu}
+\newcommand{\office}{DMSC 224}
+\newcommand{\officehours}{Tue 4pm-5pm, Wed 4pm-5pm, or by appointment}
+% \newcommand{\university}{The University of Nevada, Reno}
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{\textbf{\coursename}}
+% \author{{\university}---{\semester}---{\roomnumb}---{\classtimes}}
+\author{{\semester}---{\roomnumb}---{\classtimes}}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+\vspace{-0.25in}
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+%% \begin{center}
+%% \begin{tabular}{llll}
+%% \textbf{Instructor}:&\myname & \textbf{Contact}:&\href{mailto:\myemail}{\myemail}, 775-784-4661 (office)\\
+%% \textbf{Office}:&\office & \textbf{Hours}:&\officehours\\
+%% \end{tabular}
+%% \end{center}
+
+
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{|p{4.5cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+    \hline
+    \bf Critical task & \bf Needs improvement & \bf Basic & \bf Surpassed \\
+    \hline
+    \hline
+    \textbf{Computation.} Perform computations necessary for the data analysis & Computations contain errors and extraneous code & Computations correct but contain extraneous code/unnecessary code & Computations correct, clear, and properly labeled\\
+    \hline
+    \textbf{Analysis.} Choose and carry out analysis appropriate for data and context. MUST USE COMPUTATIONAL STATISTICS TECHNIQUES! & Choice of analysis is overly simplistic, irrelevant, inappropriate for the data, or missing key component(s)& Analysis appropriate, but incomplete and important features and assumptions not made explicit & Analysis appropriate, complete, advanced, relevant, and informative\\
+    \hline
+    \textbf{Synthesis.} Identify key features of the analysis, and interpret results in context & Conclusions are missing, incorrect, or unsupported & Conclusions are reasonable, but partially correct or partially complete & Relevant conclusions explicitly connected to analysis and context\\
+    \hline
+    \textbf{Visual.} Communicate findings graphically clearly, precisely, and concisely & Inappropriate choice of plots; poorly labeled plots; plots missing & Plots convey information correctly but lack context for interpretation & Plots convey information correctly with adequate and appropriate connections\\
+    \hline
+    \textbf{Written.} Communicate findings in writing clearly, precisely, and concisely & Explanation is illogical, incorrect, or incoherent & Explanation is partially correct but incomplete or unconvincing & Explanation is correct, complete, and convincing.\\
+    \hline
+  \end{tabular}
+\end{table}
+
+\end{document}

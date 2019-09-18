@@ -1,0 +1,92 @@
+%A simple LaTeX syllabus template by Luke Smith.
+%I believe this is a variation of a template I got by Mike Hammond...?
+
+%\documentclass[11pt,twocolumn]{article}
+\documentclass[11pt,onecolumn]{article}
+\usepackage{hyperref}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{gb4e}
+%\usepackage[margin=.75in]{geometry}
+\usepackage{textcomp}
+\pagenumbering{gobble}
+%% \usepackage[utf8]{inputenc}
+%% \usepackage[english]{babel}
+%% \usepackage[usenames, dvipsnames]{color}
+
+%paragraph formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\usepackage{url}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\titlespacing\subsection{0in}{\parskip}{\parskip}
+\titlespacing\section{0in}{\parskip}{\parskip}
+
+%Just fill these in to fill in the basic syllabus information.
+\newcommand{\coursename}{Introduction to Statistical Computing\\Term Project}
+\newcommand{\semester}{Fall 2019}
+\newcommand{\roomnumb}{DMS 106}
+\newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
+\newcommand{\myname}{A.~Grant Schissler}
+%\newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
+\newcommand{\myemail}{aschissler@unr.edu}
+\newcommand{\office}{DMSC 224}
+\newcommand{\officehours}{Tue 4pm-5pm, Wed 4pm-5pm, or by appointment}
+% \newcommand{\university}{The University of Nevada, Reno}
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{\textbf{\coursename}}
+% \author{{\university}---{\semester}---{\roomnumb}---{\classtimes}}
+\author{{\semester}---{\roomnumb}---{\classtimes}}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+\vspace{-0.25in}
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+%% \begin{center}
+%% \begin{tabular}{llll}
+%% \textbf{Instructor}:&\myname & \textbf{Contact}:&\href{mailto:\myemail}{\myemail}, 775-784-4661 (office)\\
+%% \textbf{Office}:&\office & \textbf{Hours}:&\officehours\\
+%% \end{tabular}
+%% \end{center}
+
+Please include the following sections in your poster. You may use the poster templates provided or make your own. Either way, ensure your fonts are not too small so your work is visible.
+
+\begin{enumerate}
+  \itemsep0em
+\item{\bf Title.} Short but well crafted to define the context and the contribution. Include all team members names and  affiliations.
+\item{\bf Abstract.} State the problem you are addressing, why it is important, and give a brief summary of your findings. This is the only part of the poster that should be written in complete sentences.
+\item{\bf Background.} Provide detail here that puts the problem into context. Possible topics include: summary of related studies, current policies and practices, and descriptions of relevant physical/ biological models.
+\item{\bf Data and design.} Give a description of the data, including, as appropriate, descriptions of the:
+  \begin{itemize}
+  \item Subjects under study,
+  \item Data types and units of measurement,
+  \item Missing value analysis,
+  \item Procedures used for design and collection of data,
+  \item Simulation design if synthetic data is used.
+  \end{itemize}
+    
+\item{\bf Statement of results.} This is the bulk of your poster. This includes both exploratory/informal analysis and formal analysis. Tell as much of the story as you can through figures. Remember to abide by the principles of good graphics and provide informative captions. Present only your final analysis, that is, avoid the journey that you took to arrive at your final results.
+\item{\bf Discussion.} Be honest. Address the limitations of your findings. Discuss, if possible, how your results can be generalized. Be careful not to overstate the importance of your findings. With statistical evidence, we can rarely prove a conjecture or definitively answer a question. More often than not, the analysis provides support for or against a theory, and it is your job to assess the strength of evidence. Relate your results to the rest of the literature. Consider the following questions:
+  \begin{itemize}
+  \item Do you results confirm earlier findings or contradict them?
+  \item What additional information does your study provide over past studies?
+  \item What are the unique aspects to your study?
+    \item If you could continue work in this area, what would you suggest for the next step?
+    \end{itemize}
+  \item{\bf References.} Include references for data source(s); \textsc{R} package(s)/software used to analyze data; background material.
+\end{enumerate}
+\end{document}

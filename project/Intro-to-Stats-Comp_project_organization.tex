@@ -1,0 +1,107 @@
+%A simple LaTeX syllabus template by Luke Smith.
+%I believe this is a variation of a template I got by Mike Hammond...?
+
+%\documentclass[11pt,twocolumn]{article}
+\documentclass[11pt,onecolumn]{article}
+\usepackage{hyperref}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{gb4e}
+%\usepackage[margin=.75in]{geometry}
+\usepackage{textcomp}
+\pagenumbering{gobble}
+%% \usepackage[utf8]{inputenc}
+%% \usepackage[english]{babel}
+%% \usepackage[usenames, dvipsnames]{color}
+
+%paragraph formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\usepackage{url}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\titlespacing\subsection{0in}{\parskip}{\parskip}
+\titlespacing\section{0in}{\parskip}{\parskip}
+
+%Just fill these in to fill in the basic syllabus information.
+\newcommand{\coursename}{Introduction to Statistical Computing\\Term Project}
+\newcommand{\semester}{Fall 2019}
+\newcommand{\roomnumb}{DMS 106}
+\newcommand{\classtimes}{Mon,Wed 2:30pm - 3:45pm}
+\newcommand{\myname}{A.~Grant Schissler}
+%\newcommand{\myemail}{\href{mailto:aschissler@unr.edu}{aschissler@unr.edu}}
+\newcommand{\myemail}{aschissler@unr.edu}
+\newcommand{\office}{DMSC 224}
+\newcommand{\officehours}{Tue 4pm-5pm, Wed 4pm-5pm, or by appointment}
+% \newcommand{\university}{The University of Nevada, Reno}
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{\textbf{\coursename}}
+% \author{{\university}---{\semester}---{\roomnumb}---{\classtimes}}
+\author{{\semester}---{\roomnumb}---{\classtimes}}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+\vspace{-0.25in}
+\noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+
+%% \begin{center}
+%% \begin{tabular}{llll}
+%% \textbf{Instructor}:&\myname & \textbf{Contact}:&\href{mailto:\myemail}{\myemail}, 775-784-4661 (office)\\
+%% \textbf{Office}:&\office & \textbf{Hours}:&\officehours\\
+%% \end{tabular}
+%% \end{center}
+
+\section*{Project overview}
+Graduate students will complete a term research project. I encourage you to work on projects related to your graduate research, if possible. Separate rubrics and checklists will describe the standards for each item below.
+
+\section*{Detailed instructions and work products}
+
+For each part of the project, hand in a single assignment for the group, giving the names of all group members. Your group will share the grade for all parts of the project. Make sure to keep your own copies of submitted work as we go along. 
+
+\begin{enumerate}
+  \itemsep0em
+\item Form groups up to 3 (due meeting 9): Form a group, if desired. You may work alone.
+\item Present your research topic and recruit undergraduate students (due meeting 11): Give a 5-minute presentation to the class on your proposed research topic. After the talk, undergraduate students should express interest in working with any group.
+\item Form the final group (due meeting 12): Submit your final group team, including graduate and undergraduate students.
+%% \item Meet with your instructor (due by meeting 14): Set up a time with your instructor for 15 - 30 minute meeting to brainstorm about your project. At the end of the meeting, you should have a specific research question and plan of what sort of data you will gather and analyze.
+%% \item Meet with your instructor (due by meeting 21): Set up a time with your instructor for 15 - 30 minute to generate a preliminary data analysis plan.
+%% \item Meet with your instructor (due by meeting 25): Set up a time with your instructor for 15 - 30 minute to present preliminary results. Develop 1 - 3 key figures to bring to the meeting.
+\item Submit a draft report (due by meeting 26): Submit a polished draft of your project final product. This will be either a written report or a poster.
+\item Present and submit your final project (due meeting 28): Present and submit project final product. This will be either a written report or a poster.
+  
+\end{enumerate}
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|lll}
+    Item \# & Task & Due by (meeting number) & Max Points \\
+    \hline
+    1 & Announce grad group & 2/25/19 (9) & 5 \\
+    2 & Project proposal talk & 3/4/19 (11) & 5 \\
+    3 & Announce final group & 3/6/19 (12) & 5 \\
+    4 & Submit near final draft & 5/06/19 (26) & 15 \\
+    5 & Submit final project & 5/13/19 (28) & 80 \\
+    6 & Present final project & 5/13/19 (29) & 40 \\
+    \hline
+    Total & Total project points & NA & 150 \\
+  \end{tabular}
+\end{table}
+
+\section*{Undergraduate participation}
+
+Undergraduate students may contribute to a project, if the graduate student(s) agree to direct and supervise their work. Undergraduate students will serve as ``research assistants'' with budget of no more than an average of 1 - 2 hours of work a week. In return, any undergraduate student will have to option to replace a midterm grade (60 points) with the graduate student group's evaluation grade. Also, I will ask undergraduate students to evaluate projects and vote towards the ``best in class'' project.
+
+
+\end{document}
