@@ -1,0 +1,286 @@
+---
+title: "Sample Lab Report"
+subtitle: "Subtitle if Needed"
+author: "Name Of Student"
+date: "9/17/2019"
+output: 
+  html_document:
+    theme: cosmo
+    highlight: tango
+---
+
+See [here](https://yihui.name/knitr/options/) for a list of available knitr chunk options or a description of the ones below.
+
+<!-- This should be at the top of every Rmarkdown document -->
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.align = 'center',
+  comment = NA,
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE,
+  results = 'hold')
+
+# I also like to load any necessary libraries in the setup chunk
+
+# loads a set of packages: ggplot, tibble, dplyr, etc. I use this package
+# mainly for plotting, working with data, and pipe operations (see later)
+library(tidyverse)
+
+# This package allows for creating nice looking tables from data frames and
+# matrices
+library(kableExtra)
+```
+
+<!-- the <br /> tag breaks the line without adding space between lines -->
+**Name:** Look you get to write your name twice! <br />
+**NSHE ID:** 000000 <br />
+**Collaborated with:** N/A
+
+Some short blurb about the lab and its contents. This can be one or a few sentences that you write or grabbed from the lab.
+
+<!-- Two hashes to designate a section -->
+## Section Header
+
+Here is some background and setup information that pertains to the following questions.
+
+<!-- Three hashes to designate a subsection -->
+### Subsection header pertaining to tasks
+
+<!--
+You don't need to change the question text unless you want to cut out
+unnecesary text. Ie cutting it down to just the task without hints, notes, etc.
+-->
+- **1a.** This is question **1a** telling you what to do. It may be a couple of sentences or it may be just one.
+
+```{r, q1a}
+n <- 10000
+d <- 6
+
+x <- rnorm(n * d)
+normal_mat <- matrix(x, nrow = n, ncol = d)
+head(normal_mat, 4)
+```
+
+- <span style="color:red; font-weight:bold">Answer 1a</span> This is my answer to the above question, or a comment about the output of the code. Your eyes are drawn right to this text because of the way it stands out against the question.
+
+## Working with Data Frames
+
+*Data frames are a special type of list where all vectors in the list are the same length*
+
+### Showing Data Frames in Rmarkdown
+
+- **2a.** Load the `iris` data set and print the first 5 rows using `head()`.
+
+- <span style="color:red; font-weight:bold">Answer 2a</span> This is my explanation or statement about the code below.
+
+```{r, q2a, echo=FALSE}
+head(iris, 5)
+```
+
+
+- **2b.** Print the first 5 rows using `kableExtra`
+
+- <span style="color:red; font-weight:bold">Answer 2b</span> This code also uses the *pipe* operator that is automatically loaded when `tidyverse` is loaded. Alternatively you can load it from the `magritr` package. Details about the `kableExtra` package can be found [here](https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf).
+
+```{r, q2b}
+n_rows <- 5
+iris %>%
+  head(n_rows) %>%
+  kable(format = "html", digits = 2, align = 'c', booktabs = TRUE,
+        caption = paste("These are the first", n_rows, "rows \
+                        of the iris data set")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+# I try to keep the maximum number of characters per line at 80. Usually longer
+# lines of code are harder to read or don't display as well on smaller devices.
+```
+
+
+## Fancy Markdown and Latex
+
+Rmarkdown (and knitr) have the ability to render some fancy items, most notably being $\LaTeX$ code used for math. You can read more about LaTeX (and MathJax) for math type setting at the following sources
+
+- [TeX Commands available in MathJax](http://www.onemathematicalcat.org/MathJaxDocumentation/TeXSyntax.htm)
+- [MathJax basic tutorial and quick reference](https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference)
+
+### Writing equations
+
+Inline math statements can be put between single dollar signs \$ .. \$ so that it flows with the text. Commands such as `$\hat{\beta}_0$` will render as $\hat{\beta}_0$ without breaking the flow. Display math can be put in double dollar signs `$$ .. $$`. E.g.
+
+$$
+f(x | \mu, \sigma) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\lbrace\frac{-(x - \mu)^2}{2\sigma^2}\right\rbrace
+$$
+
+Multiline equations can be written using pure $LaTeX$ that gets rendered by knitr. The following code **IS NOT** between double dollar signs.
+
+\begin{align}
+f(x) &= ax^2 + bx + c \\
+&= a\left(x^2 + \frac{b}{a}x\right) + c \\
+&= a\left(x^2 + \frac{b}{a}x + \left(\frac{b}{2a}\right)^2\right) + c - a\left(\frac{b}{2a}\right)^2 \\
+&= a\left(x + \frac{b}{2a}\right)^2 + \frac{4ac}{4a} - \frac{b^2}{4a} \\
+&= a\left(x + \frac{b}{2a}\right)^2 + \frac{4ac - b^2}{4a}
+\end{align}
+
+## Setting Code Chunk Options
+
+### Displaying Results
+
+Consider the following (unevaluated) code:
+
+```{r, eval=FALSE}
+x1 <- rnbinom(100, 5, 0.1)
+(x1.mean <- mean(x1))
+(x1.sd <- sd(x1))
+x2 <- rnbinom(100, 5, 0.2)
+(x2.mean <- mean(x2))
+(x2.sd <- sd(x2))
+x3 <- rnbinom(100, 5, 0.3)
+(x3.mean <- mean(x3))
+(x3.sd <- sd(x3))
+x4 <- rnbinom(100, 5, 0.4)
+(x4.mean <- mean(x4))
+(x4.sd <- sd(x4))
+x5 <- rnbinom(100, 5, 0.5)
+(x5.mean <- mean(x5))
+(x5.sd <- sd(x5))
+x6 <- rnbinom(100, 5, 0.6)
+(x6.mean <- mean(x6))
+(x6.sd <- sd(x6))
+x7 <- rnbinom(100, 5, 0.7)
+(x7.mean <- mean(x7))
+(x7.sd <- sd(x7))
+x8 <- rnbinom(100, 5, 0.8)
+(x8.mean <- mean(x8))
+(x8.sd <- sd(x8))
+x9 <- rnbinom(100, 5, 0.9)
+(x9.mean <- mean(x9))
+(x9.sd <- sd(x9))
+```
+
+- There is a lot of repetitive code
+- There is a lot of repetitive output
+
+**results='markup'** *(default behavior, ugly)*
+
+This is hard to look at and hard to read. It's also hard to find any pattern in the results.
+
+```{r, results='markup'}
+x1 <- rnbinom(100, 5, 0.1)
+(x1.mean <- mean(x1))
+(x1.sd <- sd(x1))
+x2 <- rnbinom(100, 5, 0.2)
+(x2.mean <- mean(x2))
+(x2.sd <- sd(x2))
+x3 <- rnbinom(100, 5, 0.3)
+(x3.mean <- mean(x3))
+(x3.sd <- sd(x3))
+x4 <- rnbinom(100, 5, 0.4)
+(x4.mean <- mean(x4))
+(x4.sd <- sd(x4))
+x5 <- rnbinom(100, 5, 0.5)
+(x5.mean <- mean(x5))
+(x5.sd <- sd(x5))
+x6 <- rnbinom(100, 5, 0.6)
+(x6.mean <- mean(x6))
+(x6.sd <- sd(x6))
+x7 <- rnbinom(100, 5, 0.7)
+(x7.mean <- mean(x7))
+(x7.sd <- sd(x7))
+x8 <- rnbinom(100, 5, 0.8)
+(x8.mean <- mean(x8))
+(x8.sd <- sd(x8))
+x9 <- rnbinom(100, 5, 0.9)
+(x9.mean <- mean(x9))
+(x9.sd <- sd(x9))
+```
+
+**results='hold'** *(good)*
+
+A lot of repetitive code that's only calculating simple things. Probably not worth showing the output of such a task.
+
+```{r, results='hold'}
+x1 <- rnbinom(100, 5, 0.1)
+(x1.mean <- mean(x1))
+(x1.sd <- sd(x1))
+x2 <- rnbinom(100, 5, 0.2)
+(x2.mean <- mean(x2))
+(x2.sd <- sd(x2))
+x3 <- rnbinom(100, 5, 0.3)
+(x3.mean <- mean(x3))
+(x3.sd <- sd(x3))
+x4 <- rnbinom(100, 5, 0.4)
+(x4.mean <- mean(x4))
+(x4.sd <- sd(x4))
+x5 <- rnbinom(100, 5, 0.5)
+(x5.mean <- mean(x5))
+(x5.sd <- sd(x5))
+x6 <- rnbinom(100, 5, 0.6)
+(x6.mean <- mean(x6))
+(x6.sd <- sd(x6))
+x7 <- rnbinom(100, 5, 0.7)
+(x7.mean <- mean(x7))
+(x7.sd <- sd(x7))
+x8 <- rnbinom(100, 5, 0.8)
+(x8.mean <- mean(x8))
+(x8.sd <- sd(x8))
+x9 <- rnbinom(100, 5, 0.9)
+(x9.mean <- mean(x9))
+(x9.sd <- sd(x9))
+```
+
+**using a matrix or data frame** *(better)*
+
+Code is more concise. We can now see a pattern! As the probability goes up, the mean and standard deviation go down.
+
+```{r}
+x1 <- rnbinom(100, 5, 0.1)
+x2 <- rnbinom(100, 5, 0.2)
+x3 <- rnbinom(100, 5, 0.3)
+x4 <- rnbinom(100, 5, 0.4)
+x5 <- rnbinom(100, 5, 0.5)
+x6 <- rnbinom(100, 5, 0.6)
+x8 <- rnbinom(100, 5, 0.8)
+x7 <- rnbinom(100, 5, 0.7)
+x9 <- rnbinom(100, 5, 0.9)
+
+X <- cbind(x1, x2, x3, x4, x5, x6, x7, x8, x9)
+X.summary <- data.frame(Prob = seq(0.1, 0.9, 0.1),
+                        Mean = colMeans(X),
+                        `Std.Dev` = apply(X, 2, sd))
+
+X.summary
+```
+
+**parametric code + matrix / data frame + kable** *(best)*
+
+The best code is concise, scalable, and easy to understand. 
+
+Also consider: what if I want to go and add another statistic (say the median)? With the first method, I would have to type out `xN.median <- median(xN)` 9 times! Or what if I want to be more precise with the probability step sizes (eg every 0.05 steps). Now that's over 40 lines of extra code that I need to write!
+
+The amount of code you have to write increases very quickly, whereas with the code below, I would only need to change `seq(0.1, 0.9, 0.1)` to `seq(0.1, 0.9, 0.05)` and add one more line to the `data.frame`.
+
+```{r}
+n <- 100
+size <- 5
+probs <- seq(0.1, 0.9, 0.1)
+
+X <- sapply(probs, function(prob){
+  rnbinom(n = n, size = size, prob = prob)
+})
+
+X.summary <- data.frame(Probability = seq(0.1, 0.9, 0.1),
+                        Mean = colMeans(X),
+                        `Std.Dev` = apply(X, 2, sd))
+```
+
+```{r}
+# This chunk can/should be hidden because it is only used for display output
+X.summary %>%
+  kable(digits = 3, align = 'r',
+        caption = "Mean and Std. Dev. of different Negative Binomial distributions") %>%
+  kable_styling(full_width = TRUE, bootstrap_options = "striped")
+```
+
