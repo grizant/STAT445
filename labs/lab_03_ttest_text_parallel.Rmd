@@ -178,7 +178,7 @@ cl <- makeCluster(no_cores)
 parSapply(cl = cl, X=, FUN = )
 ```
 
-- **5d.** Always remind to close your cluster when you're done.
+- **5d.** Always remember to close your cluster when you're done.
 
 ```{r, eval=FALSE}
 stopCluster(cl)
