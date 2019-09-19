@@ -124,6 +124,3 @@ stopCluster(cl)
 - Why is the degrees of freedom for a t-test with unequal variances so complicated?
 - Why paralellize?
 - What additional difficulties arise when parallelizing?
-
-
-
