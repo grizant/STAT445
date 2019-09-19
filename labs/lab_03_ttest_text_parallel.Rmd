@@ -96,7 +96,7 @@ Using the `order()` function, find the indices that correspond to the top 5 long
     
 ### Computing word counts
 
-These following questions will motivate the development of function `get_wordtab_from_url` described in the lecture [functions.html](http://www.grantschissler.com/teaching/FA18/STAT445/functions.html).
+These following questions will motivate the development of function `get_wordtab_from_url` described in the lecture [06_functions_lab02.html](http://www.grantschissler.com/teaching/FA19/STAT445/06_functions_lab02.html).
 
 - **3a.** Using `table()`, compute counts for the words in `shakespeare_words`, and save the result as `shakespeare_wordtab`. How long is `shakespeare_wordtab`, and is this equal to the number of unique words (as computed above)? Using named indexing, answer: how many times does the word "thou" appear? The word "rumour"? The word "gloomy"? The word "assassination"? 
 

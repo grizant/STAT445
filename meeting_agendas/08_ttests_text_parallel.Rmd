@@ -1,0 +1,129 @@
+---
+title: "Week 5 / Lab 03: Prostate cancer $t$-tests, Shakespeare, and parallelization"
+author: "AG Schissler"
+date: "Monday September 23, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [lesson8_ttests_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/lesson8_ttests_text_parallel/rmd/lesson8_ttests_text_parallel.Rmd) from website so that you can work along the lecture.
+4. Open [lab_03_ttest_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_03_ttest_text_parallel.Rmd) to have the lab available for review.
+
+### This week's agenda
+
+This week we'll go deeper into the prostate cancer data set while reviewing inferential statistical tests, practice text manipulation during an analysis Shakespeare's works, and use the `parallel` package to make use of multi-core processes.
+
+### Today learning outcomes
+
+Students will be able to
+
+- conduct routine statistical inference using built-in R functions.
+- manipulate text data.
+- parallelize code for efficient processing.
+
+## II. Using $t$-tests to infer prostate cancer population differences
+
+At the end of Lab 02, you calculated sample means and standard deviations for the two `svi` groups. These quantatities may suggest that the group population means differ for some variable(s). In Lab 03, we'll formally test whether the population means differ using statistical inference.
+
+Recall that the **two-sample (unpaired) t-statistic** between data sets $X=(X_1,\ldots,X_n)$ and $Y=(Y_1,\ldots,Y_m)$ is:
+$$
+T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
+$$
+where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$.
+
+The **degrees of freedom** associated with $T$ is:
+$$
+\nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
+  \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
+$$
+
+## III. Manipulating and analyzing Shakespeare texts
+
+### Shakespeare's complete works
+
+[Project Gutenberg](http://www.gutenberg.org) offers over 50,000 free online books, especially old books (classic literature), for which copyright has expired. We're going to look at the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare), taken from the Project Gutenberg website. 
+
+To avoid hitting the Project Gutenberg server over and over again, I point you to text file that contains the complete works of William Shakespeare, located [here](http://www.stat.cmu.edu/~ryantibs/statcomp/data/shakespeare.txt). Skim through this text file a little bit to get a sense of what it contains (a whole lot!). 
+
+Lab 03 will walk you through all analysis of this file. Including more motivation of  the function `get_wordtab_from_url` described in the lecture [06_functions_lab02.html](http://www.grantschissler.com/teaching/FA19/STAT445/06_functions_lab02.html).
+
+## IV. Using the `parallel` package
+
+We'll use the `parallel` package to accelerate some simulation. 
+
+Let's discuss this post from the excellent forum, [Stack Overflow](https://stackoverflow.com/):  
+ [https://stackoverflow.com/questions/19281010/simplest-way-to-do-parallel-replicate](https://stackoverflow.com/questions/19281010/simplest-way-to-do-parallel-replicate).
+
+### Serial (one-thread) replicate example
+
+```{r replicate}
+## simreps is the number of simulation reps (n)
+simreps <- 1e5 ## this is 100000, five zeros
+## ?replicate
+set.seed(44)
+compute_meanSDratio <- function(x) {
+    mean(x)/sd(x)
+}
+system.time(res0 <- replicate(n = simreps, expr = compute_meanSDratio( rnorm(10) )))
+str(res0)
+hist(res0, breaks = "scott")
+```
+
+### parallelized replicate function version 1
+
+```{r parRep1, eval=TRUE}
+#create cluster
+library(parallel)
+cl <- makeCluster(detectCores()-1)  
+# get library support needed to run the code
+## clusterEvalQ(cl,library(MASS))
+# put objects in place that might be needed for the code
+## myData <- data.frame(x=1:10, y=rnorm(10))
+## clusterExport(cl,c("myData"))
+# Set a different seed on each member of the cluster (just in case)
+clusterSetRNGStream(cl)
+##... then parallel replicate...
+## on-the-fly function definition
+system.time(res1 <- parSapply(cl, 1:simreps, function(i,...) { x <- rnorm(10); mean(x)/sd(x) } ))
+str(res1)
+hist(res1, breaks = "scott")
+```
+
+### Version two
+
+```{r parRep2, eval=TRUE}
+parReplicate <- function(cl, n, expr, simplify=TRUE, USE.NAMES=TRUE)
+  parSapply(cl, integer(n), function(i, ex) eval(ex, envir=.GlobalEnv),
+            substitute(expr), simplify=simplify, USE.NAMES=USE.NAMES)
+## export functions/objects to the cores
+clusterExport(cl,c("compute_meanSDratio", "simreps"))
+system.time(res2 <- parReplicate(cl, simreps, compute_meanSDratio(x = rnorm(10))))
+hist(res2, breaks = "scott")
+```
+
+Always stop the cluster.
+
+```{r}
+## stop the cluster
+stopCluster(cl)
+```
+
+## Please work on lab 03 with any remaining time
+
+## V. Summary
+
+- Why is the degrees of freedom for a t-test with unequal variances so complicated?
+- Why paralellize?
+- What additional difficulties arise when parallelizing?
+
+
+
