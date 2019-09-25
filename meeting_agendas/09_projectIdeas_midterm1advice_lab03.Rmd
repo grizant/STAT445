@@ -1,0 +1,197 @@
+---
+title: "Projects, Midterm 1 advice, and Lab 03"
+author: "AG Schissler"
+date: "Wednesday September 25, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open our meeting agenda [09_projectIdeas_midterm1advice_lab03.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/09_projectIdeas_midterm1advice_lab03.Rmd) and Lab 03 [lab_03_ttest_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_03_ttest_text_parallel.Rmd) from website so that you can work along the lecture.
+
+## II. Projects
+
+Please email your initial project groups by the end of the day. 
+
+### Project ideas
+
+1) you have a data set you'd like to analyze 
+2) you have a applied topic you'd like to find publicly available data for and analyze
+3) you would like to analyze real data that I have on hand --- medical data, environmental data, genetic data. Possibly in a collaboration with other out-of-class students leading the project.
+4) you have a stats computing method/concept you'd like to explore (check out the later topics in our course schedule for some ideas). Or ask me for an idea here.
+
+## III. Midterm 1 format and advice
+
+Our midterm exam will be in class and you will have the entire class period to complete it. The questions will be mostly conceptual and in multiple choice format. Some questions may require you to calculate something. Please bring a calculator. You will not be allowed to use `R` or the Internet. You may use a page of notes (handwritten, front and back).
+
+### Exam question examples
+
+#### An exam question about t-tests with multiple correct choices.
+
+<head>
+<style type="text/css">
+body{font-family: Arial, Helvetica, Sans;}
+</style>
+</head>
+
+<body>
+
+<ol>
+<li>
+The waiting time (in minutes) at the cashier of two supermarket
+chains with different cashier systems is compared. The following
+statistical test was performed:
+<div class="p"><!----></div>
+<pre>
+	Two&nbsp;Sample&nbsp;t-test
+data:&nbsp;&nbsp;Waiting&nbsp;by&nbsp;Supermarket
+t&nbsp;=&nbsp;1.147,&nbsp;df&nbsp;=&nbsp;111,&nbsp;p-value&nbsp;=&nbsp;0.1269
+alternative&nbsp;hypothesis:&nbsp;true&nbsp;difference&nbsp;in&nbsp;means&nbsp;is&nbsp;greater&nbsp;than&nbsp;0
+95&nbsp;percent&nbsp;confidence&nbsp;interval:
+&nbsp;-0.3592692&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inf
+sample&nbsp;estimates:
+&nbsp;mean&nbsp;in&nbsp;group&nbsp;Sparag&nbsp;mean&nbsp;in&nbsp;group&nbsp;Consumo&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.764750&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.959496&nbsp;
+</pre>
+<div class="p"><!----></div>
+Which of the following statements are correct? (Significance level 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>5</mn><mi>%</mi></mrow></math>)
+<div class="p"><!----></div>
+<br/>
+<ol type="a">
+<li>
+The absolute value of the test statistic is larger than 1.96.
+</li>
+<li>
+A one-sided alternative was tested.
+</li>
+<li>
+The 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi></mrow></math>&nbsp;value is larger than 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>0</mn><mo>.</mo><mn>05</mn></mrow></math>.
+</li>
+<li>
+The test provides strong statistical evidence that the waiting time is longer at Sparag  than at Consumo.
+</li>
+<li>
+The test provides strong statistical evidence that the waiting time is shorter at Sparag than at Consumo.
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+
+<br/>
+<ol type="a">
+<li>
+False. The absolute value of the test statistic is equal to 1.147.
+</li>
+<li>
+True. The test aims at showing that the difference of means is  larger than 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>0</mn></mrow></math>.
+</li>
+<li>
+True. The 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi></mrow></math>&nbsp;value is equal to 
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mn>0</mn><mo>.</mo><mn>127</mn></mrow></math>.
+</li>
+<li>
+False.  The test result is not significant (
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi><mo>&ge;</mo><mn>0</mn><mo>.</mo><mn>05</mn></mrow></math>).
+</li>
+<li>
+False. The test aims at showing that the waiting time at Sparag is longer than at Consumo. The test result ist not significant (
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>p</mi><mo>&ge;</mo><mn>0</mn><mo>.</mo><mn>05</mn></mrow></math>).
+</li>
+</ol>
+<br/>
+</li>
+</ol>
+
+#### An exam question about data types, iteration, memory with only one correct choice.
+
+<html>
+
+<head>
+<style type="text/css">
+body{font-family: Arial, Helvetica, Sans;}
+</style>
+<meta charset="utf-8">
+</head>
+
+<body>
+
+<ol>
+<li>
+<p>Below are two ways to store the same data in <code>R</code>.</p>
+<p>Option A:</p>
+<pre class="text"><code>x_mat &lt;- matrix(data = 1:10000, nrow = 100)</code></pre>
+<p>Option B:</p>
+<pre class="text"><code>x_list &lt;- vector(&quot;list&quot;, length = 100)
+x_vec &lt;- 1:10000
+counter &lt;- 1
+for (i in seq(1, 9991, by= 100)) {
+    x_list[[counter]] &lt;- x_vec[i:(i+99)]
+    counter &lt;- counter + 1
+}</code></pre>
+<p>Which object requires more memory to store and why?</p>
+<br/>
+<ol type="a">
+<li>
+Cannot say using the information given.
+</li>
+<li>
+Both <code>x_list</code> and <code>x_mat</code> use the same amount of memory as the data are the same.
+</li>
+<li>
+<code>x_list</code> uses more memory because <code>for</code> loops are slower in <code>R</code>.
+</li>
+<li>
+The <code>x_list</code> object requires more memory as the list stores both the data and data type information for each column.
+</li>
+<li>
+<code>x_mat</code> uses more memory as lists are the most efficient object in <code>R</code>.
+</li>
+</ol>
+<br/>
+
+
+### Midterm 1 study checklist
+
+[midterm1_prep_checklist.pdf](https://github.com/grizant/STAT445/blob/master/checklists/midterm1_prep_checklist.pdf)
+
+## IV. Labs
+
+Let's review the lab rubric/checklist. 
+
+- [Lab rubric](https://github.com/grizant/STAT445/blob/master/rubrics/lab_rubric.pdf)
+- [Lab checklist](https://github.com/grizant/STAT445/blob/master/checklists/lab_checklist.pdf)
+
+Also Alex K. provided a new template/more guidance:
+
+- [sample_lab_report.Rmd](https://github.com/grizant/STAT445/blob/master/labs/sample_lab_report.Rmd)
+- [sample_lab_report.html](http://www.grantschissler.com/teaching/FA19/STAT445/sample_lab_report.html)
+
+### Please continue working Lab 03
+
+- [lab_03_ttest_text_parallel.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_03_ttest_text_parallel.Rmd)
+
+### V. Summary: 
+
+- How will you prepare your notes for the exam?
+- How will you improve your lab reports?
