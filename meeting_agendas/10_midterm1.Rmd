@@ -1,0 +1,23 @@
+---
+title: "Midterm One"
+author: "AG Schissler"
+date: "09/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<bring to class: copies of the exam, pens>
+
+## Start-of-class work: Please prepare your workspace (5 min)
+
+Scratch paper, handheld calculator, pencil/pen , 1 page of notes, timers, etc. Log into
+
+## Midterm One (70 min)
+
+You may begin working as soon as you get your exam. Please keep all cell phones/computers/laptops/other communication devices away until all exams are turned in. No other window may be open on your computer (especially R!)
+
+If you finish early, then please submit your work and you may leave quietly. Do not leave your personal solutions up for long and check your solutions in detail later. Please make sure you do not disrupt the test or use a communication device.
+
