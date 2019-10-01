@@ -46,6 +46,21 @@ T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
 $$
 where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$. We will compute these $t$-statistics for all 8 variables in our data set, where $X$ will play the role of one of the variables for SVI patients, and $Y$ will play the role of this variable for non-SVI patients. Start by computing a vector of the denominators of the t-statistics, called `pros_dat_denom`, according to the formula above. Take advantage of vectorization; this calculation should require just a single line of code. Make sure not to include any hard constants (e.g., don't just manually write 21 here for $n$); as always, programmatically define all the relevant quantities. Then compute a vector of t-statistics for the 8 variables in our data set, called `pros_dat_t_stat`, according to the formula above, and using `pros_dat_denom`. Again, take advantage of vectorization; this calculation should require just a single line of code (it's okay if you take more than 1 line). Print out the t-statistics to the console. 
 
+```{r}
+colnames(pros_dat)
+pros_svi1_mat <- pros_dat[ pros_dat[ ,"svi"] ==  1, -5]
+(n <- nrow(pros_svi1_mat))
+
+pros_svi0_mat <- pros_dat[ pros_dat[ ,"svi"] ==  0, -5]
+(m <- nrow(pros_svi0_mat))
+
+var1_svi0_vec <- pros_dat[ pros_dat[ ,"svi"] ==  0, 1]
+m <- length(var1_svi1_vec)
+
+sqrt(var(x = var1_svi1_vec) / n + var(x = var1_svi0_vec) / m)
+
+```
+
 - **1b.** Given data $X$ and $Y$ and the t-statistic $T$ as defined the last question, the **degrees of freedom** associated with $T$ is:
 $$
 \nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
