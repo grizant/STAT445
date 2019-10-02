@@ -37,5 +37,6 @@ cat(paste( 1:length(student_vec), ". **", student_vec[prez_order], "**  \n\n*", 
 
 ## Closing (5 min)
 
+- Grad teams please send your slides from today.
 - Which project are you most interested in?
 - 445 students please inquiry with groups as soon as possible if you'd like to participate in a project. Note that it is ultimately the graduate team's decision and please do not be offended if for whatever reason it doesn't work.
