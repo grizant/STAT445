@@ -1,0 +1,41 @@
+---
+title: "Intro to Stat Computing Proposal Talks"
+author: "AG Schissler"
+date: "10/02/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<bring to class: textbook>
+
+## Start-of-class work: ( < 1 min)
+
+Please turn take your seats and engage/participate in the talks. Hold Q & A until the end.
+
+## I. Project proposal talks (50 - 70 minutes)
+
+```{r prez_order, results='asis'}
+group_dat <- readxl::read_xlsx("~/OneDrive - University of Nevada, Reno/Teaching/STAT_445-645/FA19_student_work/grad_project_groups_milestones.xlsx", sheet = "grad_project_groups_milestones")
+## treat as categorical variable
+group_dat$GroupID <- factor(group_dat$GroupID)
+## randomize prez order
+set.seed(10022019)
+prez_order <- sample(levels(group_dat$GroupID))
+## print(as.numeric(prez_order))
+## print the names in that order
+student_by_id_list <- split(group_dat$Student, group_dat$GroupID)
+student_vec <- unlist(lapply(student_by_id_list, paste, collapse = " and "))
+## print in prez order
+topic_by_id_list <- split(group_dat$Topic, group_dat$GroupID)
+topic_vec <- unlist(lapply(topic_by_id_list, function(x) x[1]))
+cat(paste( 1:length(student_vec), ". **", student_vec[prez_order], "**  \n\n*", topic_vec[prez_order], "*  \n\n", sep = ""))
+```
+
+
+## Closing (5 min)
+
+- Which project are you most interested in?
+- 445 students please inquiry with groups as soon as possible if you'd like to participate in a project. Note that it is ultimately the graduate team's decision and please do not be offended if for whatever reason it doesn't work.
