@@ -1,7 +1,7 @@
 ---
 title: "Lab 04: Reading and cleaning data"
 author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Week of 10/08/2018"
+date: "Due 10/13/2018"
 output: html_document
 ---
 
@@ -14,7 +14,7 @@ Name:
 NSHE ID:  
 Collaborated with:  
 
-This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file and rmd file on Canvas, by Sunday 11:59pm.
 
 **This week's agenda**: reading in data, cleaning data, reordering data, merging data, restructuring data
 
@@ -26,7 +26,7 @@ at `http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat` and call
 this dataset `sprint_m_df`. Likewise, read into R the dataset found at
 `http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.w.dat` and call
 this dataset `sprint_w_df`. Use the appropriate arguments in the `read.table()`
-so `sprint_m_df` is a dataset with 282 rows and 8 variables, and
+so `sprint_m_df` is a dataset with 2988 rows and 8 variables, and
 `sprint_w_df` is a dataset with 2018 rows and 8 variables. 
 Print the dimensions of `sprint_m_df` and `sprint_w_df`. 
 Also, print the first 3 rows of both data frames.
@@ -113,7 +113,7 @@ occur on the same `City_Date`, we will only keep the fastest sprint
 and discard the rest. Do the same with `sprint_w_df`.
 Make sure at the end, all the rows in `sprint_m_df` and `sprint_w_df` are
 still sorted in order of `Date`. If multiple sprints occur on the same date, then
-sort those sprints alphabetically by `City`. Your final `sprint_m_df` should have 1180 rows and 9 variables, while `sprint_w_df` should have 921 rows and 9 variables.
+sort those sprints alphabetically by `City`. Your final `sprint_m_df` should have 1253 rows and 9 variables, while `sprint_w_df` should have 921 rows and 9 variables.
 We will not give you explicit guidance on this question, but writing this as
 a function is highly suggested. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df` afterwards. *One hint*: You may want to look into the `base` R function `duplicated`.
 
@@ -131,7 +131,7 @@ Specifically, remove all the rows in `sprint_m_df` that have a `City_Date`
 that does not occur in `sprint_w_df`. Likewise, remove all the rows in `sprint_w_df` that have a `City_Date` that does not occur in `sprint_m_df`.
 Then, remove the `City` and `Date` columns in both data frames.
 (Hint: You might be interested in the `%in%` function in R. Try looking this up
-to see what it does.) In the end, both `sprint_m_df` and `sprint_w_df` should have 385 rows and 7 columns. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
+to see what it does.) In the end, both `sprint_m_df` and `sprint_w_df` should have 377 rows and 7 columns. Print out the first 3 lines of `sprint_m_df` and `sprint_w_df`
 afterwards.
 
 
@@ -149,7 +149,7 @@ afterwards.
 the same thing as in Question 3b. Use one line to merge
 `sprint_m_df` and `sprint_w_df` by `City_Date`. Call this
 resulting data frame `sprint_df2`. This data frame should have
-385 rows and 13 columns.
+377 rows and 13 columns.
 Be sure to set the arguments of `merge()` appropriately so the
 columns from `sprint_m_df` are suffixed by `_m` and the columns
 for `sprint_w_df` are suffixed by `_w`. For example,

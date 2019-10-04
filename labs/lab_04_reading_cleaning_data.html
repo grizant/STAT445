@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="AG Schissler (modified from Ryan Tibshirani)" />
@@ -255,9 +256,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -271,7 +270,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -282,22 +280,80 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -307,8 +363,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Lab 04: Reading and cleaning data</h1>
-<h4 class="author"><em>AG Schissler (modified from Ryan Tibshirani)</em></h4>
-<h4 class="date"><em>Week of 10/08/2018</em></h4>
+<h4 class="author">AG Schissler (modified from Ryan Tibshirani)</h4>
+<h4 class="date">Due 10/13/2018</h4>
 
 </div>
 
@@ -316,12 +372,12 @@ $(document).ready(function () {
 <p>Name:<br />
 NSHE ID:<br />
 Collaborated with:</p>
-<p>This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit <strong>your own</strong> lab as an knitted HTML file on Canvas, by Sunday 11:59pm, this week.</p>
+<p>This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit <strong>your own</strong> lab as an knitted HTML file and rmd file on Canvas, by Sunday 11:59pm.</p>
 <p><strong>This week’s agenda</strong>: reading in data, cleaning data, reordering data, merging data, restructuring data</p>
 <div id="reading-in-and-cleaning" class="section level1">
 <h1>Reading in and cleaning</h1>
 <ul>
-<li><strong>1a.</strong> We first read in the two datasets we will be using in this lab. Use the <code>read.table()</code> function to read into R the dataset found at <code>http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat</code> and call this dataset <code>sprint_m_df</code>. Likewise, read into R the dataset found at <code>http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.w.dat</code> and call this dataset <code>sprint_w_df</code>. Use the appropriate arguments in the <code>read.table()</code> so <code>sprint_m_df</code> is a dataset with 282 rows and 8 variables, and <code>sprint_w_df</code> is a dataset with 2018 rows and 8 variables. Print the dimensions of <code>sprint_m_df</code> and <code>sprint_w_df</code>. Also, print the first 3 rows of both data frames. For this question, we will require you to set the <code>stringsAsFactors</code> argument in <code>read.table()</code> to be <code>TRUE</code>.</li>
+<li><strong>1a.</strong> We first read in the two datasets we will be using in this lab. Use the <code>read.table()</code> function to read into R the dataset found at <code>http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat</code> and call this dataset <code>sprint_m_df</code>. Likewise, read into R the dataset found at <code>http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.w.dat</code> and call this dataset <code>sprint_w_df</code>. Use the appropriate arguments in the <code>read.table()</code> so <code>sprint_m_df</code> is a dataset with 2988 rows and 8 variables, and <code>sprint_w_df</code> is a dataset with 2018 rows and 8 variables. Print the dimensions of <code>sprint_m_df</code> and <code>sprint_w_df</code>. Also, print the first 3 rows of both data frames. For this question, we will require you to set the <code>stringsAsFactors</code> argument in <code>read.table()</code> to be <code>TRUE</code>.</li>
 </ul>
 <p><strong>Reponse 1a.</strong></p>
 <ul>
@@ -349,16 +405,16 @@ wind_measurements</code></pre>
 <li><p><strong>2a.</strong> Notice that the <code>Birthdate</code> and <code>Date</code> columns in both data frames are currently strings that follow the format <code>DAY.MONTH.YEAR</code>. Write a function called <code>date_to_numeric()</code> that takes in a string in either the <code>Birthdate</code> and <code>Date</code> column and outputs a numeric of the form <code>DAY + (MONTH)*10^2 + (YEAR)*10^4</code>. For example, <code>date_to_numeric(&quot;16.08.2009&quot;)</code> should return the numeric <code>20090816</code>. Then, use one of the <code>apply</code> functions to iteratively use <code>date_to_numeric()</code> on both the <code>Birthdate</code> and <code>Date</code> columns in both the <code>sprint_m_df</code> and <code>sprint_w_df</code> data frames, replacing its values. Print out the first 3 lines of <code>sprint_m_df</code> and <code>sprint_w_df</code> afterwards. (Note: Notice that the dates in <code>Birthdate</code> have only the last two numbers of the year, while <code>Date</code> has all four numbers of the year (i.e., <code>86</code> vs. <code>1986</code>). Your code should handle this.)</p></li>
 <li><p><strong>2b.</strong> We now want to reorder both data frames in chronological order of <code>Date</code>. Reorder both <code>sprint_m_df</code> and <code>sprint_w_df</code> in chronological order so the first race to happen is the first row. Print out the first 3 lines of <code>sprint_m_df</code> and <code>sprint_w_df</code> afterwards.</p></li>
 <li><p><strong>2c.</strong> Create a column in both <code>sprint_m_df</code> and <code>sprint_w_df</code> called <code>City_Date</code>, which are characters that are the concatenation the <code>City</code> and <code>Date</code> columns. For example, if the <code>City</code> is <code>Tokyo</code> and <code>Date</code> is <code>19641015</code>, then <code>City_Date</code> should be <code>Tokyo_19641015</code>. Print out the first 3 lines of <code>sprint_m_df</code> and <code>sprint_w_df</code> afterwards.</p></li>
-<li><p><strong>2d.</strong> We now want to remove all duplicated sprints in each of <code>sprint_m_df</code> and <code>sprint_w_df</code>. Specifically, if multiple sprints (rows) in <code>sprint_m_df</code> occur on the same <code>City_Date</code>, we will only keep the fastest sprint and discard the rest. Do the same with <code>sprint_w_df</code>. Make sure at the end, all the rows in <code>sprint_m_df</code> and <code>sprint_w_df</code> are still sorted in order of <code>Date</code>. If multiple sprints occur on the same date, then sort those sprints alphabetically by <code>City</code>. Your final <code>sprint_m_df</code> should have 1180 rows and 9 variables, while <code>sprint_w_df</code> should have 921 rows and 9 variables. We will not give you explicit guidance on this question, but writing this as a function is highly suggested. Print out the first 3 lines of <code>sprint_m_df</code> and <code>sprint_w_df</code> afterwards. <em>One hint</em>: You may want to look into the <code>base</code> R function <code>duplicated</code>.</p></li>
+<li><p><strong>2d.</strong> We now want to remove all duplicated sprints in each of <code>sprint_m_df</code> and <code>sprint_w_df</code>. Specifically, if multiple sprints (rows) in <code>sprint_m_df</code> occur on the same <code>City_Date</code>, we will only keep the fastest sprint and discard the rest. Do the same with <code>sprint_w_df</code>. Make sure at the end, all the rows in <code>sprint_m_df</code> and <code>sprint_w_df</code> are still sorted in order of <code>Date</code>. If multiple sprints occur on the same date, then sort those sprints alphabetically by <code>City</code>. Your final <code>sprint_m_df</code> should have 1253 rows and 9 variables, while <code>sprint_w_df</code> should have 921 rows and 9 variables. We will not give you explicit guidance on this question, but writing this as a function is highly suggested. Print out the first 3 lines of <code>sprint_m_df</code> and <code>sprint_w_df</code> afterwards. <em>One hint</em>: You may want to look into the <code>base</code> R function <code>duplicated</code>.</p></li>
 <li><p><strong>2e.</strong> Check that in both <code>sprint_m_df</code> and <code>sprint_w_df</code>, the values in <code>City_Date</code> column only once (i.e., there are no duplicated values). Do this in a way that you find suitable, but when you Knit this Lab, the results that demonstrate this claim should be visible in the HTML file.</p></li>
 </ul>
 </div>
 <div id="merging-data" class="section level1">
 <h1>Merging data</h1>
 <ul>
-<li><p><strong>3a.</strong> In preparation of merging <code>sprint_m_df</code> and <code>sprint_w_df</code>, we first want to find all the sprints that occur in the same race in both data frames. Specifically, remove all the rows in <code>sprint_m_df</code> that have a <code>City_Date</code> that does not occur in <code>sprint_w_df</code>. Likewise, remove all the rows in <code>sprint_w_df</code> that have a <code>City_Date</code> that does not occur in <code>sprint_m_df</code>. Then, remove the <code>City</code> and <code>Date</code> columns in both data frames. (Hint: You might be interested in the <code>%in%</code> function in R. Try looking this up to see what it does.) In the end, both <code>sprint_m_df</code> and <code>sprint_w_df</code> should have 385 rows and 7 columns. Print out the first 3 lines of <code>sprint_m_df</code> and <code>sprint_w_df</code> afterwards.</p></li>
+<li><p><strong>3a.</strong> In preparation of merging <code>sprint_m_df</code> and <code>sprint_w_df</code>, we first want to find all the sprints that occur in the same race in both data frames. Specifically, remove all the rows in <code>sprint_m_df</code> that have a <code>City_Date</code> that does not occur in <code>sprint_w_df</code>. Likewise, remove all the rows in <code>sprint_w_df</code> that have a <code>City_Date</code> that does not occur in <code>sprint_m_df</code>. Then, remove the <code>City</code> and <code>Date</code> columns in both data frames. (Hint: You might be interested in the <code>%in%</code> function in R. Try looking this up to see what it does.) In the end, both <code>sprint_m_df</code> and <code>sprint_w_df</code> should have 377 rows and 7 columns. Print out the first 3 lines of <code>sprint_m_df</code> and <code>sprint_w_df</code> afterwards.</p></li>
 <li><p><strong>3b.</strong> We now will complete the manual merge of <code>sprint_m_df</code> and <code>sprint_w_df</code>. Here are the sequence steps to do: First, check the order of values in <code>City_Date</code> in <code>sprint_m_df</code> match exactly with those in <code>sprint_w_df</code>. Second, use the <code>cbind()</code> function appropriately to create a new data frame <code>sprint_df</code> that has 13 columns. The first column should be <code>City_Date</code>, the next 6 columns should contain all the remaining columns from <code>sprint_m_df</code>, and the last 6 columns should contain all the remaining columns form <code>sprint_w_df</code>. Of course, each row should correspond to sprints from the same <code>City_Date</code>. Print out the first 3 lines of <code>sprint_df</code> afterwards.</p></li>
-<li><p><strong>3c.</strong> Now, we will use the <code>merge()</code> function to essentially the same thing as in Question 3b. Use one line to merge <code>sprint_m_df</code> and <code>sprint_w_df</code> by <code>City_Date</code>. Call this resulting data frame <code>sprint_df2</code>. This data frame should have 385 rows and 13 columns. Be sure to set the arguments of <code>merge()</code> appropriately so the columns from <code>sprint_m_df</code> are suffixed by <code>_m</code> and the columns for <code>sprint_w_df</code> are suffixed by <code>_w</code>. For example, the columns <code>Rank_m</code> and <code>Rank_w</code> should exist in <code>sprint_df2</code>. Print out the first 3 lines of <code>sprint_df2</code> afterwards. Do these values match those in <code>sprint_df</code> visually?</p></li>
+<li><p><strong>3c.</strong> Now, we will use the <code>merge()</code> function to essentially the same thing as in Question 3b. Use one line to merge <code>sprint_m_df</code> and <code>sprint_w_df</code> by <code>City_Date</code>. Call this resulting data frame <code>sprint_df2</code>. This data frame should have 377 rows and 13 columns. Be sure to set the arguments of <code>merge()</code> appropriately so the columns from <code>sprint_m_df</code> are suffixed by <code>_m</code> and the columns for <code>sprint_w_df</code> are suffixed by <code>_w</code>. For example, the columns <code>Rank_m</code> and <code>Rank_w</code> should exist in <code>sprint_df2</code>. Print out the first 3 lines of <code>sprint_df2</code> afterwards. Do these values match those in <code>sprint_df</code> visually?</p></li>
 <li><p><strong>3d.</strong> Plot the <code>Time_w</code> variable versus the <code>Time_m</code> variable from the data frame <code>sprint_df2</code>, with appropriately labeled axes and an appropriate title. This plot is showing the women’s versus men’s times from the common track meets—is there a positive correlation here, i.e., is there a “track meet effect”? This might suggest that there is something about the track meet itself (e.g., the weather, the atmosphere, the crowd, the specific way the track has been constructed/set up, some combination of these) that helps sprinters run faster. Then, use the <code>cor.test()</code> function to determine if there is a significant correlation between <code>Time_w</code> and <code>Time_m</code> at a significance level of 0.05 based on the <code>p.value</code>. Use the default settings of this function. (You might want to read the documentation of this function if it is unfamiliar to you.)</p></li>
 <li><p><strong>Challenge</strong> To analyze distinguish between the wind factors from other factors, we will regress <code>Wind_m</code> and <code>Time_w</code> onto <code>Time_m</code>. Determine whether or not each variable <code>Wind_m</code> and <code>Time_w</code> is a significant variable for predicting <code>Time_m</code> on average, at a 0.05 significance level. Use the <code>lm()</code> function followed by the <code>summary()</code> function to do this. (If you are unfamiliar with either functions, be sure the read the documentations for these functions.)</p></li>
 </ul>
@@ -382,6 +438,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
