@@ -1,0 +1,109 @@
+---
+title: "Week 7 / Lab 04: Reading and importing data"
+author: "AG Schissler"
+date: "Monday September 23, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### I. Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [12_importing_data.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/12_importing_data.Rmd) from website so that you can work along the lecture.
+4. Open [lab_04_reading_cleaning_data.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_04_reading_cleaning_data.Rmd) to have the lab available for review.
+
+### This week's agenda
+
+- Begin *Working with data* Unit II.
+
+### Today learning outcomes
+
+Students will be able to
+
+- read in (import) data into R
+- write data to a file from R
+- apply in to real data in lab 04
+
+## II. Reading/writing data
+
+All along, we've already been reading in data from the outside, using:
+
+- `readLines()`: reading in lines of text from a file or webpage; returns vector of strings
+- `read.table()`: read in a data table from a file or webpage; returns data frame
+- `read.csv()`: like the above, but assumes comma separated data; returns data frame
+
+This week we'll focus on `read.table()`, `read.csv()` and their counterparts `write.table()`, `write.csv()`, respectively.
+
+#### Reading in data from a previous R session
+
+- `readRDS()`, `saveRDS()`: functions for reading/writing single R objects from/to a file
+- `load()`, `save()`: functions for reading/writing any number of R objects from/to a file
+
+Advantage: these can be a lot more memory efficient than what we'll cover this week.
+Disadvantage: they're limited in scope in the sense that they can only communicate with R.
+
+#### `read.table()`, `read.csv()`
+
+Have a table full of data, just not in the R file format? Then `read.table()` is the function for you. It works as in:
+
+- `read.table(file=file_name, sep=" ")`, to read data from a local file on your computer called `file_name`, assuming (say) space separated data
+- `read.table(file=webpage_link, sep="\t")`, to read data from a webpage up at `webpage_link`, assuming (say) tab separated data
+
+The function `read.csv()` is just a shortcut for using `read.table()` with `sep=","`. (But note: these two actually differ on some of the default inputs!)
+
+#### Helpful input arguments
+
+The following inputs apply to either `read.table()` or `read.csv()` (though these two functions actually have different default inputs in general---e.g., `header` defaults to TRUE in `read.csv()` but FALSE in `read.table()`)
+
+- `header`: boolean, TRUE is the first line should be interpreted as column names
+- `sep`: string, specifies what separates the entries; empty string "" is interpreted to mean any white space
+- `quote`: string, specifies what set of characters signify the beginning and end of quotes; empty string "" disables quotes altogether
+
+Other helpful inputs: `skip`, `row.names`, `col.names`. You can read about them in the help file for `read.table()` .
+
+Another example of reading in data
+===
+
+```{r, error=TRUE}
+# This data table is tab separated, and it comes with column names
+sprint_df <- read.table(
+  file="http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat",
+  sep="\t", header=TRUE)
+
+# Oops! It turns out it has some apostrophe marks in the City column, 
+# so we have to set quote=""
+sprint_df <- read.table(
+  file="http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat",
+  sep="\t", header=TRUE, quote="")
+head(sprint_df)
+sapply(sprint_df, class)
+unique(grep("'", sprint_df$City, value=TRUE)) # This is the troublemaker
+```
+
+#### `write.table()`, `write.csv()`
+
+To write a data frame (or matrix) to a text file, use `write.table()` or `write.csv()`. These are the counterparts to `read.table()` and `read.csv()`, and they work as in:
+
+- `write.table(my_df, file="my_df.txt", sep=" ", quote=FALSE)`, to write `my_dat` to the text file "my_df_txt" (to be created in your working directory), with (say) space separation, and no quotes around the entries
+- `write.csv(my_df, file="my_df_csv", quote=FALSE)`, to write `my_dat` to the text file "my_df.csv" (to be created in your working directory), with comma separation, and no quotes.
+
+Note that `quote=FALSE`, signifying that no quotes should be put around the printed data entries, seems always preferable (default is `quote=TRUE`). Also, setting `row.names=FALSE` and `col.names=FALSE` will disable the printing of row and column names (defaults are `row.names=TRUE` and `col.names=TRUE`).
+
+
+## III. Lab 04
+
+1. Review the entire document.
+2. Ask for clarification as needed.
+3. Identify next actions.
+
+## IV. Summary
+
+- 3 new R functions
+- 2 stats ideas
+- 1 action item for you to do.
