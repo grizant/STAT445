@@ -1,0 +1,56 @@
+---
+title: "Week 7 / Lab 04: Reading, ordering, merging data"
+author: "AG Schissler (modified from Ryan Tibshirani)"
+date: "Wednesday October 9, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [13_merging_data_lab04.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/13_merging_data_lab04.Rmd) from website so that you can work along the lecture.
+4. Open [lab_04_reading_cleaning_data.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_04_reading_cleaning_data.Rmd) to have the lab available.
+
+### This week's agenda
+
+- Importing, ordering, and merging data
+
+### Today's learning outcomes
+
+Students will be able to
+
+- reorder data sets in R
+- merge data sets in R
+
+## II. Reordering and merging data sets
+
+### `merge()`
+
+The `merge()` function tries to merge two data frames according to common columns, as in: `merge(x, y, by.x="SomeXCol", by.y="SomeYCol")`, to join two data frames `x`, `y`, by matching the columns "SomeXCol" and "SomeYCol"
+
+- Default (no `by.x`, `by.y` specified) is to match all columns with common names
+- Output will be a new data frame that has all the columns of both data frames 
+- If you know databases, then `merge()` is doing a JOIN.
+
+## Using `order()` and manual tricks versus `merge()`
+
+- Reordering is easier to grasp; `merge()` takes some learning
+- Reordering is simplest when there's only one column to merge on; `merge()` handles many columns
+- Reordering is simplest when the data frames are the same size; `merge()` handles different sizes automatically
+
+## III. Lab 04
+
+- Questions for the whole group? Please don't be shy it could save us all effort.
+- Please begin and I will answer questions in the order I receive them and considering who I have helped previously in class.
+
+
+## IV. Summary
+
+- 445: Write a one-sentence summary of things you learned today.
