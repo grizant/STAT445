@@ -98,12 +98,43 @@ Note that `quote=FALSE`, signifying that no quotes should be put around the prin
 
 ## III. Lab 04
 
+### Some suggested steps
+
 1. Review the entire document.
 2. Ask for clarification as needed.
 3. Identify next actions.
 
+### Some code to help process city data in Lab 04
+
+The HTML encoding of cities is an annoying issue. Here is how I resolved the issue:
+
+Following the post https://stackoverflow.com/questions/43635252/convert-default-html-encoding-to-utf-8-or-latin1-in-r
+
+```{r, results='hold'}
+library(stringi)
+library(XML)
+
+sprint_m_df <- read.table("http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat", header = T, sep = "\t", quote = "")
+vector_cities <- as.character(sprint_m_df$City)
+## some problematic names
+vector_cities[c(19, 21, 34)]
+
+html_txt <- function(str) {
+xpathApply(htmlParse(str, asText=TRUE),
+"//body//text()",
+xmlValue)[[1]]
+}
+
+##The html_txt can parse the &#227 etc chars to their respective UTF values which can further be taken by stringi functions to convert into english alphabets
+
+x <- vector_cities
+txt <- html_txt(x)
+Encoding(txt) <- "UTF-8" #encoding to utf-8
+splt_txt <- strsplit(txt,split="\n")[[1]]
+converted_city <- stringi::stri_trans_general(splt_txt, "latin-ascii")
+converted_city[c(19, 21, 34)]
+```
+
 ## IV. Summary
 
-- 3 new R functions
-- 2 stats ideas
-- 1 action item for you to do.
+Provide a suggestion/strategy for using a new function in R.

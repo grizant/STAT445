@@ -471,19 +471,47 @@ head(sprint_df)</code></pre>
 </div>
 <div id="iii.-lab-04" class="section level2">
 <h2>III. Lab 04</h2>
+<div id="some-suggested-steps" class="section level3">
+<h3>Some suggested steps</h3>
 <ol style="list-style-type: decimal">
 <li>Review the entire document.</li>
 <li>Ask for clarification as needed.</li>
 <li>Identify next actions.</li>
 </ol>
 </div>
+<div id="some-code-to-help-process-city-data-in-lab-04" class="section level3">
+<h3>Some code to help process city data in Lab 04</h3>
+<p>The HTML encoding of cities is an annoying issue. Here is how I resolved the issue:</p>
+<p>Following the post <a href="https://stackoverflow.com/questions/43635252/convert-default-html-encoding-to-utf-8-or-latin1-in-r" class="uri">https://stackoverflow.com/questions/43635252/convert-default-html-encoding-to-utf-8-or-latin1-in-r</a></p>
+<pre class="r"><code>library(stringi)
+library(XML)
+
+sprint_m_df &lt;- read.table(&quot;http://www.stat.cmu.edu/~ryantibs/statcomp/data/sprint.m.dat&quot;, header = T, sep = &quot;\t&quot;, quote = &quot;&quot;)
+vector_cities &lt;- as.character(sprint_m_df$City)
+## some problematic names
+vector_cities[c(19, 21, 34)]
+
+html_txt &lt;- function(str) {
+xpathApply(htmlParse(str, asText=TRUE),
+&quot;//body//text()&quot;,
+xmlValue)[[1]]
+}
+
+##The html_txt can parse the &amp;#227 etc chars to their respective UTF values which can further be taken by stringi functions to convert into english alphabets
+
+x &lt;- vector_cities
+txt &lt;- html_txt(x)
+Encoding(txt) &lt;- &quot;UTF-8&quot; #encoding to utf-8
+splt_txt &lt;- strsplit(txt,split=&quot;\n&quot;)[[1]]
+converted_city &lt;- stringi::stri_trans_general(splt_txt, &quot;latin-ascii&quot;)
+converted_city[c(19, 21, 34)]</code></pre>
+<pre><code>## [1] &quot;Ath&amp;iacute;nai&quot; &quot;Z&amp;uuml;rich&quot;    &quot;Ath&amp;iacute;nai&quot;
+## [1] &quot;Athinai&quot; &quot;Zurich&quot;  &quot;Athinai&quot;</code></pre>
+</div>
+</div>
 <div id="iv.-summary" class="section level2">
 <h2>IV. Summary</h2>
-<ul>
-<li>3 new R functions</li>
-<li>2 stats ideas</li>
-<li>1 action item for you to do.</li>
-</ul>
+<p>Provide a suggestion/strategy for using a new function in R.</p>
 </div>
 </div>
 
