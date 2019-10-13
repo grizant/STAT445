@@ -75,7 +75,7 @@ my_sim_data <- sapply(X = my_index, FUN = function(tmp_index){
     ## ifelse works since 1 == TRUE and 0 == FALSE
     ifelse(test = tmp_index, yes = rnorm(1, 5, 1), no = rnorm(1,0,1))
 })
-ggplot2::qplot(x = my_sim_data, bins = 40) + ggplot2::theme_bw() 
+ggplot2::qplot(x = my_sim_data, bins = 40) + ggplot2::theme_bw() + ggplot2::labs(x="Simulated values", y = "Counts") 
 ```
 
 ## III. Please continue Lab 04
