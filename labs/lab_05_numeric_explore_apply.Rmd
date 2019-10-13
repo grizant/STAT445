@@ -1,7 +1,7 @@
 ---
-title: "Lab 05: Reading and cleaning data"
+title: "Lab 05: Exploratory data analysis --- numeric summaries"
 author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Week of 10/15/2018"
+date: "Week of 10/14/2019"
 output: html_document
 ---
 
@@ -46,6 +46,8 @@ Data frame basics
 
 - **1f.** Add the `TotalCrime` vector to as a new column to `crime_mat_noregion`, and make sure this column is named appropriately. Note: unlike the last question, there are not many ways to do this, there is only one. Print the first 6 rows of the new `crime_mat_noregion` matrix.
 
+- **Challenge** Use functions within the `tidyverse` to reproduce similar output to all parts of Question 1.  
+
 Apply functions versus `for()` loops
 ===
 
@@ -86,4 +88,4 @@ We're going to ask you to emulate this for each of 3 other apply functions (`lap
 
 - **2d.** Compute the quantiles of the `Murder` column in `crime_mat_noregion` using the `quantile()` function, and print the result to the console. Now compute the quantiles of each of the columns of `crime_mat_noregion`, using `apply()` and `quantile()`, in just one line of code. Store the resulting matrix as `quant_mat`, print it out to the console, and comment on its dimensions and row and column names. Now compute the 10%, 20%, etc., through 90% quantiles of `Murder` column with a single call to `quantile()`, and print the result to the console. Hint: look at the documentation for `quantile()` to figure out what argument to set in order to achieve this result. Do the same for each column of `crime_mat_noregion`, using `apply()` and `quantile()`, and passing additional arguments as appropriate. Store the resulting matrix as `quant_mat2`, and print it out to the console. Lastly (sorry to do this to you, but you probably guessed we would ask), replicate this with a `for()` loop, calling the result `quant_mat3`. Check using `all.equal()` that `quant_mat2` and `quant_mat3` match. Hint: you'll have to set the row and columns names of `quant_mat3` appropriately.
 
-- **Challenge** Use the `dplyr` package within the `tidyverse` to construct a matching `min_vector3` from part Q2c. Also compute the quantiles of `Murder` (as in Q2d), but within each of the four regions. See this [page](https://dplyr.tidyverse.org/) to get started and there are DataCamp modules on this.
+- **Challenge** Use functions within the `tidyverse` to reproduce similar output to all parts of Question 2.

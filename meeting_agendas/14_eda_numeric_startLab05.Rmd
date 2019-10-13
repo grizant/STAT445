@@ -1,0 +1,71 @@
+---
+title: "Week 8 / Exploratory Data Analysis, numeric summary, Lab 05"
+author: "AG Schissler"
+date: "Monday October 14, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### I. Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [14_eda_numeric_startLab05.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/14_eda_numeric_startLab05.Rmd) from website so that you can work along the lecture.
+4. Open [lab_05_numeric_explore_apply.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_05_numeric_explore_apply.Rmd) to have the lab available.
+
+### This week's agenda
+
+- Continue *Working with data* Unit II.
+- Focus on using R to perform numeric exploratory data analysis (EDA).
+- More work with the `apply` family of functions.
+
+### Today learning outcomes
+
+Students will be able to
+
+- more practice on reading in (import) data into R
+- use `apply` to numerically summarize real data in lab 05
+
+## II. Exploratory Data Analysis (EDA)
+
+EDA is a fundamental part of data analysis (or maybe FUN-damental). The problem is that there is no standard approach/workflow. It is also iterative, not just done once and checked off your todo list. EDA is begins after the data is read into `R` and all the data are cleaned and data types (numeric, categorical, ordinal, etc.) are defined. Then the EDA begins with the following goals:  
+
+1) Ensure data quality. Are all the data trustworthy?  
+2) Ensure that all data are well understood. You know exactly what every variable/observation means.  
+3) If analytic/research questions are previously defined, generate plots to informally address that questions.  
+4) If analytic/research questions are **not** previously defined, explore patterns and generate hypotheses (*data mining*)  
+
+Common EDA strategies:  
+
+* Numerically summarize variables individually. This includes finding suitable measures of center (mean, median, etc), spread (standard deviation, variance, quantiles). Or frequencies and proportions for categorical data. Find and 
+enumerate missing values. 
+
+* Visualize univariate data --- histograms, probability density estimates, boxplots, etc. Are there outlying data points? Are these outliers real measurements or typos/incorrect quantification? E.g., does an air temperature of 101 degrees F in December make sense for Reno, NV?
+
+* Numerically summarize joint characteristics (covariance, correlation, etc.). Explore numeric relationships within and across categories. For example, compute the means of annual income within age groups then compare across age groups.
+
+* Visualize univariate data --- histograms, probability density estimates, boxplots, etc.
+
+* Visualize multivariate data --- scatterplots, side-by-side boxplots, etc. Check out `ggally` for easy plot creation.
+
+For some projects, descriptive statistics and plots are all that is needed. Then EDA sufficiently meets the project objectives. But typically in rigorous/scientific work, after EDA statistical modeling begins along with formal inferential procedures. All the EDA informs which models are appropriate before running a bunch of hypothesis tests and fitting regressions. For example, if your data are bimodal, would a normal model make sense?
+
+## III. Lab 05
+
+### Some suggested steps
+
+1. Review the entire document, estimate time to complete.
+2. Ask for clarification as needed.
+3. Identify next actions.
+4. Schedule time to finish on time.
+
+## IV. Summary
+
+What challenges do you face this week in order to complete Lab 05 on time? How will you overcome them?
+
+
