@@ -49,11 +49,11 @@ $$
 
 Then let  
 
-$$
-Z = X, \pi = 1
-Z = Y, \pi = 0
-$$ 
-
+\[ \begin{cases} 
+      Z = X, & \pi = 1 \\
+	  Z = Y, & \pi = 0
+   \end{cases}
+\]
 
 be the random variable that results from the (two-component) discrete mixing of $X$ and $Y$ with mixing proportion $\pi \sim bernoulli(p = 0.01)$. By the values we've used above the data will appear to have outliers --- a few points from away from the majority of points.
 
@@ -77,6 +77,15 @@ my_sim_data <- sapply(X = my_index, FUN = function(tmp_index){
 })
 ggplot2::qplot(x = my_sim_data, bins = 40) + ggplot2::theme_bw() + ggplot2::labs(x="Simulated values", y = "Counts") 
 ```
+
+Another common visualization is a (modified) boxplot. Outliers are defined by the $1.5 \times IQR$ rule:
+
+```{r, fig.cap = 'Figure 2. Boxplot of 1000 simulated points from a discrete mixture of Gaussians. Interestingly, the traditional outlier rule in this setting shows outlying points in both directions.'}
+vals <- boxplot(x = my_sim_data, ylab = "Simulated values")
+vals$out
+```
+
+### The point for EDA is that outliers will sometimes be identified by methods and the analyst much hypothesize the generating mechanism.
 
 ## III. Please continue Lab 04
 
