@@ -1,7 +1,7 @@
 ---
-title: "Week 8 / Exploratory Data Analysis, numeric summary, Lab 05"
+title: "Week 9 / Exploratory Data Analysis, base graphics, Lab 06"
 author: "AG Schissler"
-date: "Wednesday October 16, 2019"
+date: "Wednesday October 23, 2019"
 output: html_document
 ---
 
@@ -15,83 +15,194 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open [14_eda_numeric_startLab05.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/14_eda_numeric_startLab05.Rmd) from website so that you can work along the lecture.
-4. Open [lab_05_numeric_explore_apply.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_05_numeric_explore_apply.Rmd) to have the lab available.
+3. Open [17_base_graphics_continueLab06.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/17_base_graphics_continueLab06.Rmd) from website so that you can work along the lecture.
+4. Open [lab_06_base_graphics.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_06_base_graphics.Rmd) to have the lab available.
 
 ### This week's agenda
 
 - Continue *Working with data* Unit II.
-- Focus on using R to perform numeric exploratory data analysis (EDA).
-- More work with the `apply` family of functions.
+- Focus on using R to plot data to conduct exploratory data analysis (EDA).
 
 ### Today learning outcomes
 
 Students will be able to
 
-- more practice on reading in (import) data into R
-- use `apply` to numerically summarize real data in lab 05
+- use base R graphics to plot data
 
-## II. An outlier generating example through a discrete mixture
+## II. Curves, surfaces, and colors
 
-Let's discuss how to simulate data with outliers. One way this could arise is that the data in one variable are actually from two distributions that are *mixed* together.  
+### Drawing a curve
 
-In the code below we simulate $n=1000$ data points from a discrete mixture of Gaussian random variables. Formally, let  
+To draw a curve of a function, use `curve()`
 
-$$
-X \sim N(0,1)
-$$
-
-and  
-
-$$
-Y \sim N(5,1)
-$$
-
-Then let  
-
-\[ \begin{cases} 
-      Z = X, & \pi = 1 \\
-	  Z = Y, & \pi = 0
-   \end{cases}
-\]
-
-be the random variable that results from the (two-component) discrete mixing of $X$ and $Y$ with mixing proportion $\pi \sim bernoulli(p = 0.01)$. By the values we've used above the data will appear to have outliers --- a few points from away from the majority of points.
-
-```{r, fig.cap = 'Figure 1. Histogram of 1000 simulated points from a discrete mixture of Gaussians. This produces a few outliers with larger values than the majority of points.'}
-## let's simulate and visualize data with outlying points
-set.seed(10162109)
-## mixing probability
-my_pi <- 0.01
-## suppose with have 1000 data points
-n = 1000
-## let's sample which points will be from X and Y
-my_index <- rbinom(n = n, size = 1, prob = my_pi)
-## count the "outliers"
-paste("There are", sum(my_index), "outliers.")
-## simulate the values by an "on-the-fly"
-## function definition in sapply
-## development parameter: tmp_index <- 0
-my_sim_data <- sapply(X = my_index, FUN = function(tmp_index){
-    ## ifelse works since 1 == TRUE and 0 == FALSE
-    ifelse(test = tmp_index, yes = rnorm(1, 5, 1), no = rnorm(1,0,1))
-})
-ggplot2::qplot(x = my_sim_data, bins = 40) + ggplot2::theme_bw() + ggplot2::labs(x="Simulated values", y = "Counts") 
+```{r}
+curve(x^3) # Default is to plot between 0 and 1. Note: x here is a symbol
+curve(x^3, from=-3, to=3, lwd=3, col="red") # More plotting options
 ```
 
-Another common visualization is a (modified) boxplot. Outliers are defined by the $1.5 \times IQR$ rule:
+### Adding a curve to an existing plot
 
-```{r, fig.cap = 'Figure 2. Boxplot of 1000 simulated points from a discrete mixture of Gaussians. Interestingly, the traditional outlier rule in this setting shows outlying points in both directions.'}
-vals <- boxplot(x = my_sim_data, ylab = "Simulated values")
-vals$out
+
+To add a curve to an existing plot, use `curve()` with `add=TRUE`
+
+```{r}
+n = 50
+set.seed(0)
+x = sort(runif(n, min=-2, max=2))
+y = x^3 + rnorm(n)
+
+plot(x, y)
+curve(x^3, lwd=3, col="red", add=TRUE)
+# Note: the x argument here and the x vector we defined above are different!
+# Reminder: x here is a symbol
 ```
 
-### The point for EDA is that outliers will sometimes be identified by methods and the analyst much hypothesize the generating mechanism.
+### Adding a rug to an existing plot
 
-## III. Please continue Lab 04
+To add a rug to an existing plot (just tick marks, for where the x points occur), use `rug()`
+
+```{r}
+plot(x, y)
+curve(x^3, lwd=3, col="red", add=TRUE) 
+rug(x)
+```
+
+### Drawing a surface
+
+
+To draw a surface, use the custom function `surface()` given below. This function wraps around the built-in `persp()` function.
+
+```{r}
+surface = function(expr, from.x=0, to.x=1, from.y=0, to.y=1, n.x=30, 
+  n.y=30, col.list=rainbow(30), theta=5, phi=25, mar=c(1,1,1,1), ...) {
+  # Build the 2d grid
+  x = seq(from=from.x,to=to.x,length.out=n.x)
+  y = seq(from=from.y,to=to.y,length.out=n.y)
+  plot.grid = expand.grid(x=x,y=y)
+  
+  # Evaluate the expression to get matrix of z values
+  uneval.expr = substitute(expr)
+  z.vals = eval(uneval.expr,envir=plot.grid)
+  z = matrix(z.vals,nrow=n.x)
+  
+  # Figure out margins
+  orig.mar = par()$mar # Save the original margins
+  par(mar=mar)
+  col.grid = col.list[round((z[-1,-1]-min(z))/(max(z)-min(z))
+    * (length(col.list)-1) + 1)]
+  r = persp(x,y,z,theta=theta,phi=phi,col=col.grid,...)
+  par(mar=orig.mar) # Restore the original margins
+  invisible(r) # Return the persp object invisibly
+}
+surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3)
+surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3,
+        theta=25, phi=15, col=terrain.colors(30), 
+        ticktype="detailed", mar=c(2,2,2,2))
+```
+
+Adding points to a surface
+===
+
+To add points to a surface, save the output of `surface()`. Then use `trans3d()`, to transform (x,y,z) coordinates to (x,y) coordinates that you can pass to `points()`
+
+```{r}
+persp.mat = surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3,
+                    theta=25, phi=15, col=rgb(0,0,1,alpha=0.2),
+                    ticktype="detailed", mar=c(2,2,2,2))
+
+n = 500
+x = runif(n, -3, 3)
+y = runif(n, -3, 3)
+z = x^3 + y^3 + 5*rnorm(n)
+
+xy.list = trans3d(x, y, z, persp.mat)
+points(xy.list, pch=20)
+```
+
+### Color palettes
+
+
+Color palettes are functions for creating vectors of contiguous colors, just like `gray.colors()`, `rainbow()`, `heat.colors()`, `terrain.colors()`, `topo.colors()`, `cm.colors()`. Given a number n, each of these functions just returns a vector of colors (names, stored as strings) of length n
+
+```{r}
+n = 50
+plot(0, 0, type="n", xlim=c(1,n), ylim=c(1,6))
+points(1:n, rep(6,n), col=gray.colors(n), pch=19)
+points(1:n, rep(5,n), col=rainbow(n), pch=19)
+points(1:n, rep(4,n), col=heat.colors(n), pch=19)
+points(1:n, rep(3,n), col=terrain.colors(n), pch=19)
+points(1:n, rep(2,n), col=topo.colors(n), pch=19)
+points(1:n, rep(1,n), col=cm.colors(n), pch=19)
+```
+
+### Creating a custom color palette
+
+
+To create a custom palette, that interpolates between a set of base colors, `colorRampPalette()`
+
+```{r}
+cust.colors = colorRampPalette(c("red","purple","darkgreen"))
+class(cust.colors)
+plot(1:n, rep(1,n), col=cust.colors(n), pch=19)
+```
+
+### Coloring points by value 
+
+
+Coloring points according to the value of some variable can just be done with a bit of indexing, and the tools you already know about colors
+
+```{r}
+# Function to retrieve a color according to a value
+# - val: the value in question
+# - lim: a vector of length 2, lower and upper limits for possible values
+# - col.vec: the color vector to choose from
+get.col.from.val = function(val, lim, col.vec) {
+  col.vec[(val-lim[1])/(lim[2]-lim[1]) * (length(col.vec)-1) + 1]
+}
+
+# Let's color points according to y value
+col.vec = heat.colors(30)
+lim = c(-1, 1)
+theta = seq(0, 6*pi, length=200)
+
+plot(theta, sin(theta), type="o", pch=19, 
+     col=get.col.from.val(sin(theta), lim, col.vec))
+```
+
+---
+
+```{r}
+# Another example, now in 3d
+persp.mat = surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3,
+                    theta=25, phi=15, col=rgb(1,1,1,alpha=0.2),
+                    ticktype="detailed", mar=c(2,2,2,2))
+
+# Let's color points according to z value
+col.vec = terrain.colors(30)
+lim = c(min(z), max(z))
+
+xy.list = trans3d(x, y, z, persp.mat)
+points(xy.list, pch=20, col=get.col.from.val(z, lim, col.vec))
+```
+
+### Summary
+
+- `plot()`: generic plotting function
+- `points()`: add points to an existing plot
+- `lines()`, `abline()`: add lines to an existing plot
+- `text()`, `legend()`: add text to an existing plot
+- `rect()`, `polygon()`: add shapes to an existing plot
+- `hist()`, `image()`: histogram and heatmap
+- `heat.colors()`, `topo.colors()`, etc: create a color vector
+- `density()`: estimate density, which can be plotted
+- `contour()`: draw contours, or add to existing plot
+- `curve()`: draw a curve, or add to existing plot
+
+## III. Please continue Lab 06
 
 - Questions for the whole group? Please don't be shy it could save us all effort.
 - Please begin and I will answer questions in the order I receive them and considering who I have helped previously in class.
 
 ## IV. Summary
 
-Why do we perform EDA before fitting any statistical model?
+Describe the concept of **layers** in plotting data.

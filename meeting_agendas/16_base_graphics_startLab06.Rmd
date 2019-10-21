@@ -28,7 +28,6 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 Students will be able to
 
 - use base R graphics to plot data
-- critique visualizations
 
 ## II. Introduction to base graphics in R
 
@@ -36,11 +35,7 @@ Base graphics refers to the automatically loaded `graphics` and `base` R package
 
 ## III. Using base graphics
 
-<span style="color: blue">Part I</span>
-===
-
-Plotting in R
-===
+### Plotting in R
 
 Base R has a set of powerful plotting tools. An overview:
 
@@ -55,8 +50,7 @@ Base R has a set of powerful plotting tools. An overview:
 - `contour()`: draw contours, or add to existing plot
 - `curve()`: draw a curve, or add to existing plot
 
-Scatter plot
-===
+### Scatter plot
 
 To make a scatter plot of one variable versus another, use `plot()`
 
@@ -68,8 +62,7 @@ y = x^3 + rnorm(n)
 plot(x, y)
 ```
 
-Plot type
-===
+### Plot type
 
 The `type` argument controls the plot type. Default is `p` for points; set it to `l` for lines
 
@@ -80,8 +73,7 @@ plot(x, y, type="l")
 
 Try also `b` or `o`, for both points and lines 
 
-Labels
-===
+### Labels
 
 The `main` argument controls the title; `xlab` and `ylab` are the x and y labels
 
@@ -90,8 +82,8 @@ plot(x, y, main="A noisy cubic") # Note the default x and y labels
 plot(x, y, main="A noisy cubic", xlab="My x variable", ylab="My y variable")
 ```
 
-Point type 
-===
+### Point type 
+
 
 Use the `pch` argument to control point type
 
@@ -102,8 +94,8 @@ plot(x, y, pch=19) # Filled circles
 
 Try also `20` for small filled circles, or `"."` for single pixels
 
-Line type
-===
+### Line type
+
 
 Use the `lty` argument to control the line type, and `lwd` to control the line width
 
@@ -112,8 +104,8 @@ plot(x, y, type="l", lty=1, lwd=1) # Solid line, default width
 plot(x, y, type="l", lty=2, lwd=3) # Dashed line, 3 times as thick
 ```
 
-Color
-===
+### Color
+
 
 Use the `col` argument to control the color. Can be:  
 
@@ -127,8 +119,8 @@ plot(x, y, pch=19, col=1) # Black, default
 plot(x, y, pch=19, col=2) # Red
 ```
 
-Multiple plots
-===
+### Multiple plots
+
 
 To set up a plotting grid of arbitrary dimension, use the `par()` function, with the argument `mfrow`. Note: in general this will affect all following plots! (Except in separate R Markdown code chunks ...)
 
@@ -140,8 +132,8 @@ plot(rev(x), y, main="Flipped green", pch=20, col="green")
 plot(rev(x), y, main="Flipped purple", pch=20, col="purple")
 ```
 
-Margin
-===
+### Margin
+
 
 Default margins in R are large (and ugly); to change them, use the `par()` function, with the argument `mar`. Note: in general this will affect all following plots! (Except in separate R Markdown code chunks ...)
 
@@ -160,8 +152,8 @@ plot(rev(x), y, main="Flipped purple", pch=20, col="purple")
 plot(x, y)
 ```
 
-Saving plots
-===
+### Saving plots
+
 
 Use the `pdf()` function to save a pdf file of your plot, in your R working directory. Use `getwd()` to get the working directory, and `setwd()` to set it
 
@@ -178,8 +170,8 @@ graphics.off()
 
 Also, use the `jpg()` and `png()` functions to save jpg and png files
 
-Adding to plots
-===
+### Adding to plots
+
 
 The main tools for this are:
 
@@ -188,16 +180,11 @@ The main tools for this are:
 - `text()`, `legend()`: add text to an existing plot
 - `rect()`, `polygon()`: add shapes to an existing plot
 
-You'll get practice with this on lab/hw. Pay attention to **layers**---they work just like they would if you were painting a picture by hand
+You'll get practice with this on lab/hw. Pay attention to **layers**---they work just like they would if you were painting a picture by hand.
 
-<span style="color: blue">Part II</span>
-===
+## *Histograms and heatmaps*
 
-<span style="color: blue">*Histograms and heatmaps*</span>
-
-
-Plotting a histogram
-===
+#### Plotting a histogram
 
 To plot a histogram of a numeric vector, use `hist()`
 
@@ -211,8 +198,7 @@ trump.wlens = nchar(trump.words)
 hist(trump.wlens)
 ```
 
-Histogram options
-===
+### Histogram options
 
 Several options are available as arguments to `hist()`, such as `col`, `freq`, `breaks`, `xlab`, `ylab`, `main`
 
@@ -222,8 +208,8 @@ hist(trump.wlens, col="pink", freq=FALSE, # Probability scale, and more options
      breaks=0:20, xlab="Word length", main="Trump word lengths") 
 ```
 
-Adding a histogram to an existing plot
-===
+### Adding a histogram to an existing plot
+
 
 To add a histogram to an existing plot (say, another histogram), use `hist()` with `add=TRUE`
 
@@ -234,8 +220,8 @@ hist(trump.wlens + 5, col=rgb(0,0.5,0.5,0.5), # Note: using a transparent color
      freq=FALSE, breaks=0:20, add=TRUE)
 ```
 
-Adding a density curve to a histogram
-===
+### Adding a density curve to a histogram
+
 
 To estimate a density from a numeric vector, use `density()`. This returns a list; it has components `x` and `y`, so we can actually call `lines()` directly on the returned object
 
@@ -249,8 +235,8 @@ hist(trump.wlens, col="pink", freq=FALSE, breaks=0:20,
 lines(density.est, lwd=3)
 ```
 
-Plotting a heatmap
-===
+### Plotting a heatmap
+
 
 To plot a heatmap of a numeric matrix, use `image()`
 
@@ -259,8 +245,8 @@ To plot a heatmap of a numeric matrix, use `image()`
 image(mat) # Red means low, white means high
 ```
 
-Orientation of `image()`
-===
+### Orientation of `image()`
+
 
 The orientation of `image()` is to plot the heatmap according to the following order, in terms of the matrix elements:
 
@@ -289,8 +275,8 @@ clockwise90 = function(a) { t(a[nrow(a):1,]) } # Handy rotate function
 image(clockwise90(mat))
 ```
 
-Color scale
-====
+### Color scale
+
 
 The default is to use a red-to-white color scale in `image()`. But the `col` argument can take any vector of colors. Built-in functions `gray.colors()`, `rainbow()`, `heat.colors()`, `topo.colors()`, `terrain.colors()`, `cm.colors()` all return continguous color vectors of given length
 
@@ -308,8 +294,8 @@ image(normal.mat, col=terrain.colors(20)) # Terrain colors
 image(normal.mat, col=topo.colors(20)) # Topological colors
 ```
 
-Drawing contour lines
-===
+### Drawing contour lines
+
 
 To draw contour lines from a numeric matrix, use `contour()`; to add contours to an existing plot (like, a heatmap), use `contour()` with `add=TRUE`
 
@@ -319,150 +305,8 @@ image(normal.mat, col=terrain.colors(20))
 contour(normal.mat, add=TRUE)
 ```
 
-<span style="color: blue">Part III</span>
-===
+### Summary
 
-<span style="color: blue">*Curves, surfaces, and colors*</span>
-
-
-Drawing a curve
-===
-
-To draw a curve of a function, use `curve()`
-
-```{r}
-curve(x^3) # Default is to plot between 0 and 1. Note: x here is a symbol
-curve(x^3, from=-3, to=3, lwd=3, col="red") # More plotting options
-```
-
-Adding a curve to an existing plot
-===
-
-To add a curve to an existing plot, use `curve()` with `add=TRUE`
-
-```{r}
-n = 50
-set.seed(0)
-x = sort(runif(n, min=-2, max=2))
-y = x^3 + rnorm(n)
-
-plot(x, y)
-curve(x^3, lwd=3, col="red", add=TRUE)
-# Note: the x argument here and the x vector we defined above are different!
-# Reminder: x here is a symbol
-```
-
-Adding a rug to an existing plot
-===
-
-To add a rug to an existing plot (just tick marks, for where the x points occur), use `rug()`
-
-```{r}
-plot(x, y)
-curve(x^3, lwd=3, col="red", add=TRUE) 
-rug(x)
-```
-
-Drawing a surface
-===
-
-To draw a surface, use `surface()`, available at http://www.stat.cmu.edu/~ryantibs/statcomp/lectures/surface.R. (This is a function written by your instructor, relying on the built-in `persp()` function)
-
-```{r}
-source("http://www.stat.cmu.edu/~ryantibs/statcomp/lectures/surface.R")
-surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3)
-surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3,
-        theta=25, phi=15, col=terrain.colors(30), 
-        ticktype="detailed", mar=c(2,2,2,2))
-```
-
-Adding points to a surface
-===
-
-To add points to a surface, save the output of `surface()`. Then use `trans3d()`, to transform (x,y,z) coordinates to (x,y) coordinates that you can pass to `points()`
-
-```{r}
-persp.mat = surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3,
-                    theta=25, phi=15, col=rgb(0,0,1,alpha=0.2),
-                    ticktype="detailed", mar=c(2,2,2,2))
-
-n = 500
-x = runif(n, -3, 3)
-y = runif(n, -3, 3)
-z = x^3 + y^3 + 5*rnorm(n)
-
-xy.list = trans3d(x, y, z, persp.mat)
-points(xy.list, pch=20)
-```
-
-Color palettes
-===
-
-Color palettes are functions for creating vectors of contiguous colors, just like `gray.colors()`, `rainbow()`, `heat.colors()`, `terrain.colors()`, `topo.colors()`, `cm.colors()`. Given a number n, each of these functions just returns a vector of colors (names, stored as strings) of length n
-
-```{r}
-n = 50
-plot(0, 0, type="n", xlim=c(1,n), ylim=c(1,6))
-points(1:n, rep(6,n), col=gray.colors(n), pch=19)
-points(1:n, rep(5,n), col=rainbow(n), pch=19)
-points(1:n, rep(4,n), col=heat.colors(n), pch=19)
-points(1:n, rep(3,n), col=terrain.colors(n), pch=19)
-points(1:n, rep(2,n), col=topo.colors(n), pch=19)
-points(1:n, rep(1,n), col=cm.colors(n), pch=19)
-```
-
-Creating a custom color palette
-===
-
-To create a custom palette, that interpolates between a set of base colors, `colorRampPalette()`
-
-```{r}
-cust.colors = colorRampPalette(c("red","purple","darkgreen"))
-class(cust.colors)
-plot(1:n, rep(1,n), col=cust.colors(n), pch=19)
-```
-
-Coloring points by value 
-===
-
-Coloring points according to the value of some variable can just be done with a bit of indexing, and the tools you already know about colors
-
-```{r}
-# Function to retrieve a color according to a value
-# - val: the value in question
-# - lim: a vector of length 2, lower and upper limits for possible values
-# - col.vec: the color vector to choose from
-get.col.from.val = function(val, lim, col.vec) {
-  col.vec[(val-lim[1])/(lim[2]-lim[1]) * (length(col.vec)-1) + 1]
-}
-
-# Let's color points according to y value
-col.vec = heat.colors(30)
-lim = c(-1, 1)
-theta = seq(0, 6*pi, length=200)
-
-plot(theta, sin(theta), type="o", pch=19, 
-     col=get.col.from.val(sin(theta), lim, col.vec))
-```
-
----
-
-```{r}
-# Another example, now in 3d
-persp.mat = surface(x^3 + y^3, from.x=-3, to.x=3, from.y=-3, to.y=3,
-                    theta=25, phi=15, col=rgb(1,1,1,alpha=0.2),
-                    ticktype="detailed", mar=c(2,2,2,2))
-
-# Let's color points according to z value
-col.vec = terrain.colors(30)
-lim = c(min(z), max(z))
-
-xy.list = trans3d(x, y, z, persp.mat)
-points(xy.list, pch=20, col=get.col.from.val(z, lim, col.vec))
-```
-
-Summary
-====
 
 - `plot()`: generic plotting function
 - `points()`: add points to an existing plot
@@ -473,9 +317,8 @@ Summary
 - `heat.colors()`, `topo.colors()`, etc: create a color vector
 - `density()`: estimate density, which can be plotted
 - `contour()`: draw contours, or add to existing plot
-- `curve()`: draw a curve, or add to existing plot
 
-## IV. Lab 06
+## IV. Begin Lab 06
 
 ### Some suggested steps
 
