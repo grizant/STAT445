@@ -1,7 +1,7 @@
 ---
 title: "Lab 06: Exploring data with base graphics"
 author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Week of 10/22/2018"
+date: "Week of 10/21/2019"
 output: html_document
 ---
 
