@@ -1,0 +1,97 @@
+---
+title: "Week 8 / Exploratory Data Analysis, numeric summary, Lab 05"
+author: "AG Schissler"
+date: "Wednesday October 16, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### I. Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [14_eda_numeric_startLab05.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/14_eda_numeric_startLab05.Rmd) from website so that you can work along the lecture.
+4. Open [lab_05_numeric_explore_apply.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_05_numeric_explore_apply.Rmd) to have the lab available.
+
+### This week's agenda
+
+- Continue *Working with data* Unit II.
+- Focus on using R to perform numeric exploratory data analysis (EDA).
+- More work with the `apply` family of functions.
+
+### Today learning outcomes
+
+Students will be able to
+
+- more practice on reading in (import) data into R
+- use `apply` to numerically summarize real data in lab 05
+
+## II. An outlier generating example through a discrete mixture
+
+Let's discuss how to simulate data with outliers. One way this could arise is that the data in one variable are actually from two distributions that are *mixed* together.  
+
+In the code below we simulate $n=1000$ data points from a discrete mixture of Gaussian random variables. Formally, let  
+
+$$
+X \sim N(0,1)
+$$
+
+and  
+
+$$
+Y \sim N(5,1)
+$$
+
+Then let  
+
+\[ \begin{cases} 
+      Z = X, & \pi = 1 \\
+	  Z = Y, & \pi = 0
+   \end{cases}
+\]
+
+be the random variable that results from the (two-component) discrete mixing of $X$ and $Y$ with mixing proportion $\pi \sim bernoulli(p = 0.01)$. By the values we've used above the data will appear to have outliers --- a few points from away from the majority of points.
+
+```{r, fig.cap = 'Figure 1. Histogram of 1000 simulated points from a discrete mixture of Gaussians. This produces a few outliers with larger values than the majority of points.'}
+## let's simulate and visualize data with outlying points
+set.seed(10162109)
+## mixing probability
+my_pi <- 0.01
+## suppose with have 1000 data points
+n = 1000
+## let's sample which points will be from X and Y
+my_index <- rbinom(n = n, size = 1, prob = my_pi)
+## count the "outliers"
+paste("There are", sum(my_index), "outliers.")
+## simulate the values by an "on-the-fly"
+## function definition in sapply
+## development parameter: tmp_index <- 0
+my_sim_data <- sapply(X = my_index, FUN = function(tmp_index){
+    ## ifelse works since 1 == TRUE and 0 == FALSE
+    ifelse(test = tmp_index, yes = rnorm(1, 5, 1), no = rnorm(1,0,1))
+})
+ggplot2::qplot(x = my_sim_data, bins = 40) + ggplot2::theme_bw() + ggplot2::labs(x="Simulated values", y = "Counts") 
+```
+
+Another common visualization is a (modified) boxplot. Outliers are defined by the $1.5 \times IQR$ rule:
+
+```{r, fig.cap = 'Figure 2. Boxplot of 1000 simulated points from a discrete mixture of Gaussians. Interestingly, the traditional outlier rule in this setting shows outlying points in both directions.'}
+vals <- boxplot(x = my_sim_data, ylab = "Simulated values")
+vals$out
+```
+
+### The point for EDA is that outliers will sometimes be identified by methods and the analyst much hypothesize the generating mechanism.
+
+## III. Please continue Lab 04
+
+- Questions for the whole group? Please don't be shy it could save us all effort.
+- Please begin and I will answer questions in the order I receive them and considering who I have helped previously in class.
+
+## IV. Summary
+
+Why do we perform EDA before fitting any statistical model?
