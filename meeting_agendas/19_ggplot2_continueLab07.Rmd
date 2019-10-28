@@ -1,0 +1,405 @@
+---
+title: "Week 9 / Exploratory Data Analysis, ggplot2, Lab 07"
+author: "AG Schissler"
+date: "Wednesday October 30, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### I. Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [19_ggplot2_continueLab07.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/19_ggplot2_continueLab07.Rmd) from website so that you can work along the lecture.
+4. Open [lab_07_ggplot2_graphics.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_07_ggplot2_graphics.Rmd) to have the lab available.
+
+### This week's agenda
+
+- Continue *Working with data* Unit II.
+- Focus on using R to plot data to conduct exploratory data analysis (EDA).
+- Now `ggplot2` will be used.
+
+### Today learning outcomes
+
+Students will be able to
+
+- use `ggplot2` to plot data
+
+## II. A detailed example a custom plot with the R package `nof1`
+
+```{r, eval=FALSE}
+#' Rose Plot Color Selection
+#' 
+#' \code{select_pathway_colors} provides an interface to select the colors corresponding to pathways for a given direction within a rose plot.
+#'
+#' @details Rose plots are designed to visually inspect differential pathway expression scaled by statistical significance for rapid interpretation of N-of-1-\emph{pathways} results. As such, only a few pathways are easy to see at a time. This function will automatically select colors when at most 9 pathways are plotted (corresponding to 18 'petals', one for each direction). For more pathways, the user must supply the colors.
+#'
+#' @param num_pathways a numeric value indicating the number pathways to plot, values 1 to 9 for automatic coloring
+#' @param colors_up a character vector with the colors for the higher expressed pathways
+#' @param colors_down a character vector with the colors for the lower expressed pathways
+#' @param gradient_spread a numeric value indicating the gradient of colors during automatically selection. See \code{\link[RColorBrewer]{brewer.pal}} for details.
+#'
+#' @return a list of length 2 each element containing a character vector color codes (hexidecimal representation) for the pathways in both up (above horizonal axis) and down (below horizonal axis) directions.
+#'
+#' @note The default color scheme is intended convey the appearance of blue sky and brown earth below. Enjoy.
+#'
+#' @references Schissler, A. Grant, et al. "Analysis of aggregated cell-cell statistical distances within pathways unveils therapeutic-resistance mechanisms in circulating tumor cells." Bioinformatics 32.12 (2016): i80-i89.
+#'
+#' @seealso \code{link{create_rose_plot}}, \code{link{create_multi_rose_plot}}
+#' 
+#' @examples
+#' ## Show simple automatic example
+#' select_pathway_colors(5)
+#' ## Change gradient to be more subtle
+#' select_pathway_colors(5, gradient_spread = 5)
+#' ## select custom pathways
+#' select_pathway_colors(num_pathways = 3,
+#'                       colors_up = c("#C6DBEF", "#9ECAE1", "#6BAED6"),
+#'                       colors_down = c("#FEE391", "#FEC44F", "#FE9929"))
+#' 
+#' @export
+
+select_pathway_colors <- function(num_pathways, colors_up = NULL, colors_down = NULL, gradient_spread = 9) {
+    if (is.null(colors_up) & is.null(colors_down)) {  
+        if (!requireNamespace("RColorBrewer", quietly = TRUE)) {
+            stop("RColorBrewer needed to automatically choose rose plot colors. Please install it or specify your own color vectors.", call. = FALSE)
+        } else {
+            ## check to make sure gradient spread can cover the pathways
+            if (num_pathways <= gradient_spread) {
+                ## use color brewer to select the colors
+                ## select the middle values in the gradient
+                middle_index <- ceiling(gradient_spread/2)
+                lower_index <- middle_index - floor(num_pathways/2)
+                upper_index <- middle_index + floor(num_pathways/2)
+                if (num_pathways %% 2 == 0) lower_index <- lower_index + 1
+                ## index the blue and earth tones
+                colors_up <- RColorBrewer::brewer.pal(gradient_spread,
+                                                      "Blues")[lower_index:upper_index]
+                colors_down <- RColorBrewer::brewer.pal(gradient_spread,
+                                                        "YlOrBr")[lower_index:upper_index]
+                return(list(colors_up = colors_up, colors_down = colors_down))
+            } else stop("Automatic color selection does not work with more than pathways than gradient selected. Please specify your own colors.")
+        }
+    } else {
+        if ((length(colors_up) == num_pathways) & (length(colors_down) == num_pathways)) {
+            ## simply use the user-specified colors
+            return(list(colors_up = colors_up, colors_down = colors_down))
+        } else {
+            stop("Color vectors must match the number of pathways in the rose plot.")
+        }
+    }
+}
+
+#' Rose Plot Construction
+#'
+#' \code{create_rose_plot} constructs a rose plot visualization of pathway differential expression derived from an application of N-of-1-\emph{pathways}.
+#'
+#' @details This function produces a rose plot displaying a profile pathway differential expression metrics (currently only log P-values are plotted). A rose plot is in this setting is a bar plot in polar coordinates with positive scores above the horizon and negative below. Therefore, the bars become the 'petals' in the rose plot.
+#' 
+#' @param pathway_scores a data frame of pathway scores from \code{\link{compute_nof1_pathways}}
+#' @param which_pathways a character vector of path_id or numeric vector indexing the pathways to plot
+#' @param plot_values a character value specifying which metric to plot. For now, the only option is the log_pvalue. Later versions will implement z-scores and pathway scores.
+#' @param use_desc a logical indicating to label pathways by the description rather than the ID
+#' @param colors_up a character vector with the colors for the higher expressed pathways
+#' @param colors_down a character vector with the colors for the lower expressed pathways
+#' @param legend a logical whether to display a legend
+#' @param ... other arguments for \code{\link{select_pathway_colors}}
+#'
+#' @return a ggplot2 object containing a rose plot visualization
+#' 
+#' @references
+#' Gardeux, Vincent, et al. "'N-of-1-\emph{pathways}' unveils personal deregulated mechanisms from a single pair of RNA-Seq samples: towards precision medicine." Journal of the American Medical Informatics Association 21.6 (2014): 1015-1025.
+#' 
+#' Schissler, A. Grant, et al. "Dynamic changes of RNA-sequencing expression for precision medicine: N-of-1-\emph{pathways} Mahalanobis distance within pathways of single subjects predicts breast cancer survival." Bioinformatics 31.12 (2015): i293-i302.
+#' 
+#' Schaefer, Carl F., et al. "PID: the pathway interaction database." Nucleic acids research 37.suppl 1 (2009): D674-D679.
+#'
+#' Weinstein, John N., et al. "The cancer genome atlas pan-cancer analysis project." Nature genetics 45.10 (2013): 1113-1120.
+#'
+#' Schissler, A. Grant, et al. "Analysis of aggregated cell-cell statistical distances within pathways unveils therapeutic-resistance mechanisms in circulating tumor cells." Bioinformatics 32.12 (2016): i80-i89.
+#'
+#' @seealso \code{\link{normalize_gene_data}} \code{\link{compute_multi_nof1_pathways}} \code{link{pid_filtered}} \code{link{BRCA_TCGA_BH_A1EV}} \code{link{pid_desc}}
+#'
+#' @examples
+#' \dontrun{
+#' ## Here a rose plot is produced for pre-computed N-of-1-pathways MD scores
+#' ## derived from a single the cancer genome atlas (TCGA) breast cancer patient.
+#' ## and pathways (gene sets) defined by the Pathway Interaction Database (PID).
+#' data(A7_A0DB_PID_MD_scores)
+#' one_scores <- A7_A0DB_PID_MD_scores
+#' ## plot the first five most significant pathways
+#' create_rose_plot(one_scores, 1:5)
+#' ## select pathways of interest, only some of which are actually scored
+#' my_pathways <- c("200028", "200035", "200097", "200145", "200192")
+#' create_rose_plot(one_scores, my_pathways)
+#' ## using indeces
+#' create_rose_plot(one_scores, seq(20, nrow(one_scores), length.out = 9))
+#' }
+#' 
+#' @export
+
+create_rose_plot <- function(pathway_scores, which_pathways, plot_values = "log_pvalue", use_desc = T, colors_up = NULL, colors_down = NULL, legend = T,...) {
+    ## 1. Start by processing the pathway_scores data frame and selecting colors
+    ## 1.1 select only the pathways of interest and values of interest
+    ## value_name <- ifelse(!use_zscore, "pathway_score", "zscore")
+    ## need to add other options in rose plot
+    value_name <- "p_value"
+    ## check to see if all pathways indicated are present
+    if (class(which_pathways) == "character") {
+         if (sum(rownames(pathway_scores) %in% which_pathways) < length(which_pathways)) {
+             warning("Not all pathways were found, making a partial rose plot.")
+             which_pathways <- rownames(pathway_scores)[rownames(pathway_scores) %in% which_pathways]
+         }
+    }
+    rose_scores <- pathway_scores[which_pathways, c(value_name, "direction")]
+    names(rose_scores) <- c("value", "direction")
+    ## transform the pvalue
+    rose_scores$value <- -log( rose_scores$value, base = exp(1) )
+    ## check if no pathways are selected
+    num_pathways <- nrow(rose_scores)
+    if (num_pathways == 0) stop("Rose plot cannot be created. No valid pathways selected.")
+    ## make pathway ID a factor for plotting
+    ## rose_scores$ID <- factor(rownames(rose_scores))
+    ## 1.2 select the colors
+    ## rose_colors <- select_pathway_colors(length(which_pathways), colors_up = colors_up, colors_down = colors_down)
+    rose_colors <- select_pathway_colors(num_pathways, colors_up = colors_up, colors_down = colors_down, ...)
+    ## 2. construct data structure for plotting
+    ## 2.1 construct the bins for the position of the bars
+    pos <- seq(0, 2*num_pathways - 1, by = 1)
+    rose_data <- data.frame(factor(1:(2*num_pathways)), 0, pos)
+    names(rose_data) <- c("pathway", "value", "pos")
+    ## choose positions based on desired location up or down and make values positive
+    for (j in 1:nrow(rose_data)) {
+        ifelse( rose_scores$direction[j] > 0,
+               rose_data$value[j] <- rose_scores$value[j],
+               rose_data$value[j + num_pathways] <- rose_scores$value[j])
+    }
+    ## 2.2 transform values (radii) to maintain equal area instead of radii
+    rose_data$value <- sqrt(rose_data$value)
+    ## 2.3 make pathway a factor and optionally add description
+    rose_labels <- rownames(rose_scores)
+    if (use_desc) rose_labels <- pathway_scores[which_pathways, "pathway_desc"]
+    rose_data$pathway <- factor( rose_data$pathway, labels = c(paste0(rose_labels," +"),paste0(rose_labels," -") ))
+
+    ## make pathway a factor for plotting
+    rose_data$pathway <- factor(rose_data$pathway)
+    ## 3. create ggplot object
+    p0 <- ggplot2::ggplot(rose_data, ggplot2::aes_string(fill = "pathway", x = "pos", y = "value"))
+    ## create bar plot to later convert to polar coordinates
+    width <- 1
+    p1 <- p0 + ggplot2::geom_bar(width = width, stat = "identity")
+    ## create rose and shift pathways to start from horizontal axis
+    p2 <- p1 + ggplot2::coord_polar(start = -pi*(nrow(rose_data)) - pi/2)
+    ## update y scales to show breaks of interest
+    ## p3 <- p2 + scale_x_continuous(labels = NULL, breaks = pos + width/2, minor_breaks = NULL)
+    p3 <- p2 + ggplot2::scale_x_continuous(labels = NULL, breaks = (pos + width/2)[c(num_pathways,num_pathways*2)], minor_breaks = NULL)
+    ## customize fill scale
+    p4 <- p3 + ggplot2::scale_fill_manual(values = unname(unlist(rose_colors)), guide = ggplot2::guide_legend(title = "Pathways"))
+    ## customize theme
+    ## p5 <- p4 + theme_bw() + xlab("")
+    p5 <- p4 + ggplot2::xlab("")
+    ## add darker horizontal lines to guide eye for up vs. down regulation
+    p6 <- p5 + ggplot2::theme(panel.grid.major.x = ggplot2::element_line(colour = "black", linetype = 1))
+    ## update y scales to show breaks of interest (significance levels)
+    y_labels <- c(0.05, 0.01, 0.001)
+    ybreaks <- sqrt (-log(y_labels, exp(1)) )
+    ## p7 <- p6 + ggplot2::scale_y_continuous(labels = NULL, breaks = ybreaks, minor_breaks = NULL) +
+       ## theme(panel.grid.major.y = ggplot2::element_line(colour = "black", linetype = 1))
+    p7 <- p6 + ggplot2::scale_y_continuous(labels = as.character(y_labels),
+                                  breaks = ybreaks, minor_breaks = NULL) +
+        ggplot2::theme(panel.grid.major.y = ggplot2::element_line(colour = "black", linetype = 1))
+    ## update y scales labeling
+    ## p8 <- p7 + theme(axis.ticks = element_blank(), axis.text.y = element_blank(), axis.title.y = element_blank())
+    p8 <- p7 + ggplot2::labs(y = "p-value")
+    ## remove dark color from background
+    p9 <- p8 + ggplot2::theme(strip.background = ggplot2::element_rect(fill = 'white'))
+    ## move legend 
+    if (legend) {
+        p10 <- p9 + ggplot2::theme(legend.position = "right", legend.direction = "vertical")
+    } else p10 <- p9 + ggplot2::theme(legend.position = "none")
+    p10
+}
+
+#' Multiple Rose Plots Construction
+#'
+#' \code{create_multi_rose_plot} constructs multiple rose plots to compare profiles of pathway differential expression derived from applying N-of-1-\emph{pathways}.
+#'
+#' @details This function produces side-by-side rose plots displaying aprofile pathway differential expression metrics (currently only log P-values are plotted). A rose plot is in this setting is a bar plot in polar coordinates with positive scores above the horizon and negative below. Therefore, the bars become the 'petals' in the rose plot.
+#' 
+#' @param pathway_scores a list of data frames containing pathway scores obtained from \code{\link{compute_multi_nof1_pathways}}
+#' @param which_pathways a character vector of path_id or numeric vector indexing the pathways to plot
+#' @param plot_values a character value specifying which metric to plot. For now, the only option is the log_pvalue. Later versions will implement z-scores and pathway scores.
+#' @param use_desc a logical indicating to label pathways by the description rather than the ID
+#' @param colors_up a character vector with the colors for the higher expressed pathways
+#' @param colors_down a character vector with the colors for the lower expressed pathways
+#' @param legend a logical whether to display a legend
+#' @param ... other arguments for \code{\link{select_pathway_colors}}
+#'
+#' @return a ggplot2 object containing a rose plot visualization
+#'
+#' @note The selected pathways must be present for each item in the pathway scores list.
+#' 
+#' @references
+#' Gardeux, Vincent, et al. "'N-of-1-\emph{pathways}' unveils personal deregulated mechanisms from a single pair of RNA-Seq samples: towards precision medicine." Journal of the American Medical Informatics Association 21.6 (2014): 1015-1025.
+#' 
+#' Schissler, A. Grant, et al. "Dynamic changes of RNA-sequencing expression for precision medicine: N-of-1-\emph{pathways} Mahalanobis distance within pathways of single subjects predicts breast cancer survival." Bioinformatics 31.12 (2015): i293-i302.
+#' 
+#' Schaefer, Carl F., et al. "PID: the pathway interaction database." Nucleic acids research 37.suppl 1 (2009): D674-D679.
+#'
+#' Weinstein, John N., et al. "The cancer genome atlas pan-cancer analysis project." Nature genetics 45.10 (2013): 1113-1120.
+#'
+#' Schissler, A. Grant, et al. "Analysis of aggregated cell-cell statistical distances within pathways unveils therapeutic-resistance mechanisms in circulating tumor cells." Bioinformatics 32.12 (2016): i80-i89.
+#'
+#' @seealso \code{\link{normalize_gene_data}} \code{\link{compute_multi_nof1_pathways}} \code{link{pid_filtered}} \code{link{BRCA_TCGA_BH_A1EV}} \code{link{pid_desc}}
+#'
+#' @examples
+#' \dontrun{
+#' ## Here a rose plot is produced for pre-computed N-of-1-pathways MD scores
+#' ## derived from a single the cancer genome atlas (TCGA) breast cancer patient.
+#' ## and pathways (gene sets) defined by the Pathway Interaction Database (PID).
+#' data(BRCA_TCGA_4_PID_scores)
+#' multi_scores <- BRCA_TCGA_4_PID_scores
+#' ## trim samples names to make more visible on plot
+#' names(multi_scores) <- gsub("TCGA\\.","", names(multi_scores))
+#' ## select pathways of interest
+#' my_pathways <- c("200177", "200190", "200026", "200041",
+#' "200224", "200090","200096", "200123", "200091")
+#' ## make plots
+#' create_multi_rose_plot(multi_scores, my_pathways)
+#' }
+#' 
+#' @export
+
+create_multi_rose_plot <- function(pathway_scores, which_pathways, plot_values = "log_pvalue", use_desc = T, colors_up = NULL, colors_down = NULL, legend = T,...) {
+    ## 1. Start by processing the pathway_scores data frame and selecting colors
+    ## 1.1 select only the pathways of interest and values of interest
+    ## value_name <- ifelse(!use_zscore, "pathway_score", "zscore")
+    ## need to add other options in rose plot
+    value_name <- "p_value"
+    ## check to see if all pathways indicated are present
+    if (class(which_pathways) == "character") {
+        ## get counts of selected pathways
+        pathway_counts <- unlist(lapply(pathway_scores, function(tmp_scores){
+            sum(rownames(tmp_scores) %in% which_pathways)
+        }))
+         if (any(pathway_counts < length(which_pathways))) {
+             stop("Not all pathways were found. Please ensure all pathways selected are scored for each element of the pathway_scores list.")
+         }
+    }
+    ##
+    num_pathways <- length(which_pathways)
+    ## 1.2 select the colors
+    ## rose_colors <- select_pathway_colors(length(which_pathways), colors_up = colors_up, colors_down = colors_down)
+    rose_colors <- select_pathway_colors(num_pathways, colors_up = colors_up, colors_down = colors_down,...)
+    ## 1.3 create the rose plot data
+    ## tmp_scores <- pathway_scores[[1]]
+    rose_data <- lapply(pathway_scores, function(tmp_scores) {
+        tmp_scores <- tmp_scores[which_pathways, c(value_name, "direction", "pathway_desc")]
+        names(tmp_scores) <- c("value", "direction", "pathway_desc")
+        ## transform the pvalue
+        tmp_scores$value <- -log( tmp_scores$value, base = exp(1) )
+        ## 2. construct data structure for plotting
+        ## 2.1 construct the bins for the position of the bars
+        pos <- seq(0, 2*num_pathways - 1, by = 1)
+        tmp_data <- data.frame(factor(1:(2*num_pathways)), 0, pos)
+        names(tmp_data) <- c("pathway", "value", "pos")
+        ## choose positions based on desired location up or down and make values positive
+        for (j in 1:nrow(tmp_data)) {
+            ifelse( tmp_scores$direction[j] > 0,
+                   tmp_data$value[j] <- tmp_scores$value[j],
+                   tmp_data$value[j + num_pathways] <- tmp_scores$value[j])
+        }
+        ## 2.2 transform values (radii) to maintain equal area instead of radii
+        tmp_data$value <- sqrt(tmp_data$value)
+        ## 2.3 make pathway a factor and optionally add description
+        rose_labels <- rownames(tmp_scores)
+        if (use_desc) rose_labels <- tmp_scores[which_pathways, "pathway_desc"]
+        tmp_data$pathway <- factor( tmp_data$pathway, labels = c(paste0(rose_labels," +"),paste0(rose_labels," -") ))
+        tmp_data
+    })
+    
+    ## 2.4 annotate with pair label
+    ## retrieve pair label
+    num_pathways <- nrow(rose_data[[1]])/2
+    pair_names <- rep(names(rose_data), each = 2*num_pathways)
+    ## convert to data frame
+    rose_data <- do.call("rbind", rose_data)
+    rose_data$pair <- pair_names
+
+    ## 2.5 automatically order the plots
+    ## tmp_data <- split(rose_data, rose_data$pair)[[1]]
+    order_data <- do.call("rbind", lapply(split(rose_data, rose_data$pair), function(tmp_data) {
+        average_value <- 1/mean(c(tmp_data[1:num_pathways,"value"], -1*tmp_data[(num_pathways+1):nrow(tmp_data),"value"]))
+        count_down <- sum(tmp_data[(num_pathways+1):nrow(tmp_data),"value"] != 0)
+        data.frame(average_value, count_down)
+    }))
+    ## order by count down then average
+    order_data <- order_data[order(order_data[,"count_down"],order_data[,"average_value"]),]
+    ## add pair label
+    rose_data$pair <- factor(pair_names, levels = row.names(order_data))
+
+    ## 3. create ggplot object
+    ## 3.1 retrieve plotting characteristics
+    ## retrieve the position sequence
+    pos <- unique(rose_data$pos)
+
+    ## make pathway a factor
+    rose_data$pathway <- factor(rose_data$pathway)
+    ## 3.2 build up the object in layers
+    p0 <- ggplot2::ggplot(rose_data, ggplot2::aes_string(fill = "pathway", x = "pos", y = "value"))
+    ## create bar plot to later convert to polar coordinates
+    width <- 1
+    p1 <- p0 + ggplot2::geom_bar(width = width, stat = "identity")
+    ## create rose and shift pathways to start from horizontal axis
+    p2 <- p1 + ggplot2::coord_polar(start = -pi*(num_pathways*2) - pi/2)
+    ## update y scales to show breaks of interest
+    ## p3 <- p2 + scale_x_continuous(labels = NULL, breaks = pos + width/2, minor_breaks = NULL)
+    p3 <- p2 + ggplot2::scale_x_continuous(labels = NULL, breaks = (pos + width/2)[c(num_pathways,num_pathways*2)], minor_breaks = NULL)
+    ## customize fill scale
+    p4 <- p3 + ggplot2::scale_fill_manual(values = unname(unlist(rose_colors)), guide = ggplot2::guide_legend(title = "Pathways"))
+    ## customize theme
+    ## p5 <- p4 + theme_bw() + ggplot2::xlab("")
+    p5 <- p4 + ggplot2::xlab("")
+    ## add darker horizontal lines to guide eye for up vs. down regulation
+    p6 <- p5 + ggplot2::theme(panel.grid.major.x = ggplot2::element_line(colour = "black", linetype = 1))
+    ## update y scales to show breaks of interest (significance levels)
+    y_labels <- c(0.05, 0.01, 0.001)
+    ybreaks <- sqrt (-log(y_labels, exp(1)) )
+    ## p7 <- p6 + ggplot2::scale_y_continuous(labels = NULL, breaks = ybreaks, minor_breaks = NULL) +
+       ## ggplot2::theme(panel.grid.major.y = ggplot2::element_line(colour = "black", linetype = 1))
+    p7 <- p6 + ggplot2::scale_y_continuous(labels = as.character(y_labels),
+                                  breaks = ybreaks, minor_breaks = NULL) +
+        ggplot2::theme(panel.grid.major.y = ggplot2::element_line(colour = "black", linetype = 1))
+    ## update y scales labeling
+    ## p8 <- p7 + ggplot2::theme(axis.ticks = element_blank(), axis.text.y = element_blank(), axis.title.y = element_blank())
+    p8 <- p7 + ggplot2::labs(y = "p-value")
+    ## remove dark color from background
+    p9 <- p8 + ggplot2::theme(strip.background = ggplot2::element_rect(fill = 'white'))
+    ## move legend 
+    if (legend) {
+        p10 <- p9 + ggplot2::theme(legend.position = "right", legend.direction = "vertical")
+    } else p10 <- p9 + ggplot2::theme(legend.position = "none")
+    ## facet by pair
+    p11 <- p10 + ggplot2::facet_wrap(~ pair)
+    p11
+}
+
+```
+
+### Let's see it in action from a vignette
+
+[http://www.lussiergroup.org/publications/nof1pathways-vignette_v2.html](http://www.lussiergroup.org/publications/nof1pathways-vignette_v2.html)
+
+## III. Please continue Lab 07
+
+- Questions for the whole group? Please don't be shy it could save us all effort.
+- Please begin and I will answer questions in the order I receive them and considering who I have helped previously in class.
+
+## IV. Summary
+
+What is easier to do in base graphics than in ggplot2? Vice versa?
