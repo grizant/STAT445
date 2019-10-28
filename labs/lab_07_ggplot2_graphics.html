@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="AG Schissler (modified from Ryan Tibshirani)" />
@@ -255,9 +256,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -271,7 +270,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -282,22 +280,80 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -307,8 +363,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Lab 07: Exploring data with ggplot2</h1>
-<h4 class="author"><em>AG Schissler (modified from Ryan Tibshirani)</em></h4>
-<h4 class="date"><em>Week of 10/29/2018</em></h4>
+<h4 class="author">AG Schissler (modified from Ryan Tibshirani)</h4>
+<h4 class="date">Week of 10/27/2019</h4>
 
 </div>
 
@@ -320,11 +376,13 @@ Collaborated with:</p>
 <div id="learning-outcomes" class="section level1">
 <h1>Learning outcomes</h1>
 <p>Students will be able to use advanced R plotting tools, including ggplot2 Students will be able to apply the concept of vizualization layers (grammer of graphics)</p>
-<p><strong>Important note</strong>: *this assignment is to be completed <strong>only</strong> using <code>ggplot2</code> commands are allowed!.</p>
+<div id="important-note-this-assignment-is-to-be-completed-only-using-ggplot2-commands-are-allowed" class="section level3">
+<h3>Important note: this assignment is to be completed only using <code>ggplot2</code> commands are allowed!</h3>
+</div>
 </div>
 <div id="overall-goal" class="section level1">
 <h1>Overall goal</h1>
-<p>Reproduce the plots from Lab 06 using <code>ggplot2</code>, when possible. If it is not possible, explain why not. I’m going to leave the instructions from Lab 06 below to remind you, but do <em>not</em> follow the instructions for base graphics. You will likely find this <a href="https://ggplot2.tidyverse.org/">page</a> describing <code>ggplot2</code> and its extensions useful.</p>
+<p>Reproduce the plots from Lab 06 using <code>ggplot2</code>, when possible. If it is not possible, explain why not. <strong>I’m going to leave the instructions from Lab 06 below to remind you, but DO NOT follow the instructions for base graphics.</strong> You will likely find this <a href="https://ggplot2.tidyverse.org/">page</a> describing <code>ggplot2</code> and its extensions useful.</p>
 </div>
 <div id="plot-basics" class="section level1">
 <h1>Plot basics</h1>
@@ -389,19 +447,6 @@ sprint_w_dat = read.table(
 <li><p><strong>Challenge.</strong> Repeat Q3 but for the women’s sprint data, arriving at vector <code>sprint_w_ages</code>. Then plot a histogram of <code>sprint_ages</code>, now with <code>probability=TRUE</code> (so it is on the probability scale, rather than raw frequency scale). Overlay a histogram of <code>sprint_w_ages</code>, also with <code>probability=TRUE</code>. Set the break locations so that the plot captures the full range of the very youngest to the very oldest sprinter present among both men and women. Your code should determine these limits programmatically. Choose colors of your liking, but use transparency as appropriate so that the shapes of both histograms are visible; label the x-axis, and title the histogram appropriately. Add a legend to the histogram, identifying the histogram bars from the men and women. Compare, roughly, the shapes of the two histograms: is there a difference between the age distributions of the world’s fastest men and fastest women?</p></li>
 </ul>
 </div>
-<div id="stat-645-project-milestone-20-point-deduction-if-not-completed" class="section level1">
-<h1>STAT 645 Project milestone (20 point deduction if not completed)</h1>
-<ol style="list-style-type: decimal">
-<li>Announce your project team of 1 to 3 members.</li>
-<li>Submit or describe the dataset you will analyze.</li>
-</ol>
-<ul>
-<li>Include a data dictonary: What (and what type of data) are your variables? What are the observational units? How many observations and variables? Are the data from an experiment or observational?</li>
-</ul>
-<ol start="3" style="list-style-type: decimal">
-<li>Pose a preliminary research question(s) and a research hypothesis(es).</li>
-</ol>
-</div>
 
 
 
@@ -420,6 +465,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

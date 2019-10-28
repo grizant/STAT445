@@ -1,7 +1,7 @@
 ---
 title: "Lab 07: Exploring data with ggplot2"
 author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Week of 10/29/2018"
+date: "Week of 10/27/2019"
 output: html_document
 ---
 
@@ -22,12 +22,12 @@ Learning outcomes
 Students will be able to use advanced R plotting tools, including ggplot2
 Students will be able to apply the concept of vizualization layers (grammer of graphics)
 
-**Important note**: *this assignment is to be completed **only** using `ggplot2` commands are allowed!.
+### Important note: this assignment is to be completed only using `ggplot2` commands are allowed!
 
 Overall goal
 ===
 
-Reproduce the plots from Lab 06 using `ggplot2`, when possible. If it is not possible, explain why not. I'm going to leave the instructions from Lab 06 below to remind you, but do *not* follow the instructions for base graphics. You will likely find this [page](https://ggplot2.tidyverse.org/) describing `ggplot2` and its extensions useful.
+Reproduce the plots from Lab 06 using `ggplot2`, when possible. If it is not possible, explain why not. **I'm going to leave the instructions from Lab 06 below to remind you, but DO NOT follow the instructions for base graphics.** You will likely find this [page](https://ggplot2.tidyverse.org/) describing `ggplot2` and its extensions useful.
 
 Plot basics
 ===
@@ -106,11 +106,3 @@ More text manipulations, and histograms
 - **4b.** Plot a histogram of `sprint_ages`, with break locations occuring at every age in between 17 and 40. Color the histogram to your liking; label the x-axis, and title the histogram appropriately. What is the mode, i.e., the most common age? Also, describe what you see around the mode: do we see more sprinters who are younger, or older? 
 
 - **Challenge.** Repeat Q3 but for the women's sprint data, arriving at vector `sprint_w_ages`. Then plot a histogram of `sprint_ages`, now with `probability=TRUE` (so it is on the probability scale, rather than raw frequency scale). Overlay a histogram of `sprint_w_ages`, also with `probability=TRUE`. Set the break locations so that the plot captures the full range of the very youngest to the very oldest sprinter present among both men and women. Your code should determine these limits programmatically. Choose colors of your liking, but use transparency as appropriate so that the shapes of both histograms are visible; label the x-axis, and title the histogram appropriately. Add a legend to the histogram, identifying the histogram bars from the men and women. Compare, roughly, the shapes of the two histograms: is there a difference between the age distributions of the world's fastest men and fastest women? 
-
-STAT 645 Project milestone (20 point deduction if not completed)
-===
-
-1. Announce your project team of 1 to 3 members.
-2. Submit or describe the dataset you will analyze. 
-  * Include a data dictonary: What (and what type of data) are your variables? What are the observational units? How many observations and variables? Are the data from an experiment or observational?
-3. Pose a preliminary research question(s) and a research hypothesis(es).
