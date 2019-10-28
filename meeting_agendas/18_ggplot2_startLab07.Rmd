@@ -1,0 +1,142 @@
+---
+title: "Week 9 / Exploratory Data Analysis, ggplot2, Lab 07"
+author: "AG Schissler"
+date: "Monday October 28, 2019"
+output: html_document
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### I. Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [18_ggplot2_startLab07.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/18_ggplot2_startLab07.Rmd) from website so that you can work along the lecture.
+4. Open [lab_07_ggplot2_graphics.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_07_ggplot2_graphics.Rmd) to have the lab available.
+
+### This week's agenda
+
+- Continue *Working with data* Unit II.
+- Focus on using R to plot data to conduct exploratory data analysis (EDA).
+- Now `ggplot2` will be used.
+
+### Today learning outcomes
+
+Students will be able to
+
+- use `ggplot2` to plot data
+
+## II. Introduction to `ggplot2` in R
+
+`ggplot2` is an R package created by Hadley Wickham (now head data scientist at RStudio) plots and uses syntax inspired by Leland Wilkinson's *The Grammar of Graphics* (1st edition in 1999). I make my publication-quality plots using `ggplot2`. Now `ggplot2` has a huge community of developers and users. Some links:
+
+- [https://ggplot2.tidyverse.org/](https://ggplot2.tidyverse.org/)
+- [https://ggplot2.tidyverse.org/reference/](https://ggplot2.tidyverse.org/reference/)
+- []()
+
+### Some fun viz packages that play well with `ggplot`:
+
+- `ggally`
+- `cowplot`
+- `ggforce`
+
+## III. Using `ggplot2` to create plots
+
+I'll keep this brief since you already have had a datacamp module on `ggplot2`. Some remarks from my experience:
+
+### Quick plotting for to explore and clean datat
+
+`qplot()` is nice as it uses syntax inspires by base `graphics` commands. But it also layers well as it is a ggplot object.
+
+### Format your data into *long* format
+
+As non-running example:
+
+```{r combine, echo = TRUE, eval=FALSE}
+## empirical is efancy for empirical data
+## method_names <- c("empirical", "independent", "approxR", "condreg", "Spearman", "Kendall")
+method_names <- c("Empirical", "Independent", "ApproxR", "Spearman", "Kendall")
+num_methods <- length(method_names)
+all_dat <- data.frame(dat_source = rep( method_names, each = d),
+                      index = rep(1:d, times = num_methods))
+
+## aggregate z scores (order matters!)
+all_dat$z_score <- c( sort(empirical_z_values, decreasing = T),
+                     sort(sim_ind_z_values, decreasing = T),
+                     sort(sim_approxR_z_values, decreasing = T),
+                     ## sort(sim_condreg_z_values, decreasing = T),
+                     sort(sim_spearman_z_values, decreasing = T),
+                     sort(sim_kendall_z_values, decreasing = T) )
+
+## aggregate p values (order matters
+all_dat$p_value <- c( sort(empirical_p_values),
+                     sort(sim_ind_p_values),
+                     sort(sim_approxR_p_values),
+                     ## sort(sim_condreg_p_values),
+                     sort(sim_spearman_p_values),
+                     sort(sim_kendall_p_values) )
+
+```
+
+See how the `p_value` variable contains all the values for each method? It is long in the sense that you do not have separate columns for each method's p-value (that would be *wide* format). In long format, there is a variable that contains a factor for the method type. Then you can easily map that categorization (label) to aesthetic variables, as seen in the next example.
+
+### Build plots in layers and inspect at each point
+
+```{r pvalues, echo = TRUE, fig.height = 4, eval=FALSE}
+## p values, subset to first N indeces?
+p0 <- ggplot(all_dat, aes(x=index, y= p_value, color=dat_source )) 
+p1 <- p0 + geom_point(size = 3) 
+p2 <- p1 + labs(x = "Sorted Index", y = "P-values", color = "Data source") + theme_bw()
+## pP <- p2 + geom_abline(slope = 1, intercept = 0)
+pP <- p2
+## + scale_color_discrete(labels = c("Kendall Copula", "Empirical", "Independent"))
+pP ## prints the plot
+```
+
+### Try the available themes
+
+- `theme_bw()` is great for articles and other docs that people may print on black-and-white printers.
+
+### For complicated plots and inspiration
+
+When I construct a plot, I often look for code snippets to hack at rather than creating from scratch. A nice gallery of examples  
+
+[https://www.r-graph-gallery.com/](https://www.r-graph-gallery.com/)
+
+### Violin plots to visualize distributions
+
+```{r violin}
+# Library
+library(ggplot2)
+
+# create a dataset
+data <- data.frame(
+  name=c( rep("A",500), rep("B",500), rep("B",500), rep("C",20), rep('D', 100)  ),
+  value=c( rnorm(500, 10, 5), rnorm(500, 13, 1), rnorm(500, 18, 1), rnorm(20, 25, 4), rnorm(100, 12, 1) )
+)
+head(data)
+# Most basic violin chart
+p <- ggplot(data, aes(x=name, y=value, fill=name)) + # fill=name allow to automatically dedicate a color for each group
+  geom_violin()
+
+p
+```
+
+
+## IV. Begin Lab 07
+
+### Some suggested steps
+
+1. This lab is different in the plots are the same as in Lab 06.
+2. But you are to use `ggplot2` now and instead of base graphics.
+3. So it is helpful to have your Lab 06 handy to compare to.
+
+## V. Summary
+
+- Explain to a friend the differences between base and `ggplot2` plot construction.
+
+
