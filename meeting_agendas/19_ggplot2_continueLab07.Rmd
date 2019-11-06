@@ -2,7 +2,13 @@
 title: "Week 9 / Exploratory Data Analysis, ggplot2, Lab 07"
 author: "AG Schissler"
 date: "Wednesday October 30, 2019"
-output: html_document
+output:
+  html_document:
+    css: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/base.css
+    highlight: null
+    theme: null
+    includes:
+      in_header: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/notebook.html
 ---
 
 ## I. Opening 
