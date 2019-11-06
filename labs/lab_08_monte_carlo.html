@@ -7,10 +7,12 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="AG Schissler (modified from Ryan Tibshirani)" />
 
+<meta name="date" content="2019-11-24" />
 
 <title>Lab 08: Simulation, randomization tests, and MC integration</title>
 
@@ -255,9 +257,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -271,7 +271,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -282,22 +281,80 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -307,8 +364,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Lab 08: Simulation, randomization tests, and MC integration</h1>
-<h4 class="author"><em>AG Schissler (modified from Ryan Tibshirani)</em></h4>
-<h4 class="date"><em>Week of 11/19/2018</em></h4>
+<h4 class="author">AG Schissler (modified from Ryan Tibshirani)</h4>
+<h4 class="date">11/24/2019</h4>
 
 </div>
 
@@ -316,7 +373,7 @@ $(document).ready(function () {
 <p>Name:<br />
 NSHE ID:<br />
 Collaborated with:</p>
-<p>This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit <strong>your own</strong> lab as an knitted HTML file on Canvas, by Sunday 11:59pm, <strong>next week</strong> due to the holiday.</p>
+<p>This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit <strong>your own</strong> lab as an knitted HTML file and Rmarkdown file on Canvas, by Sunday 11:59pm.</p>
 <div id="learning-outcomes" class="section level2">
 <h2>Learning outcomes</h2>
 <ol style="list-style-type: decimal">
@@ -373,15 +430,6 @@ X_{\mathrm{drug}} \sim 100 \cdot \mathrm{Exp}(\mathrm{mean}=2).
 <li><p><strong>Challenge.</strong> Use Monte Carlo integration to estimate <span class="math inline">\(\int_0^1 \int_0^1 cos(x-y) dx dy\)</span>.</p></li>
 </ul>
 </div>
-<div id="stat-645-project-milestone-20-point-deduction-if-not-completed" class="section level2">
-<h2>STAT 645 Project milestone (20 point deduction if not completed)</h2>
-<p>Copy your code from your project files to show your doing this, but do not evaluate here.</p>
-<ol style="list-style-type: decimal">
-<li>Complete the process of importing data.</li>
-<li>Complete the process of exploring and cleaning the data.</li>
-<li>Create some preliminary plots along the way to visualize important aspects of your data as they relate to your research interests.</li>
-</ol>
-</div>
 
 
 
@@ -400,6 +448,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

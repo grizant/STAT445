@@ -1,7 +1,7 @@
 ---
 title: "Lab 08: Simulation, randomization tests, and MC integration"
 author: "AG Schissler (modified from Ryan Tibshirani)"
-date: "Week of 11/19/2018"
+date: "11/24/2019"
 output: html_document
 ---
 
@@ -13,7 +13,7 @@ Name:
 NSHE ID:  
 Collaborated with:  
 
-This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, **next week** due to the holiday.
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file and Rmarkdown file on Canvas, by Sunday 11:59pm.
 
 ## Learning outcomes
 
@@ -221,11 +221,3 @@ Use Monte Carlo integration to estimate the following integrals. Compare with th
 - **4c.** $\int_0^2 \frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx$
 
 - **Challenge.** Use Monte Carlo integration to estimate $\int_0^1 \int_0^1 cos(x-y) dx dy$.
-  
-## STAT 645 Project milestone (20 point deduction if not completed)
-
-Copy your code from your project files to show your doing this, but do not evaluate here.
-
-1. Complete the process of importing data.
-2. Complete the process of exploring and cleaning the data.
-3. Create some preliminary plots along the way to visualize important aspects of your data as they relate to your research interests.
