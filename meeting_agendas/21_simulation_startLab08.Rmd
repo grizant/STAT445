@@ -52,7 +52,7 @@ To sample from a given vector, use `sample()`
 ```{r}
 sample(x=letters, size=10) # Without replacement, the default
 sample(x=c(0,1), size=10, replace=TRUE) # With replacement
-sample(x=10) # Arguments set as x=1:10, size=10, replace=FALSE
+sample(x=seq(0,1,0.2), size = 3) # Arguments set as x=1:10, size=10, replace=FALSE
 ```
 
 ### Random number generation
