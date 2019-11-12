@@ -1,0 +1,450 @@
+---
+title: Simulation for checking statistical procedures and model fits
+author: Presented by AG Schissler
+date: Wednesday November 20, 2019
+output:
+  html_document:
+    css: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/base.css
+    highlight: null
+    theme: null
+    includes:
+      in_header: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/notebook.html
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+## I. Opening (5-10 minutes)
+
+Today I'll introduce the concept of using simulation to check code and statistical procedures --- and to assess how well a model fits the data. `R` has some great features to conduct these studies. Why simulate? Welcome to the 21st century! Two reasons:  
+  1) Often, simulations can be easier than hand calculations.  
+  2) Often, simulations can be made more realistic than hand calculations.  
+
+### Fake-data simulation
+
+- Checking code and statistical procedure entails using simulation strategies to produce synthetic data (aka *fake data* or *frauda*) then fit a model to these data.  
+- The results should roughly align with the specified (true) values. This gives you confidence that the computer program is working.  
+- The results should align with expected (theoretical) results. This can assess whether the model is performing as advertised. For example, what are the empricial coverage rates? 
+
+### Predictive simulations
+
+- I'll describe the use of *predictive simulations* to check how well a model fits data.  
+- This invovles fitting a statistical model to real data (as opposed to fitting a model to fake data, as above).  
+- Then repeated simulations are conducted using the model and covariates to generate predicted responses.
+- These replicated data sets are then compared visually and more formally (numerically) to the original data.
+
+### Learning outcomes
+
+- Students will recall simulation strategies for checking statistical procedures and model fits.
+- Students will apply simulation strategies for checking statistical procedures and model fits.
+
+### Notes
+
+Most of this lecture is derived from Chapters 7 and 8 from the outstanding textbook *Data Analysis Using Regression and Multilevel/Hierachical Models* by Gelman and Hill 2007. We'll proceed through a series of examples of increasing complex models with code provided in `R`. The useful `R` package `arm` will do must of the heavy lifting (coding) for us.
+
+## II. Fake-data simulation (15 - 30 min)
+
+The key concept in fake-data simulation for model checking is to **simulate from a statistical model known parameter values/functional form and check the properties of the procedure against theory**.
+
+### Example 1: Simple linear regression (SLS) with Gaussian errors
+
+```{r, 81, warning=F}
+## Fake-data simulation
+library("arm")
+a <- 1.4
+b <- 2.3
+sigma <- 0.9
+x <- 1:5
+n <- length(x)
+
+# Simulate data, fit the model, and check the coverage of the conf intervals
+
+y <- a + b*x + rnorm (n, 0, sigma)
+lm.1 <- lm (y ~ x)
+display (lm.1)
+
+b.hat <- coef (lm.1)[2]       # "b" is the 2nd coef in the model
+b.se <- se.coef (lm.1)[2]     # "b" is the 2nd coef in the model
+
+cover.68 <- abs (b - b.hat) < b.se     # this will be TRUE or FALSE
+cover.95 <- abs (b - b.hat) < 2*b.se   # this will be TRUE or FALSE
+cat (paste ("68% coverage: ", cover.68, "\n"))
+cat (paste ("95% coverage: ", cover.95, "\n"))
+
+# Put it in a loop
+
+n.fake <- 1000
+cover.68 <- rep (NA, n.fake)
+cover.95 <- rep (NA, n.fake)
+for (s in 1:n.fake){
+  y <- a + b*x + rnorm (n, 0, sigma)
+  lm.1 <- lm (y ~ x)
+  b.hat <- coef (lm.1)[2]      
+  b.se <- se.coef (lm.1)[2]   
+  cover.68[s] <- abs (b - b.hat) < b.se  
+  cover.95[s] <- abs (b - b.hat) < 2*b.se 
+}
+cat (paste ("68% coverage: ", mean(cover.68), "\n"))
+cat (paste ("95% coverage: ", mean(cover.95), "\n"))
+
+# Do it again, this time using t intervals
+
+n.fake <- 1000
+cover.68 <- rep (NA, n.fake)
+cover.95 <- rep (NA, n.fake)
+t.68 <-  qt (.84, n-2)
+t.95 <-  qt (.975, n-2)
+for (s in 1:n.fake){
+  y <- a + b*x + rnorm (n, 0, sigma)
+  lm.1 <- lm (y ~ x)
+  b.hat <- coef (lm.1)[2]      
+  b.se <- se.coef (lm.1)[2]   
+  cover.68[s] <- abs (b - b.hat) < t.68*b.se  
+  cover.95[s] <- abs (b - b.hat) < t.95*b.se 
+}
+cat (paste ("68% coverage: ", mean(cover.68), "\n"))
+cat (paste ("95% coverage: ", mean(cover.95), "\n"))  
+```
+
+### Example 2: Using simulation to understand (SLS) residual plots
+
+```{r, 82}
+## Read in the data
+# Data are at http://www.stat.columbia.edu/~gelman/arm/examples/simulation
+
+## library ("arm")
+tmp_dir <- "~/OneDrive - University of Nevada, Reno/Teaching/Gelman_and_Hill_2007_code_data"
+
+grades <- read.table(file.path(tmp_dir, "gradesW4315.dat"), header=TRUE)
+midterm <- grades[,"Midterm"]
+final <- grades[,"Final"]
+
+## Estimate the model
+
+lm.1 <- lm (final ~ midterm)
+display (lm.1)
+
+## Construct fitted values
+
+n <- length(final)
+X <- cbind (rep(1,n), midterm)
+predicted <- X %*% coef (lm.1)
+resid <- lm.1$residuals
+
+## Simulate fake data & compute fitted values
+
+a <- 65
+b <- 0.7
+sigma <- 15
+y.fake <- a + b*midterm + rnorm (n, 0, sigma)
+
+lm.fake <- lm (y.fake ~ midterm)
+predicted.fake <- X %*% coef (lm.fake)
+resid.fake <- y.fake - predicted.fake
+
+par (mfrow=c(2,2))
+
+## Plots figure 8.1
+
+ # plot on the left
+
+plot (predicted, resid, xlab="predicted value", ylab="residual",
+  main="Residuals vs. predicted values", pch=20)
+abline (0,0, col="gray", lwd=.5)
+
+ # plot on the right
+
+plot (final, resid, xlab="observed value", ylab="residual",
+  main="Residuals vs. observed values", pch=20)
+abline (0,0, col="gray", lwd=.5)
+
+## Plots figure 8.2
+
+ # plot on the left
+
+plot (predicted.fake, resid.fake, xlab="predicted value", ylab="residual",
+  main="Fake data: resids vs. predicted", pch=20)
+abline (0,0, col="gray", lwd=.5)
+
+ # plot on the right
+
+plot (y.fake, resid.fake, xlab="observed value", ylab="residual",
+  main="Fake data: resids vs. observed", pch=20)
+abline (0,0, col="gray", lwd=.5)
+
+```
+
+## III. Predictive simulation (20 - 30 min)
+
+The key concept in predictive simulation for model checking is to **simulate from the fitted model and compare to the actual data**.
+
+### Example 3: Comparing data to replications from a fitted 
+
+Data from Newcomb's famous 1882 experiment to measure the speed of light.
+
+```{r, light, eval=T, message=F, warning=F, fig.caption="Histogram of Simon Newcomb's measurements for estimating the speed of light, from Stigler (1977). The data represent the amount of time required for light to travel a distance of 7442 meters and are recorded as deviations from 24,800 nanoseconds."}
+## Read in the data
+# Data are at http://www.stat.columbia.edu/~gelman/arm/examples/lightspeed
+## library ("arm")
+
+y <- scan(file.path(tmp_dir, "lightspeed.dat"), skip=4)
+
+## Display original data
+hist(y, xlab="", ylab="", cex.main="1", yaxt="n", xlim=range(y))
+```
+
+```{r, light2, eval=T, message=F, warning=F, fig.caption=""}
+## Model fit 
+
+light <- lm (y ~ 1)
+display (light)
+
+## Create the replicated data 
+
+n.sims <- 1000
+sim.light <- sim (light, n.sims)
+
+## Create fake data 
+
+n <- length (y)
+y.rep <- array (NA, c(n.sims, n))
+for (s in 1:n.sims){
+  y.rep[s,] <- rnorm (n, sim.light@coef[s], sim.light@sigma[s])
+}
+
+## Histogram of replicated data (Figure 8.4)
+
+par (mfrow=c(5,4), mar=c(3,1,2,1))
+for (s in 1:20){
+  hist (y.rep[s,], xlab="", ylab="", cex.main="1", yaxt="n", xlim=range(y))
+}
+```
+
+```{r, light3, eval=T, message=F, warning=F, fig.caption=""}
+## Write a function to make histograms with specified bin widths and ranges
+
+Hist.preset <- function (a, width, ...){
+  a.hi <- max (a, na.rm=TRUE)
+  a.lo <- min (a, na.rm=TRUE)
+  if (is.null(width)) width <- min (sqrt(a.hi-a.lo), 1e-5)
+  bin.hi <- width*ceiling(a.hi/width)
+  bin.lo <- width*floor(a.lo/width)
+  hist (a, breaks=seq(bin.lo,bin.hi,width), ...)
+}
+
+## Run the function
+
+par (mfrow=c(5,4), mar=c(3,1,2,1))
+for (s in 1:20){
+  Hist.preset (y.rep[s,], width=5, xlab="", ylab="", cex.main="1", yaxt="n",
+               xlim=range(y), main=paste("Replication #",s,sep=""))
+}
+
+```
+
+```{r, light4, eval=T, message=F, warning=F, fig.caption=""}
+## Numerical test
+
+Test <- function (y){
+  min (y)
+}
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
+
+## Histogram Figure 8.5
+
+par (mfrow=c(1,1))
+hist (test.rep, xlim=range (Test(y), test.rep), yaxt="n", ylab="",
+ xlab="", main="Observed Min(y) and distribution of Min(y.rep)")
+lines (rep (Test(y), 2), c(0,10*n))
+```
+
+### Example 4: roaches 
+
+```{r, roaches, eval=T, message=F, warning=F}
+##############################################################################
+## Read the cleaned data
+# All data are at http://www.stat.columbia.edu/~gelman/arm/examples/roaches
+## library ("arm")
+
+roachdata <- read.csv (file.path(tmp_dir, "roachdata.csv"))
+
+library(R2OpenBUGS)
+R2OpenBUGS::attach.all(roachdata)
+## Note: attaching is dangerous and generally not recommended
+## Except when you'd like the code to be highly readable.
+
+head(roachdata)
+## Fit the model
+```
+
+```{r, roaches2, eval=T, message=F, warning=F, fig.caption=""}
+glm.1 <- glm(y ~ roach1 + treatment + senior, family=poisson,
+  offset=log(exposure2))
+display (glm.1)
+
+## Comparing the data to a replicated dataset
+
+n <- length(y)
+X <- cbind (rep(1,n), roach1, treatment, senior)
+y.hat <- exposure2 * exp (X %*% coef(glm.1))
+y.rep <- rpois (n, y.hat)
+
+print (mean (y==0))
+print (mean (y.rep==0))
+
+## Comparing the data to 1000 replicated datasets
+
+n.sims <- 1000
+sim.1 <- sim (glm.1, n.sims)
+y.rep <- array (NA, c(n.sims, n))
+for (s in 1:n.sims){
+  y.hat <- exposure2 * exp (X %*% sim.1@coef[s,])
+  y.rep[s,] <- rpois (n, y.hat)
+}
+
+ # test statistic 
+
+Test <- function (y){
+  mean (y==0)
+}
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
+
+# p-value
+print (mean (test.rep > Test(y)))
+```
+
+Now let's fit a overdispersed Poisson (negative binomial).  
+
+```{r, roaches3, eval=T, message=F, warning=F, fig.caption=""}
+
+## Checking the overdispersed model
+
+glm.2 <- glm (y ~ roach1 + treatment + senior, family=quasipoisson,
+  offset=log(exposure2))
+display (glm.2)
+
+ # 1000 replicated datasets
+
+n.sims <- 1000
+sim.2 <- sim (glm.2, n.sims)
+y.rep <- array (NA, c(n.sims, n))
+overdisp <- summary(glm.2)$dispersion
+for (s in 1:n.sims){
+  y.hat <- exposure2 * exp (X %*% sim.2@coef[s,])
+  a <- y.hat/(overdisp-1)              # using R's parametrization for the
+  y.rep[s,] <- rnegbin (n, y.hat, a)   # negative binomial distribution
+}
+
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
+
+# p-value
+print (mean (test.rep > Test(y)))
+```
+
+### Example 5: Check the fit of a time-series model
+
+```{r unemp1, eval=T}
+## Read in the data
+# Data are at http://www.stat.columbia.edu/~gelman/arm/examples/unemployment
+## library ("arm")
+
+unemployment <- read.table (file.path(tmp_dir, "unemployment.dat"), header=TRUE)
+year <- unemployment$year
+y <- unemployment$unemployed.pct
+
+## Plot of the unemployment rate
+
+par (mar=c(4,4,2,2))
+plot (year, y, type="l", ylab="unemployment", xlab="year", yaxs="i",
+  ylim=c(0, max(y)*1.05), yaxt="n", mgp=c(2,.5,0), cex.axis=1.2, cex.lab=1.2)
+axis (2, c(0,5,10), paste (c(0,5,10), "%", sep=""), mgp=c(2,.5,0), cex.axis=1.2)
+
+## Fitting a 1st-order autogregression
+
+n <- length (y)
+y.lag <- c (NA, y[1:(n-1)])
+lm.lag <- lm (y ~ y.lag)
+display (lm.lag)
+```
+
+```{r, unemp2, eval=T, message=F, warning=F, fig.caption=""}
+## Simulating replicated datasets 
+
+b.hat <- coef (lm.lag)        # vector of 2 regression coefs
+s.hat <- sigma.hat (lm.lag)   # residual sd
+
+n.sims <- 1000
+y.rep <- array (NA, c(n.sims, n))
+for (s in 1:n.sims){
+  y.rep[s,1] <- y[1]
+  for (t in 2:n){
+    prediction <- c (1, y.rep[s,t-1]) %*% b.hat
+    y.rep[s,t] <- rnorm (1, prediction, s.hat)
+  }
+}
+
+## Including uncertainty in the estimated parameters
+
+lm.lag.sim <- sim (lm.lag, n.sims)       # simulations of beta and sigma
+for (s in 1:n.sims){
+  y.rep[s,1] <- y[1]
+  for (t in 2:n){
+    prediction <-  c (1, y.rep[s,t-1]) %*% lm.lag.sim@coef[s,]
+    y.rep[s,t] <- rnorm (1, prediction, lm.lag.sim@sigma[s])
+  }
+}
+```
+
+```{r, unemp3, eval=T, message=F, warning=F, fig.caption="", fig.height=10}
+## Plot of simulated unemployment rate series
+
+par (mfrow=c(5,3), mar=c(4,4,2,2))
+for (s in 1:15){
+  plot (year, y.rep[s,], type="l", ylab="unemployment", xlab="year", yaxs="i",
+  ylim=c(0, max(y)*1.05), yaxt="n", mgp=c(2,.5,0),
+        main=paste("simulation #", s, sep=""), cex.main=0.95)
+  axis (2, c(0,5,10), paste (c(0,5,10), "%", sep=""), mgp=c(2,.5,0))
+}
+```
+
+```{r, unemp4, eval=T, message=F, warning=F}
+## Numerical model check
+
+Test <- function (y){
+  n <- length (y)
+  y.lag <- c (NA, y[1:(n-1)])
+  y.lag2 <- c (NA, NA, y[1:(n-2)])
+  sum (sign(y-y.lag) != sign(y.lag-y.lag2), na.rm=TRUE)
+}
+
+n.sims <- 1000
+print (Test (y))
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
+
+print (mean (test.rep > Test(y)))
+print (quantile (test.rep, c(.05,.5,.95)))
+```
+
+## IV. Closing activity (5 - 10 min)
+
+### Think-pair-share
+
+1. Think: Where/how you could apply today's concepts and skills to one of your data analytic problems.
+2. Pair: Refine your thoughts through discussion with a partner or small-group near you.
+3. Share: Share your combined thouughts with the whole group.
+
+### Thanks for your attention and participation!
+
+Let me know if you have any questions.
