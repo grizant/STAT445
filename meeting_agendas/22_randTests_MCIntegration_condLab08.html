@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="AG Schissler" />
+
+
+<title>Randomization Tests and Monte Carlo Integration, Lab 08</title>
+
+<style type="text/css">
+  
+  /* Whole document - standard notebook size and margins */
+  body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      max-width: 8.5in;
+      margin: auto;
+      background: #FFFFFF;
+      padding: 1in 1in 1in 1in;
+  }
+  
+</style>
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,%3Cstyle%20type%3D%22text%2Fcss%22%3E%0A%0A%0Abody%20%7B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Amax%2Dwidth%3A%208%2E5in%3B%0Amargin%3A%20auto%3B%0Abackground%3A%20%23FFFFFF%3B%0Apadding%3A%201in%201in%201in%201in%3B%0A%7D%0A%0Ah1%20%7B%0Afont%2Dsize%3A%2050px%3B%0Acolor%3A%20%23000000%3B%0Atext%2Dalign%3Acenter%3B%0Amargin%2Dbottom%3A15px%3B%0A%7D%0Ah1%2Bp%20%7B%0A%0Acolor%3A%20%23000000%3B%0Afont%2Dsize%3A%2020px%3B%0Aline%2Dheight%3A%202em%3B%0Amargin%2Dtop%3A%200%2E5em%3B%0Amargin%2Dbottom%3A%200em%20%21important%3B%0Atext%2Dalign%3A%20center%3B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0A%0Ah2%20%7B%0Acolor%3A%20%23000000%3B%0A%7D%0A%0Adt%20%7B%0Afloat%3A%20left%3B%0Aclear%3A%20left%3B%0Awidth%3A%2017%25%3B%0A%0A%7D%0Add%20%7B%0Amargin%2Dleft%3A%2017%25%3B%0A%7D%0Ap%20%7B%0Amargin%2Dtop%3A0%3B%0Amargin%2Dbottom%3A7px%3B%0A%7D%0A%0Ablockquote%20%7B%0Atext%2Dalign%3A%20left%3B%20%7D%0A%0Aa%20%7B%0Atext%2Ddecoration%3A%20none%3B%0Acolor%3A%20%232980d6%3B%0A%7D%0Aa%3Ahover%2C%20a%3Aactive%20%7B%0Abackground%2Dcolor%3A%20%232980d6%3B%0Acolor%3A%20%23FFFFFF%3B%0Atext%2Ddecoration%3A%20none%3B%0Atext%2Dshadow%3A%201px%201px%201px%20%23333%3B%0A%7D%0A%0Ahr%20%7B%0Acolor%3A%20%23A6A6A6%3B%0A%7D%0Atable%20%7B%0Awidth%3A%20100%25%3B%0Aborder%2Dcollapse%3Acollapse%3B%0Aborder%2Dspacing%3A0%3B%0Adisplay%3Atable%0A%7D%0Atable%2EminimalistBlack%20%7B%0Aborder%3A%203px%20solid%20%23000000%3B%0Awidth%3A%20100%25%3B%0Atext%2Dalign%3A%20left%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%2EminimalistBlack%20td%2C%20table%2EminimalistBlack%20th%20%7B%0Apadding%3A%205px%204px%3B%0A%7D%0Atable%2EminimalistBlack%20tbody%20td%20%7B%0Afont%2Dsize%3A%2015px%3B%0A%7D%0Atable%2EminimalistBlack%20thead%20%7B%0Abackground%3A%20%23CFCFCF%3B%0Abackground%3A%20%2Dmoz%2Dlinear%2Dgradient%28top%2C%20%23dbdbdb%200%25%2C%20%23d3d3d3%2066%25%2C%20%23CFCFCF%20100%25%29%3B%0Abackground%3A%20%2Dwebkit%2Dlinear%2Dgradient%28top%2C%20%23dbdbdb%200%25%2C%20%23d3d3d3%2066%25%2C%20%23CFCFCF%20100%25%29%3B%0Abackground%3A%20linear%2Dgradient%28to%20bottom%2C%20%23dbdbdb%200%25%2C%20%23d3d3d3%2066%25%2C%20%23CFCFCF%20100%25%29%3B%0Aborder%2Dbottom%3A%203px%20solid%20%23000000%3B%0A%7D%0Atable%2EminimalistBlack%20thead%20th%20%7B%0Afont%2Dsize%3A%2015px%3B%0Afont%2Dweight%3A%20bold%3B%0Acolor%3A%20%23000000%3B%0Atext%2Dalign%3A%20left%3B%0A%7D%0Atable%2EminimalistBlack%20tfoot%20%7B%0Afont%2Dsize%3A%2014px%3B%0Afont%2Dweight%3A%20bold%3B%0Acolor%3A%20%23000000%3B%0Aborder%2Dtop%3A%203px%20solid%20%23000000%3B%0A%7D%0Atable%2EminimalistBlack%20tfoot%20td%20%7B%0Afont%2Dsize%3A%2014px%3B%0A%7D%0A%0A%2Eanswer%5Fdiv%20%7B%0Awidth%3A100%25%3B%0Aheight%3A2in%3B%0Afloat%3Aleft%3B%0A%7D%0A%2Elong%5Fanswer%5Fdiv%7B%0Awidth%3A100%25%3B%0Aheight%3A3in%3B%0Afloat%3Aleft%3B%0A%7D%0A%0A%40media%20print%20%7B%0A%2Epagebreak%20%7B%20page%2Dbreak%2Dbefore%3A%20always%3B%20padding%2Dtop%3A1in%3B%0A%7D%20%7D%0Adiv%2Esolutions%20%2A%20%7B%0Acolor%3A%23000099%3B%0A%7D%0A%3C%2Fstyle%3E%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Randomization Tests and Monte Carlo Integration, Lab 08</h1>
+<h4 class="author">AG Schissler</h4>
+<h4 class="date">Wednesday November 13, 2019</h4>
+
+
+
+<div id="i.-opening" class="section level2">
+<h2>I. Opening</h2>
+<div id="i.-start-of-class-work" class="section level3">
+<h3>I. Start-of-class work</h3>
+<ol style="list-style-type: decimal">
+<li>Log in the your workstation.</li>
+<li>Open the RStudio application on your machine.</li>
+<li>Open <a href="https://github.com/grizant/STAT445/blob/master/meeting_agendas/22_randTests_MCIntegration_condLab08.Rmd">22_randTests_MCIntegration_condLab08.Rmd</a> from website so that you can work along the lecture.</li>
+<li>Open <a href="https://github.com/grizant/STAT445/blob/master/labs/lab_08_monte_carlo.Rmd">lab_08_monte_carlo.Rmd</a> to have the lab available.</li>
+</ol>
+</div>
+<div id="this-weeks-agenda" class="section level3">
+<h3>This week’s agenda</h3>
+<p>I introduce more Monte Carlo (simulation-based) methods of inference and computation, including</p>
+<ol style="list-style-type: decimal">
+<li>Randomization (permutation) tests</li>
+<li>Power analysis through simulation (lab 08)</li>
+<li>Monte Carlo Integration</li>
+</ol>
+<p>Also, I will release all the lectures/labs this week to provied more guidance on the projects.</p>
+</div>
+</div>
+<div id="ii.-randomization-permutation-tests" class="section level2">
+<h2>II. Randomization (permutation) tests</h2>
+<p>Here I present the formal way to compute a empirical <em>p</em>-value for an approximate permutation test. The test is approximate because you could acutally permutate the labels in every possible way and compute the <em>exact</em> achieved significance level. But in almost every situation it is not computationally possible to do this.</p>
+<div id="approximate-permutation-test-procedure-for-a-2-group-comparison" class="section level3">
+<h3>Approximate permutation test procedure for a 2-group comparison</h3>
+<p>From Rizzo 2009 who cites Davison and Hinkley:</p>
+<p>You have two independent random samples <span class="math inline">\(X_1,\ldots,X_n\)</span> and <span class="math inline">\(Y_1,\ldots,Y_m\)</span>. Let <span class="math inline">\(Z=X\cup Y\)</span> be the pooled sample.</p>
+<ol style="list-style-type: decimal">
+<li>Compute the observed test statistic <span class="math inline">\(\hat{\theta}(X,Y)\)</span>.<br />
+</li>
+<li>For each replicate, indexed <span class="math inline">\(b=1,\ldots,B\)</span></li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Generate a random permutation <span class="math inline">\(\pi_b\)</span>.<br />
+</li>
+<li>Compute the statistic <span class="math inline">\(\hat{\theta}^{(b)}=\hat{\theta}^{*}(Z,\pi_b)\)</span>.</li>
+</ol>
+<ol start="3" style="list-style-type: decimal">
+<li>If large values of <span class="math inline">\(\hat{\theta}\)</span> support the alternative, compute the empirical <span class="math inline">\(p\)</span>-value by</li>
+</ol>
+<p><span class="math display">\[
+\hat{p}=\frac{1+ \#\{{\hat{\theta}^{(b)} \geq \hat{\theta}}\}}{B + 1} =\frac{1+ \sum_{b=1}^B I({\hat{\theta}^{(b)} \geq \hat{\theta}})}{B + 1}.
+\]</span></p>
+<p>For a lower-tail or two-tail the test <span class="math inline">\(p\)</span>-value is computed in a similar way with different inequalities.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Reject <span class="math inline">\(H_0\)</span> at significance level <span class="math inline">\(\alpha\)</span> if <span class="math inline">\(\hat{p} \leq \alpha\)</span>.</li>
+</ol>
+<p>Note <span class="math inline">\(B=999\)</span> should suffice in most cases. If the cost is cheap (comp time) then feel free to use a very large <span class="math inline">\(B\)</span>.</p>
+</div>
+</div>
+<div id="iii.-monte-carlo-integration" class="section level2">
+<h2>III. Monte Carlo Integration</h2>
+<p><em>Key insight: Another way to think about integration is that it is an <strong>average</strong> with respect to some probability density.</em> We can think of integration geometrically as areas under curves/boundaries or algebraically as anti-derivatives. But statistically we are averaging! Almost all statistical methods involve integration — computing probabilities, expected values, moments, central moments, variances. All integrals for continuous random variables. Now I’ll show you how to use this notion to compute integrals via simulation.</p>
+<p>Suppose <span class="math inline">\(g(x)\)</span> is any function that is integrable on the interval <span class="math inline">\([a,b]\)</span>. The integral</p>
+<p><span class="math display">\[
+\int_a^b g(x) dx
+\]</span></p>
+<p>can be approximated using simulation. Monte Carlo (MC) integration relies on the Strong Law of Large Numbers. This law says informally that a sample mean from a large sample will tend to be close to the expected value of the distribution being sampled. So, if we can express an integral as an expected value, we can approximate it by a sample mean.</p>
+<p>For example let <span class="math inline">\(U_1,\ldots, U_n\)</span> be independent uniform random variables on the interval <span class="math inline">\([a,b]\)</span>. These have density <span class="math inline">\(f(u)=1/(b-a)\)</span> on that interval. Then</p>
+<p><span class="math display">\[
+E[g(U_i)] = \int_a^b g(u) \frac{1}{b-a}du,
+\]</span></p>
+<p>so that the original integral <span class="math inline">\(\int_a^b g(x) dx\)</span> can be approximated be <span class="math inline">\(b-a\)</span> times the sample mean of <span class="math inline">\(g(U_i)\)</span></p>
+<div id="i-do-simple-mc-integration" class="section level3">
+<h3>I do: Simple MC integration</h3>
+<p>Simple MC integration uses the uniform distribution. This is the easiest way (and the focus of your Lab 08 problems). But it can be inefficient and can only be used with finite support.</p>
+<p>Approximate the integral <span class="math inline">\(\int_0^1 x^4 dx\)</span>, using the following lines:</p>
+<pre class="r"><code>u &lt;- runif(10000)
+mean(u^4)</code></pre>
+<pre><code>## [1] 0.2053637</code></pre>
+<p>Compare this to the exact value 0.2 (easily computed by hand).</p>
+</div>
+<div id="you-do" class="section level3">
+<h3>You do</h3>
+<p>Approximate the integral <span class="math inline">\(\int_2^5 sin(x) dx\)</span> by completing the following lines:</p>
+<pre class="r"><code>u &lt;- runif(10000, min = 2, max = )</code></pre>
+<p>Compare this to the exact value -0.700.</p>
+</div>
+<div id="we-do-computing-using-other-probability-densities" class="section level3">
+<h3>We do: computing using other probability densities</h3>
+<p>The uniform density is not the only density used in MC integration. If the density of <span class="math inline">\(X\)</span> is <span class="math inline">\(f(x)\)</span> then <span class="math inline">\(E[g(X)/f(X)]=\int [g(X)/f(X)]f(x)dx = \int g(x) dx\)</span>. So we can appproximate the latter by sample averages of <span class="math inline">\(g(X)/f(X)\)</span>. This is useful for integrals over infinite support, as below.</p>
+<p>Approximate the integral <span class="math inline">\(\int_1^\infty exp(-x^2)dx\)</span>. Recognize this as close to the exponential density if the support is different. So rewrite the integral as <span class="math inline">\(\int_0^\infty exp[-(x+1)^2]dx\)</span>. Then use an exponential density for <span class="math inline">\(X\)</span>.</p>
+<pre class="r"><code>x &lt;- rexp(10000, rate = 1)
+## compute sample average of the ratio</code></pre>
+<p>Compare this to the true value 0.1394.</p>
+</div>
+</div>
+<div id="iv.-continue-lab-08" class="section level2">
+<h2>IV. Continue Lab 08</h2>
+<ul>
+<li>Please continue working on Lab 08 with everyone’s help.</li>
+<li>Grad students please ask for guidance on your projects also.</li>
+</ul>
+</div>
+<div id="v.-summary" class="section level2">
+<h2>V. Summary</h2>
+<ul>
+<li>3 <code>R</code> functions</li>
+<li>2 new statistical facts/ideas</li>
+<li>1 question</li>
+</ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

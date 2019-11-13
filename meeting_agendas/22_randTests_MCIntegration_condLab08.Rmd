@@ -1,0 +1,132 @@
+---
+title: "Randomization Tests and Monte Carlo Integration, Lab 08"
+author: "AG Schissler"
+date: "Wednesday November 13, 2019"
+output:
+  html_document:
+    css: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/base.css
+    highlight: null
+    theme: null
+    includes:
+      in_header: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/notebook.html
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### I. Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open [22_randTests_MCIntegration_condLab08.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/22_randTests_MCIntegration_condLab08.Rmd) from website so that you can work along the lecture.
+4. Open [lab_08_monte_carlo.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_08_monte_carlo.Rmd) to have the lab available.
+
+### This week's agenda
+
+I introduce more Monte Carlo (simulation-based) methods of inference and computation, including
+
+1) Randomization (permutation) tests
+2) Power analysis through simulation (lab 08)
+3) Monte Carlo Integration
+
+Also, I will release all the lectures/labs this week to provied more guidance on the projects.
+ 
+## II. Randomization (permutation) tests  
+
+Here I present the formal way to compute a empirical *p*-value for an approximate permutation test. The test is approximate because you could acutally permutate the labels in every possible way and compute the *exact* achieved significance level. But in almost every situation it is not computationally possible to do this.
+
+### Approximate permutation test procedure for a 2-group comparison
+
+From Rizzo 2009 who cites Davison and Hinkley:
+
+You have two independent random samples $X_1,\ldots,X_n$ and $Y_1,\ldots,Y_m$. Let $Z=X\cup Y$ be the pooled sample.
+
+1. Compute the observed test statistic $\hat{\theta}(X,Y)$.  
+2. For each replicate, indexed $b=1,\ldots,B$  
+
+(a) Generate a random permutation $\pi_b$.  
+(b) Compute the statistic $\hat{\theta}^{(b)}=\hat{\theta}^{*}(Z,\pi_b)$.  
+
+3. If large values of $\hat{\theta}$ support the alternative, compute the empirical $p$-value by  
+
+$$
+\hat{p}=\frac{1+ \#\{{\hat{\theta}^{(b)} \geq \hat{\theta}}\}}{B + 1} =\frac{1+ \sum_{b=1}^B I({\hat{\theta}^{(b)} \geq \hat{\theta}})}{B + 1}.
+$$
+
+For a lower-tail or two-tail the test $p$-value is computed in a similar way with different inequalities. 
+
+4. Reject $H_0$ at significance level $\alpha$ if $\hat{p} \leq \alpha$.
+
+Note $B=999$ should suffice in most cases. If the cost is cheap (comp time) then feel free to use a very large $B$.
+
+## III. Monte Carlo Integration
+
+*Key insight: Another way to think about integration is that it is an **average** with respect to some probability density.* We can think of integration geometrically as areas under curves/boundaries or algebraically as anti-derivatives. But statistically we are averaging! Almost all statistical methods involve integration --- computing probabilities, expected values, moments, central moments, variances. All integrals for continuous random variables. Now I'll show you how to use this notion to compute integrals via simulation.  
+
+Suppose $g(x)$ is any function that is integrable on the interval $[a,b]$. The integral
+
+$$
+\int_a^b g(x) dx
+$$
+
+can be approximated using simulation. Monte Carlo (MC) integration relies on the Strong Law of Large Numbers. This law says informally that a sample mean from a large sample will tend to be close to the expected value of the distribution being sampled. So, if we can express an integral as an expected value, we can approximate it by a sample mean.
+
+For example let $U_1,\ldots, U_n$ be independent uniform random variables on the interval $[a,b]$. These have density $f(u)=1/(b-a)$ on that interval. Then
+
+$$
+E[g(U_i)] = \int_a^b g(u) \frac{1}{b-a}du,
+$$
+
+so that the original integral $\int_a^b g(x) dx$ can be approximated be $b-a$ times the sample mean of $g(U_i)$
+
+### I do: Simple MC integration
+
+Simple MC integration uses the uniform distribution. This is the easiest way (and the focus of your Lab 08 problems). But it can be inefficient and can only be used with finite support.
+
+Approximate the integral $\int_0^1 x^4 dx$, using the following lines:
+
+```{r}
+u <- runif(10000)
+mean(u^4)
+```
+
+Compare this to the exact value 0.2 (easily computed by hand).
+
+### You do
+
+Approximate the integral $\int_2^5 sin(x) dx$ by completing the following lines:
+
+```{r, eval = FALSE}
+u <- runif(10000, min = 2, max = )
+
+```
+
+Compare this to the exact value -0.700.
+
+### We do: computing using other probability densities
+
+The uniform density is not the only density used in MC integration. If the density of $X$ is $f(x)$ then $E[g(X)/f(X)]=\int [g(X)/f(X)]f(x)dx = \int g(x) dx$. So we can appproximate the latter by sample averages of $g(X)/f(X)$. This is useful for integrals over infinite support, as below.
+
+Approximate the integral $\int_1^\infty exp(-x^2)dx$. Recognize this as close to the exponential density if the support is different. So rewrite the integral as $\int_0^\infty exp[-(x+1)^2]dx$. Then use an exponential density for $X$.
+
+```{r, eval = FALSE}
+x <- rexp(10000, rate = 1)
+## compute sample average of the ratio
+
+```
+
+Compare this to the true value 0.1394.
+
+## IV. Continue Lab 08
+
+- Please continue working on Lab 08 with everyone's help.
+- Grad students please ask for guidance on your projects also.
+
+## V. Summary
+
+- 3 `R` functions
+- 2 new statistical facts/ideas
+- 1 question
