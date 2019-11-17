@@ -1,0 +1,496 @@
+---
+title: Fitting Models to Data
+author: Presented by AG Schissler
+date: Monday November 18, 2019
+output:
+  html_document:
+    css: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/base.css
+    highlight: null
+    theme: null
+    includes:
+      in_header: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/notebook.html
+---
+
+<span style="color: blue">*Exploratory data analysis*</span>
+
+Why fit statistical (regression) models?
+===
+
+You have some data $X_1,\ldots,X_p,Y$: the variables $X_1,\ldots,X_p$ are called predictors, and $Y$ is called a response. You're interested in the relationship that governs them
+
+So you posit that $Y|X_1,\ldots,X_p \sim P_\theta$, where $\theta$ represents some unknown parameters. This is called **regression model** for $Y$ given $X_1,\ldots,X_p$. Goal is to estimate parameters. Why?
+
+- To assess model validity, predictor importance (**inference**)
+- To predict future $Y$'s from future $X_1,\ldots,X_p$'s (**prediction**)
+
+Prostate cancer data 
+===
+
+Recall the data set on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~tibs/ElemStatLearn/)). The measured variables:
+
+- `lpsa`: log PSA score
+- `lcavol`: log cancer volume
+- `lweight`: log prostate weight
+- `age`: age of patient
+- `lbph`: log of the amount of benign prostatic hyperplasia
+- `svi`: seminal vesicle invasion
+- `lcp`: log of capsular penetration
+- `gleason`: Gleason score 
+- ` pgg45`: percent of Gleason scores 4 or 5 
+
+```{r}
+pros.df = 
+  read.table("http://www.stat.cmu.edu/~ryantibs/statcomp/data/pros.dat")
+dim(pros.df)
+```
+
+---
+
+```{r}
+head(pros.df)
+```
+
+Some example questions we might be interested in:
+
+- What is the relationship between `lcavol` and `lweight`?
+- What is the relationship between `svi` and `lcavol`, `lweight`?
+- Can we predict `lpsa` from the other variables?
+- Can we predict whether `lpsa` is high or low, from other variables?
+
+Exploratory data analysis
+===
+
+Before pursuing a specific model, it's generally a good idea to look at your data. When done in a structured way, this is called **exploratory data analysis**. E.g., you might investigate:
+
+- What are the distributions of the variables?
+- Are there distinct subgroups of samples?
+- Are there any noticeable outliers?
+- Are there interesting relationship/trends to model?
+
+Distributions of prostate cancer variables
+===
+
+```{r}
+colnames(pros.df) # These are the variables
+par(mfrow=c(3,3), mar=c(4,4,2,0.5)) # Setup grid, margins
+for (j in 1:ncol(pros.df)) {
+  hist(pros.df[,j], xlab=colnames(pros.df)[j],
+       main=paste("Histogram of", colnames(pros.df)[j]),
+       col="lightblue", breaks=20)
+}
+```
+
+---
+
+What did we learn? A bunch of things! E.g.,
+
+- `svi`, the presence of seminal vesicle invasion, is binary
+- `lcp`, the log amount of capsular penetration, is very skewed, a bunch of men with little (or none?), then a big spread; why is this?
+- `gleason`, takes integer values of 6 and larger; how does it relate to `pgg45`, the percentage of Gleason scores 4 or 5?
+- `lspa`, the log PSA score, is close-ish to normally distributed
+  
+After asking our doctor friends some questions, we learn:
+
+- When the actual capsular penetration is very small, it can't be properly measured, so it just gets arbitrarily set to 0.25 (and we can check that `min(pros.df$lcp)` $\approx \log{0.25}$)
+- The variable `pgg45` measures the percentage of 4 or 5 Gleason scores that were recorded over their visit history *before* their final current Gleason score, stored in `gleason`; a higher Gleason score is worse, so `pgg45` tells us something about the severity of their cancer in the past
+  
+Correlations between prostate cancer variables
+===
+
+```{r}
+pros.cor = cor(pros.df)
+round(pros.cor,3) 
+```
+
+Some strong correlations! Let's find the biggest (in absolute value):
+
+```{r}
+pros.cor[lower.tri(pros.cor,diag=TRUE)] = 0 # Why only upper tri part?
+pros.cor.sorted = sort(abs(pros.cor),decreasing=T)
+pros.cor.sorted[1]
+vars.big.cor = arrayInd(which(abs(pros.cor)==pros.cor.sorted[1]), 
+                        dim(pros.cor)) # Note: arrayInd() is useful
+colnames(pros.df)[vars.big.cor] 
+```
+
+This is not surprising, given what we know about `pgg45` and `gleason`; essentially this is saying: if their Gleason score is high now, then they likely had a bad history of Gleason scores
+
+---
+
+Let's find the second biggest correlation (in absolute value):
+
+```{r}
+pros.cor.sorted[2]
+vars.big.cor = arrayInd(which(abs(pros.cor)==pros.cor.sorted[2]), 
+                        dim(pros.cor))
+colnames(pros.df)[vars.big.cor] 
+```
+
+This is more interesting! If we wanted to predict `lpsa` from the other variables, then it seems like we should at least include `lcavol` as a predictor
+
+Visualizing relationships among variables, with `pairs()`
+===
+
+Can easily look at multiple scatter plots at once, using the `pairs()` function. The first argument is written like a **formula**, with no response variable. We'll hold off on describing more about formulas until we learn `lm()`, shortly
+
+```{r}
+pairs(~ lpsa + lcavol + lweight + lcp, data=pros.df)
+```
+
+Inspecting relationships over a subset of the observations
+===
+
+As we've seen, the `lcp` takes a bunch of really low values, that don't appear to have strong relationships with other variables. Let's get rid of them and see what the relationships look like
+
+```{r}
+pros.df.subset = pros.df[pros.df$lcp > min(pros.df$lcp),]
+nrow(pros.df.subset) # Beware, we've lost a half of our data! 
+pairs(~ lpsa + lcavol + lweight + lcp, data=pros.df.subset)
+```
+
+Testing means between two different groups
+===
+
+Recall that `svi`, the presence of seminal vesicle invasion, is binary:
+
+```{r}
+table(pros.df$svi)
+```
+
+From http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1476128/:
+
+> "When the pathologist’s report following radical pros.dftatectomy describes seminal vesicle invasion (SVI) ... prostate cancer in the areolar connective tissue around the seminal vesicles and outside the prostate ...generally the outlook for the patient is poor."
+
+Does seminal vesicle invasion relate to the volume of cancer? Weight of cancer?
+
+---
+
+Let's do some plotting first:
+
+```{r}
+pros.df$svi = factor(pros.df$svi) 
+par(mfrow=c(1,2))
+plot(pros.df$svi, pros.df$lcavol, main="lcavol versus svi",
+     xlab="SVI (0=no, 1=yes)", ylab="Log cancer volume")
+plot(pros.df$svi, pros.df$lweight, main="lweight versus svi",
+     xlab="SVI (0=no, 1=yes)", ylab="Log cancer weight")
+```
+
+Visually, `lcavol` looks like it has a big difference, but `lweight` perhaps does not
+
+---
+
+Now let's try simple two-sample t-tests:
+
+```{r}
+t.test(pros.df$lcavol[pros.df$svi==0],
+       pros.df$lcavol[pros.df$svi==1])
+t.test(pros.df$lweight[pros.df$svi==0],
+       pros.df$lweight[pros.df$svi==1])
+```
+
+Confirms what we saw visually
+
+<span style="color: blue">Part II</span>
+===
+
+<span style="color: blue">*Linear models*</span>
+
+Linear regression modeling
+===
+
+The linear model is arguably the **most widely used** statistical model, has a place in nearly every application domain of statistics
+
+Given response $Y$ and predictors $X_1,\ldots,X_p$, in a **linear regression model**, we posit:
+
+$$
+Y = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p + \epsilon, 
+\quad \text{where $\epsilon \sim N(0,\sigma^2)$}
+$$
+
+Goal is to estimate parameters, also called coefficients $\beta_0,\beta_1,\ldots,\beta_p$ 
+
+Fitting a linear regression model with `lm()`
+===
+
+We can use `lm()` to fit a linear regression model. The first argument is a **formula**, of the form `Y ~ X1 + X2 + ... + Xp`, where `Y` is the response and `X1`, ..., `Xp` are the predictors. These refer to column names of variables in a data frame, that we pass in through the `data` argument
+
+E.g., for the prostate data, to regress the response variable `lpsa` (log PSA score) onto the predictors variables `lcavol` (log cancer volume)  and `lweight`(log cancer weight) :
+
+```{r}
+pros.lm = lm(lpsa ~ lcavol + lweight, data=pros.df)
+class(pros.lm) # Really, a specialized list
+names(pros.lm) # Here are its components
+pros.lm # It has a special way of printing
+```
+
+Utility functions
+===
+
+Linear models in R come with a bunch of **utility** functions, such as `coef()`, `fitted()`, `residuals()`, `summary()`, `plot()`, `predict()`, for retrieving coefficients, fitted values, residuals, producing summaries, producing diagnostic plots, making predictions, respectively
+
+These tasks can also be done manually, by extracting at the components of the returned object from `lm()`, and manipulating them appropriately. But this is **discouraged**, because:
+
+- The manual strategy is more tedious and error prone
+- Once you master the utility functions, you'll be able to retrieve coefficients, fitted values, make predictions, etc., in the same way for model objects returned by `glm()`, `gam()`, and many others
+
+Retrieving estimated coefficients with `coef()`
+===
+
+So, what were the regression coefficients that we estimated? Use the `coef()` function, to retrieve them:
+
+```{r}
+pros.coef = coef(pros.lm) # Vector of 3 coefficients
+pros.coef
+```
+
+What does a linear regression coefficient mean, i.e., how do you interpret it? Note, from our linear model:
+
+$$
+\mathbb{E}(Y|X_1,\ldots,X_p) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p
+$$
+
+So, increasing predictor $X_j$ by one unit, while holding all other predictors fixed, increases the expected response by $\beta_j$
+
+E.g., increasing `lcavol` (log cancer volume) by one unit (one cc), while holding `lweight` (log cancer weight) fixed, increases the expected value of `lpsa` (log PSA score) by $\approx 0.65$
+
+Retrieving fitted values with `fitted()`
+===
+
+What does our model predict for the log PSA scores of the 97 mean in question? And how do these compare to the actual log PSA scores? Use the `fitted()` function, then plot the actual values versus the fitted ones:
+
+```{r}
+pros.fits = fitted(pros.lm) # Vector of 97 fitted values
+plot(pros.fits, pros.df$lpsa, main="Actual versus fitted values",
+     xlab="Fitted values", ylab="Log PSA values") 
+abline(a=0, b=1, lty=2, col="red") 
+```
+
+Displaying an overview with `summary()`
+==
+
+The function `summary()` gives us a nice summary of the linear model we fit:
+
+```{r}
+summary(pros.lm) # Special way of summarizing
+```
+
+This tells us:
+
+- The quantiles of the residuals: ideally, this is a perfect normal distribution
+- The coefficient estimates
+- Their standard errors
+- P-values for their individual significances
+- (Adjusted) R-squared value: how much variability is explained by the model?
+- F-statistic for the significance of the overall model
+
+Running diagnostics with `plot()`
+===
+
+We can use the `plot()` function to run a series of diagnostic
+tests for our regression:
+
+```{r}
+plot(pros.lm) # Special way of plotting
+```
+
+The results are pretty good:
+
+- "Residuals vs Fitted" plot: points appear randomly scattered, no particular pattern
+- "Normal Q-Q" plot: points are mostly along the 45 degree line, so residuals look close to a normal distribution
+- "Scale-Location" and "Residuals vs Leverage" plots: no obvious groups, no points are too far from the center
+  
+There is a science (and an art?) to interpreting these; you'll learn a lot more in the Modern Regression 36-401 course
+
+Making predictions with `predict()`
+===
+
+Suppose we had a new observation from a man whose log cancer volume was 4.1, and log cancer weight was 4.5. What would our linear model estimate his log PSA score would be? Use `predict()`:
+
+```{r}
+pros.new = data.frame(lcavol=4.1, lweight=4.5) # Must set up a new data frame
+pros.pred = predict(pros.lm, newdata=pros.new) # Now call predict with new df
+pros.pred
+```
+
+We'll learn much more about making/evaluating statistical predictions later in the course
+
+Some handy shortcuts
+===
+
+Here are some handy shortcuts, for fitting linear models with `lm()` (there are also many others):
+
+- No intercept (no $\beta_0$ in the mathematical model): use `0 +` on the right-hand side of the formula, as in:
+    ```{r}
+    summary(lm(lpsa ~ 0 + lcavol + lweight, data=pros.df))
+    ```
+- Include all predictors: use `.` on the right-hand side of the formula, as in:
+    ```{r}
+    summary(lm(lpsa ~ ., data=pros.df))
+    ```
+- Include interaction terms: use `:` between two predictors of interest, to include the interaction between them as a predictor, as in:
+    ```{r}
+    summary(lm(lpsa ~ lcavol + lweight + lcavol:svi, data=pros.df))
+    ```
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*Beyond linear models*</span>
+
+What other kinds of models are there?
+===
+
+Linear regression models, as we've said, are useful and ubiquitous. But there's a lot else out there. What else?
+
+- Logistic regression 
+- Poisson regression
+- Generalized linear models
+- Generalized additive models
+- Many, many others (generative models, Bayesian models, hidden Markov models, nonparametric models, machine learning "models", etc.)
+
+Today we'll quickly visit logistic regression and generalized additive models. In some ways, they are similar to linear regression; in others, they're quite different, and you'll learn a lot more about them in the Advanced Methods for Data Analysis 36-402 course (or the Data Mining 36-462 course)
+
+Logistic regression modeling
+===
+
+Given response $Y$ and predictors $X_1,\ldots,X_p$, where $Y \in \{0,1\}$ is a **binary outcome**. In a **logistic regression model**, we posit the relationship:
+
+$$
+\log\frac{\mathbb{P}(Y=1|X)}{\mathbb{P}(Y=0|X)} = 
+\beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p
+$$
+
+(where $Y|X$ is shorthand for $Y|X_1,\ldots,X_p$). Goal is to estimate parameters, also called coefficients $\beta_0,\beta_1,\ldots,\beta_p$ 
+
+Fitting a logistic regression model with `glm()`
+===
+
+We can use `glm()` to fit a logistic regression model. The arguments are very similar to `lm()`
+
+The first argument is a formula, of the form `Y ~ X1 + X2 + ... + Xp`, where `Y` is the response and `X1`, ..., `Xp` are the predictors. These refer to column names of variables in a data frame, that we pass in through the `data` argument. We must also specify `family="binomial"` to get logistic regression
+
+E.g., for the prostate data, suppose we add a column `lpsa.high` to our data frame `pros.df`, as the indicator of whether the `lpsa` variable is larger than log(10) (equivalently, whether the PSA score is larger than 10). To regress the binary response variable `lpsa.high` onto the predictor variables `lcavol` and  `lweight`:
+
+```{r}
+pros.df$lpsa.high = as.numeric(pros.df$lpsa > log(10)) # New binary outcome
+table(pros.df$lpsa.high) # There are 56 men with high PSA scores
+
+pros.glm = glm(lpsa.high ~ lcavol + lweight, data=pros.df, family="binomial")
+class(pros.glm) # Really, a specialized list
+pros.glm # It has a special way of printing
+```
+
+Utility functions work as before
+===
+
+For retrieving coefficients, fitted values, residuals, summarizing, plotting, making predictions, the utility functions `coef()`, `fitted()`, `residuals()`, `summary()`, `plot()`, `predict()` work pretty much just as with `lm()`. E.g.,
+
+```{r}
+coef(pros.glm) # Logisitic regression coefficients 
+summary(pros.glm) # Special way of summarizing
+
+p.hat = fitted(pros.glm) # These are probabilities! Not binary outcomes
+y.hat = round(p.hat) # This is one way we'd compute fitted outcomes
+table(y.hat, y.true=pros.df$lpsa.high) # This is a 2 x 2 "confusion matrix"
+```
+
+What does a logistic regression coefficient mean?
+===
+
+How do you interpret a logistic regression coefficient? Note, from our logistic model:
+
+$$
+\frac{\mathbb{P}(Y=1|X)}{\mathbb{P}(Y=0|X)} = 
+\exp(\beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p)
+$$
+
+So, increasing predictor $X_j$ by one unit, while holding all other predictor fixed, multiplies the odds by $e^{\beta_j}$. E.g., 
+
+```{r}
+coef(pros.glm)  
+```
+
+So, increasing `lcavol` (log cancer volume) by one unit (one cc), while holding `lweight` (log cancer weight) fixed, multiplies the odds of `lpsa.high` (high PSA score, over 10) by $\approx e^{1.52} \approx 4.57$
+
+Creating a binary variable "on-the-fly"
+===
+
+We can easily create a binary variable "on-the-fly" by using the `I()` function inside a call to `glm()`: 
+
+```{r}
+pros.glm = glm(I(lpsa > log(10)) ~ lcavol + lweight, data=pros.df, 
+               family="binomial")
+summary(pros.glm) # Same as before
+```
+
+Generalized additive modeling
+===
+
+**Generalized additive models** allow us to do something that is like linear regression or logistic regression, but with a more flexible way of modeling the effects of predictors (rather than limiting their effects to be linear). For a continuous response $Y$, our model is:
+
+$$
+\mathbb{E}(Y|X) = \beta_0 + f_1(X_1) + \ldots + f_p(X_p)
+$$
+
+and the goal is to estimate $\beta_0,f_1,\ldots,f_p$. For a binary response $Y$, our model is:
+
+$$
+\log\frac{\mathbb{P}(Y=1|X)}{\mathbb{P}(Y=0|X)} 
+= \beta_0 + f_1(X_1) + \ldots + f_p(X_p)
+$$
+
+and the goal is again to estimate $\beta_0,f_1,\ldots,f_p$
+
+Fitting a generalized additive model with `gam()`
+===
+
+We can use the `gam()` function, from the `gam` package, to fit a generalized additive model. The arguments are similar to `glm()` (and to `lm()`), with a key distinction 
+
+The formula is now of the form `Y ~ s(X1) + X2 + ... + s(Xp)`, where `Y` is the response and `X1`, ..., `Xp` are the predictors. The notation `s()` is used around a predictor name to denote that we want to model this as a smooth effect (nonlinear); without this notation, we simply model it as a linear effect
+
+So, e.g., to fit the model
+
+$$
+\mathbb{E}(\mathrm{lpsa}\,|\,\mathrm{lcavol},\mathrm{lweight}) 
+= \beta_0 + f_1(\mathrm{lcavol}) + \beta_2 \mathrm{lweight}
+$$
+
+we use:
+
+```{r}
+library(gam, quiet=TRUE)
+pros.gam = gam(lpsa ~ s(lcavol) + lweight, data=pros.df)
+class(pros.gam) # Again, a specialized list
+pros.gam # It has a special way of printing
+```
+
+Most utility functions work as before
+===
+
+Most of our utility functions work just as before. E.g.,
+
+```{r}
+summary(pros.gam)
+```
+
+---
+
+But now, `plot()`, instead of producing a bunch of diagnostic plots, shows us the effects that were fit to each predictor (nonlinear or linear, depending on whether or not we used `s()`):
+
+```{r}
+plot(pros.gam)
+```
+
+We can see that, even though we allowed `lcavol` to have a nonlinear effect, this didn't seem to matter much as its estimated effect came out to be pretty close to linear anyway!
+
+Summary
+===
+
+- Fitting models is critical to both statistical inference and prediction
+- Exploratory data analysis is a very good first step and gives you a sense of what you're dealing with before you start modeling
+- Linear regression is the most basic modeling tool of all, and one of the most ubiquitous
+- `lm()` allows you to fit a linear model by specifying a formula, in terms of column names of a given data frame
+- Utility functions `coef()`, `fitted()`, `residuals()`, `summary()`, `plot()`, `predict()` are very handy and should be used over manual access tricks
+- Logistic regression is the natural extension of linear regression to binary data; use `glm()` with `family="binomial"` and all the same utility functions
+- Generalized additive models add a level of flexibility in that they allow the predictors to have nonlinear effects; use `gam()` and utility functions 
