@@ -1,0 +1,218 @@
+---
+title: Optimization and Maxmimum Likelihood Estimation
+author: Presented by AG Schissler
+date: Monday December 2, 2019
+output:
+  html_document:
+    css: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/base.css
+    highlight: null
+    theme: null
+    includes:
+      in_header: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/notebook.html
+---
+
+## I. Opening 
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+### Start-of-class work
+
+1. Log in the your workstation.
+2. Open the RStudio application on your machine.
+3. Open lesson26_mle_optim.Rmd from website so that you can work along the lecture.
+
+### This week's agenda
+
+Digging into more computational methods of inference and computation, including
+
+2) Bootstrap
+3) Maximum Likelihood Estimation
+
+## II. Numerical optimization
+
+From Braun and Murdock 2018, *A First Course in Statistical Programming with R*, there are many areas of statistics and applied mathematics that asks: given a function $f(\cdot)$, which value of $x$ makes $f(x)$ as large or small as possible?
+
+I'll discuss one simple optimization method in detail, then show you tools for more complex and efficient algorithms.
+
+### The golden section search method
+
+The golden section search method is a simple way of finding the minimizer of a single-variable function which has single minimizer is $[a,b]$. Consider minimizing the function
+
+$$
+f(x) = |x - 3.5| + (x - 2)^2
+$$
+
+on the interval $[0,5]$ This function is **not** differentiable at $x=3.5$, so we must be careful.
+
+In R,
+
+```{r}
+f <- function(x){
+    abs(x - 3.5) + (x -2 )^2
+}
+curve(f, from = 1, to = 5)
+```
+
+The golden search method is an interative method, which involves the following steps:
+
+1. Start with the interval $[a,b]$, known to contain the minimizer.
+2. Repeatedly shrink it, finding smaller and smaller intervals $[a^\prime,b^\prime]$ which still contains the minimzer.
+3. Stop when $b^\prime - a^\prime$ is small enough (when the length is smaller than a pre-set tolerance).
+
+The minimzer is then given as the midpoint of the final interval. The maximum error = $(b^\prime - a^\prime) / 2$.
+
+The algorithm makes use of the golden ratio,
+
+$$
+\phi = \frac{1 + \sqrt{5}}{2}.
+$$
+
+Note that $1/\phi = \phi - 1$ and $1/\phi^2 = 1 - 1/\phi$.
+
+Two reasons for this;
+
+1) It makes the selection of "probe points" efficient, by avoiding selecting wide intervals. You can learn more about this at the [wiki](https://en.wikipedia.org/wiki/Golden-section_search) page. This leads to rapid convergence.
+2) When the ratio is judiciously used, you don't have to re-evaluate the function multiple times. For example, if you locate interior points at $x_1 = b-(b-a)/\phi$ and $x_2 = a + (b-a)/\phi$ then
+
+\begin{align}
+x_1^{\prime} &= b - (b-a^{\prime})/\phi \\
+ &= b - (b-x_1)/\phi \\
+ &= b - (b-a)/\phi^2 \\
+ &= a + (b -a)/\phi \\
+ &= x_2
+\end{align}
+
+
+
+
+```{r}
+golden <- function(f, a, b, tol = 1e-7) {
+    ratio <- 2 / (sqrt(5) + 1) ## 1/phi, aka "silver ratio".
+    x1 <- b - ratio * (b - a)
+    x2 <- a + ratio * (b - a)
+
+    f1 <- f(x1)
+    f2 <- f(x2)
+
+    while(abs(b - a) > tol){
+        if (f2 > f1){
+            b <- x2
+            x2 <- x1
+            f2 <- f1
+            x1 <- b - ratio * (b - a)
+            f1 <- f(x1)
+        } else{
+            a <- x1
+            x1 <- x2
+            f1 <- f2
+            x2 <- a + ratio * (b - a)
+            f2 <- f(x2)
+        }
+    }
+    return( (a + b) / 2 )
+}
+```
+```{r}
+golden(f, 1, 5)
+```
+
+### Two other important methods
+
+- Newton-Raphson
+- The Nelder-Mead simplex method (several variables)
+
+### Built-in R functions
+
+For one-dimensional optimization, the `optimize()` function performs a variation of the golden section search. For multi-dimensional problems `optim()` is a general purpose wrapper for several optimization routines including variants of Newton-Raphson and Nelder-Mead. In practice, the choice of optimizer should not matter much. You can try several and investigate any differences.
+
+## III. Maxmimum Likelihood Estimation
+
+From Rizzo 2006, Maximum likelihood is a method of estimating parameters from a distribution. The abbreviation MLE may refer to the method, to the estimate, or to the estimator. The method finds a value of the parameter that maximizes the *likelihood function*. So numerical optimization of the likelihood function is an important problem in statistics.
+
+Suppose that $X_1, \ldots, X_n$ are random variables with parameter $\theta \in \Theta$ ($\theta$ may be a vector). The likelihood function $L(\theta)$ of random variables $X_1, \ldots, X_n$ evaluated at observed values $x_1, \ldots, x_n$ is defined as the joint density
+
+$$
+L(\theta) = f(x_1,\ldots,x_n | \theta).
+$$
+
+If $X_1, \ldots, X_n$ are a random sample (so $X_i$ are iid) with common density $f(x|\theta)$, then
+
+$$
+L(\theta) = \prod^n_{i=1} f(x_i|\theta).
+$$
+
+A maximum likelihood estimate of $\theta$ is a value $\hat{\theta}$ that maximizes $L(\theta)$. That is, $\hat{\theta}$ is a solution (not necessarily unique) to
+
+$$
+L(\hat{\theta}) = f(x_1,\ldots,x_n | \hat{\theta}) = \max_{\theta \in \Theta} f(x_1,\ldots,x_n | \theta).
+$$
+
+One finds the MLE is a standard way, finding critical points through solving the equation
+
+$$
+\frac{d}{d\theta} L(\theta) = 0.
+$$
+
+In practice, instead of solving the above equation, we typically solve 
+
+$$
+\frac{d}{d\theta} l(\theta) = 0.
+$$
+
+where $l(\theta) = log L(\theta)$, where $log(x)$ is the natural log. $l(\theta)$ is called the *log-likelihood* and is much easier to compute with (product becomes a sum).
+
+### Example (MLE using `mle` function for exponentional RV)
+
+Suppose $Y_1,Y_2$ are iid with density $f(y)= \theta e^{-\theta y}, y > 0$. Find the MLE of $\theta$.
+
+By independence, 
+
+$$
+L(\theta) = (\theta e^{-\theta y_1}) (\theta e^{-\theta y_2}) = \theta^2 e^{-\theta(y_1+y_2)}.
+$$
+
+Then $l(\theta)=2log\theta-\theta(y_1+y_2)$. So we have
+
+$$
+\frac{d}{d\theta} l(\theta) = \frac{2}{\theta} - (y_1+y_2) = 0, \theta > 0.
+$$
+
+The unique solution is $\hat{\theta} = 2/(y_1+y_2)$. Notice this is the reciprocal of the mean (since $\theta$ is the rate parameter, this should make sense).
+
+Now let's find the mle using the `mle` function from the `stats4` package. `mle` is a nice wrapper around `optim`.
+
+```{r}
+## observed sample
+y <- c(0.04304550, 0.50263474)
+
+## mle takes in the minus log-likelihood as the function to optimize.
+mlogL <- function(theta=1) {
+    ## minus log-likelihood of exp. density, rate is 1/theta
+    ## notice that the function below is for n = length(y) observations
+    return( - (length(y) * log(theta) - theta * sum(y)) )
+}
+
+require(stats4)
+fit <- stats4::mle(mlogL)
+summary(fit)
+```
+
+Alternatively, you can provide initial values for the optimizer.
+
+```{r}
+stats4::mle(mlogL, start = list(theta=1))
+stats4::mle(mlogL, start = list(theta=mean(y)))
+```
+
+### Comments
+
+For commonly used distributions (e.g. normal), the log-likelihood are well known and can be found by searching online for a few minutes. For less common distributions, you'll have to derive the MLE and check that there exists a unique solution. Check the second derivative and boundaries!
+
+## IV. Continue working on Lab 10, time permitting
+
+## V. Summary
+
+
+

@@ -1,0 +1,172 @@
+---
+title: "Lab 09: Bootstrap, MLE, MCMC"
+author: "AG Schissler"
+date: "Week of 12/03/2018"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+NSHE ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, **next** week.
+
+Learning outcomes
+===
+
+1) Students will be able to (SWBAT) use the bootstrap.
+2) SWBAT find maximum likelihood estimators (MLE).
+3) SWBAT use a Markov Chain Monte Carlo to sample a target distribution.
+
+## 1. Studying bootstrap performance
+
+We'll study the behavior of the bootstrap through simulation. 
+
+- **1a.** First let's consider the bootstrap's behavior for a large sample. Simulate a random sample of size ($n$) 40 from a normal distribution with mean ($\mu$)30 and standard deviation ($\sigma) $5.
+
+```{r, 1a}
+set.seed(11)
+## your code here
+
+```
+
+- **1b.** Now construct a bootstrap distribution of the sample mean with bootstrap replicates of $B=2000$. How well does the bootstrap estimate of the standard error of the sample mean agree with the theoretical value $SE(\bar{x})=\sigma / \sqrt{n}$? Also comment on the bias on the bootstrap procedure.
+
+```{r, 1b}
+set.seed(12)
+## your code here
+
+```
+
+- **1c.** Now let's consider the bootstrap's behavior for a small sample. Simulate a random sample of size ($n$) 5 from a normal distribution with mean ($\mu$)30 and standard deviation ($\sigma) $5.
+
+```{r, 1c}
+set.seed(13)
+## your code here
+
+```
+
+- **1d.** Repeat Q1b for the small sample.
+
+```{r, 1d}
+set.seed(14)
+## your code here
+
+```
+
+- **Challenge** Explore various sample sizes. What is the minimum $n$ you would recommend for data from this distribution and statistic (the sample mean)? How did you arrive at this conclusion?
+
+```{r, 1challenge}
+set.seed(15)
+## your code here
+
+```
+
+## 2. MLE and the bootstrap (modifiied from Rizzo 2006)
+
+Refer to the air-conditioning data set `aircondit` provided in the `boot` package. The 12 observations are the times between failures of air conditioning equipment. 
+
+```{r, 2}
+library(boot)
+t(aircondit)
+```
+
+- **2a** Model the failure using an exponential distribution, $Exp(\lambda)$. Obtain the MLE of the hazard rate $\lambda$ using the `mle` function in the `stat4` package.
+
+```{r, 2a}
+## your code here
+
+```
+
+- **2b** Use the bootstrap to estimate the bias and standard error of the estimate.
+
+```{r, 2b}
+set.seed(22)
+## your code here
+
+```
+
+## 3. MCMC sampler (modified from Rizzo 2006)
+
+Refer to the Metropolis-Hastings sampling of the Rayleigh distribution with $\sigma=4$ (in [lesson27_mcmc.Rmd](https://github.com/grizant/STAT445/blob/master/lesson27_mcmc/lesson27_mcmc.Rmd).
+
+- **3a** Repeat the example using the proposal distribution $Y \sim Gamma(X_t, 1)$ (shape parameter X_t and rate parameter 1). Comment on the apparent efficiency based on the proportion of rejected samples.
+
+```{r, 3a}
+set.seed(31)
+## your code here
+
+```
+
+- **3b** Plot the last 1000 samples in a line graph. Comment on any visual differences between your plot and the plot in the lecture.
+
+```{r, 3b}
+## your code here
+
+```
+
+## 4. Random Walk Metropolis
+
+The *random walk Metropolis* sampler is an example of a Metropolis sampler. Suppose the candidate point $Y$ is generated from a symmetric proposal distribution $g(Y|X_t)=g(|X_t-Y|)$. Then at each iteration, a random increment $Z$ is generated from $g(\cdot)$, and $Y$ is defined by $Y = X_t + Z$. For example, the random increment might be normal with zero mean, so that the candidate point is $Y|X_t \sim Normal(X_t, \sigma^2)$ for some fixed $\sigma^2 > 0$.
+
+The convergence of the random walk Metropolis is often sensitive to the scale parameter ($\sigma$ above) in the proposal distribution. When the variance is too large, the chain rejects too often. When too small, the chain accepts too often (behaves like a true random walk). This question will investigate the choice of scale parameter when using a random walk Metropolis to simulate from a Student $t$ distribution with $\nu$ degrees of freedom.
+
+- **4a** Complete the code below to write a function `get_chain_rw_metropolis` that takes four parameters `nu` (the degrees of freedom for the target $t$ distribution), `sigma` (the standard deviation for the Normal proposal distribution), `x0` (the initial point in the chain), and `N` (the length of the chain). Hint: use `dt`.
+
+```{r, 4a}
+get_chain_rw_metropolis <- function(nu, sigma, x0, N) {
+    x <- numeric(N)
+    ## set the initial value
+    ## your code here
+
+    ## get probabilities for acceptance decision
+    ## your code here
+
+    ## count rejections
+    k <- 0
+
+    ## construct the chain
+    for (i in 2:N) {
+        ## generate a proposed point
+        ## your code here
+
+        ## compute the acceptance ratio and compare to the acceptance probability
+        ## your code here
+
+        ## update the chain and increment number of rejections
+        ## your code here
+        
+    }
+    return(list(x = x, k = k))
+}
+```
+
+- **4b** Now generate four chains with different variances $\sigma^2$ of the proposal distribution. Use the values provided below and complete the code chunk.
+
+```{r, 4b}
+nu <- 4 ## degrees of freedom in the target Student t distribution
+N <- 2000
+sigma <- c(0.05, 0.5, 2, 16)
+x0 <- 25
+
+set.seed(42)
+## your code here
+```
+
+- **4c** Roberts, Gelman, and Gilks (1997) recommend that the rejection rates in the range $[0.15, 0.5]$ for good performance. Explore the rejection rates for each chain. Which chain(s) are performing well?
+
+```{r, 4c}
+## your code here
+
+```
+
+- **4d** Finally, plot your four chains in one plot (either use `par` or panel with `ggplot2`). Provide reference lines at the 2.5% and 97.5% quantiles on each plot (hint: use `qt`). Comment on each plot.
+
+```{r, 4d}
+## your code here
+
+```
