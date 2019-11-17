@@ -1,6 +1,6 @@
 ---
-title: Simulation for Statistical Inference
-author: Presented by AG Schissler, modified from R. Tibshirani
+title: Simulation for checking statistical procedures and model fits
+author: Presented by AG Schissler
 date: Wednesday November 20, 2019
 output:
   html_document:
@@ -19,330 +19,447 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 ### Start-of-class work
 
-1. Log in the your workstation.
+1. Please log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open [21_simulation_startLab08.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/21_simulation_startLab08.Rmd) from website so that you can work along the lecture.
-4. Open [lab_08_monte_carlo.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_08_monte_carlo.Rmd) to have the lab available.
+3. Open [24_model_checking_fake_data.Rmd](https://github.com/grizant/STAT445/blob/master/meeting_agendas/24_model_checking_fake_data.Rmd) from website so that you can work along the lecture.
+4. Open [lab_09_models.Rmd](https://github.com/grizant/STAT445/blob/master/labs/lab_08_monte_carlo.Rmd) to have the lab available.
 
 ### This week's agenda
 
 - This week begins the third and final unit of the course: Statistical Inference through Computing. 
 - You are reviewing probability in a DataCamp module.
 
-## II. DataCamp Foundations of Probability
+## I. Opening (5-10 minutes)
 
-- Probability is the main mathematical tool for understanding randomness and predictable variation.
-- We won't focus on analytic manipulations, but you need to have a good familiarity with the concepts to complete the assignments and final exam.
-- Let me know if you have any questions as you go through module.
+Today I'll introduce the concept of using simulation to check code and statistical procedures --- and to assess how well a model fits the data. `R` has some great features to conduct these studies. Why simulate? Welcome to the 21st century! Two reasons:  
+  1) Often, simulations can be easier than hand calculations.  
+  2) Often, simulations can be made more realistic than hand calculations.  
 
-## III. Introduction to Simulation
+### Fake-data simulation
 
-- We're been simulating from almost the first (using `rbinom`).
-- This lecture goes deeper and uses simulation to gather statistical evidence and test hypotheses.
-- R gives us unique access to great simulation tools (unique compared to other languages). Why simulate? Welcome to the 21st century! Two reasons:
-  1) Often, simulations can be easier than hand calculations 
-  2) Often, simulations can be made more realistic than hand calculations.
+- Checking code and statistical procedure entails using simulation strategies to produce synthetic data (aka *fake data* or *frauda*) then fit a model to these data.  
+- The results should roughly align with the specified (true) values. This gives you confidence that the computer program is working.  
+- The results should align with expected (theoretical) results. This can assess whether the model is performing as advertised. For example, what are the empricial coverage rates? 
 
-## IV. Simulation 101
+### Predictive simulations
 
-### Sampling from a given vector
+- I'll describe the use of *predictive simulations* to check how well a model fits data.  
+- This invovles fitting a statistical model to real data (as opposed to fitting a model to fake data, as above).  
+- Then repeated simulations are conducted using the model and covariates to generate predicted responses.
+- These replicated data sets are then compared visually and more formally (numerically) to the original data.
 
-To sample from a given vector, use `sample()`
+### Learning outcomes
 
-```{r}
-sample(x=letters, size=10) # Without replacement, the default
-sample(x=c(0,1), size=10, replace=TRUE) # With replacement
-sample(x=seq(0,1,0.2), size = 3) # Arguments set as x=1:10, size=10, replace=FALSE
+- Students will recall simulation strategies for checking statistical procedures and model fits.
+- Students will apply simulation strategies for checking statistical procedures and model fits.
+
+### Notes
+
+Most of this lecture is derived from Chapters 7 and 8 from the outstanding textbook *Data Analysis Using Regression and Multilevel/Hierachical Models* by Gelman and Hill 2007. We'll proceed through a series of examples of increasing complex models with code provided in `R`. The useful `R` package `arm` will do must of the heavy lifting (coding) for us.
+
+## II. Fake-data simulation (15 - 30 min)
+
+The key concept in fake-data simulation for model checking is to **simulate from a statistical model known parameter values/functional form and check the properties of the procedure against theory**.
+
+### Example 1: Simple linear regression (SLS) with Gaussian errors
+
+```{r, 81, warning=F}
+## Fake-data simulation
+library("arm")
+a <- 1.4
+b <- 2.3
+sigma <- 0.9
+x <- 1:5
+n <- length(x)
+
+# Simulate data, fit the model, and check the coverage of the conf intervals
+
+y <- a + b*x + rnorm (n, 0, sigma)
+lm.1 <- lm (y ~ x)
+display (lm.1)
+
+b.hat <- coef (lm.1)[2]       # "b" is the 2nd coef in the model
+b.se <- se.coef (lm.1)[2]     # "b" is the 2nd coef in the model
+
+cover.68 <- abs (b - b.hat) < b.se     # this will be TRUE or FALSE
+cover.95 <- abs (b - b.hat) < 2*b.se   # this will be TRUE or FALSE
+cat (paste ("68% coverage: ", cover.68, "\n"))
+cat (paste ("95% coverage: ", cover.95, "\n"))
+
+# Put it in a loop
+
+n.fake <- 1000
+cover.68 <- rep (NA, n.fake)
+cover.95 <- rep (NA, n.fake)
+for (s in 1:n.fake){
+  y <- a + b*x + rnorm (n, 0, sigma)
+  lm.1 <- lm (y ~ x)
+  b.hat <- coef (lm.1)[2]      
+  b.se <- se.coef (lm.1)[2]   
+  cover.68[s] <- abs (b - b.hat) < b.se  
+  cover.95[s] <- abs (b - b.hat) < 2*b.se 
+}
+cat (paste ("68% coverage: ", mean(cover.68), "\n"))
+cat (paste ("95% coverage: ", mean(cover.95), "\n"))
+
+# Do it again, this time using t intervals
+
+n.fake <- 1000
+cover.68 <- rep (NA, n.fake)
+cover.95 <- rep (NA, n.fake)
+t.68 <-  qt (.84, n-2)
+t.95 <-  qt (.975, n-2)
+for (s in 1:n.fake){
+  y <- a + b*x + rnorm (n, 0, sigma)
+  lm.1 <- lm (y ~ x)
+  b.hat <- coef (lm.1)[2]      
+  b.se <- se.coef (lm.1)[2]   
+  cover.68[s] <- abs (b - b.hat) < t.68*b.se  
+  cover.95[s] <- abs (b - b.hat) < t.95*b.se 
+}
+cat (paste ("68% coverage: ", mean(cover.68), "\n"))
+cat (paste ("95% coverage: ", mean(cover.95), "\n"))  
 ```
 
-### Random number generation
+### Example 2: Using simulation to understand (SLS) residual plots
 
-To sample from a normal distribution, we have the utility functions:
+```{r, 82}
+## Read in the data
+# Data are at http://www.stat.columbia.edu/~gelman/arm/examples/simulation
 
-- `rnorm()`: generate normal random variables
-- `pnorm()`: normal distribution function, $\Phi(x)=P(Z \leq x)$ 
-- `dnorm()`: normal density function, $\phi(x)= \Phi'(x)$
-- `qnorm()`: normal quantile function, $q(y)=\Phi^{-1}(y)$, i.e., $\Phi(q(y))=y$
+## library ("arm")
+tmp_dir <- "~/OneDrive - University of Nevada, Reno/Teaching/Gelman_and_Hill_2007_code_data"
 
-Replace "norm" with the name of another distribution, all the same functions apply. E.g., "t", "exp", "gamma", "chisq", "binom", "pois", etc. 
+grades <- read.table(file.path(tmp_dir, "gradesW4315.dat"), header=TRUE)
+midterm <- grades[,"Midterm"]
+final <- grades[,"Final"]
 
-### Random number examples
+## Estimate the model
 
+lm.1 <- lm (final ~ midterm)
+display (lm.1)
 
-Standard normal random variables (mean 0 and variance 1)
+## Construct fitted values
 
-```{r}
-n = 1000
-z = rnorm(n, mean=0, sd=1) # These are the defaults for mean, sd
-mean(z)  # Check: sample mean is approximately 0
-var(z)   # Check: sample variance is approximately 1
-```
+n <- length(final)
+X <- cbind (rep(1,n), midterm)
+predicted <- X %*% coef (lm.1)
+resid <- lm.1$residuals
 
-### Estimated distribution function
+## Simulate fake data & compute fitted values
 
-To compute empirical cumulative distribution function (ECDF)---the standard estimator of the cumulative distribution function---use `ecdf()`
+a <- 65
+b <- 0.7
+sigma <- 15
+y.fake <- a + b*midterm + rnorm (n, 0, sigma)
 
-```{r}
-x = seq(-3,3,length=100)
-ecdf.fun = ecdf(z) # Create the ECDF
-class(ecdf.fun) # It's a function!
-ecdf.fun(0)
+lm.fake <- lm (y.fake ~ midterm)
+predicted.fake <- X %*% coef (lm.fake)
+resid.fake <- y.fake - predicted.fake
 
-# We can plot it 
-plot(ecdf.fun, lwd=2, col="red", ylab="CDF", main="ECDF")
-lines(x, pnorm(x), lwd=2)
-legend("topleft", legend=c("Empirical", "Actual"), lwd=2, 
-       col=c("red","black"))
-```
+par (mfrow=c(2,2))
 
+## Plots figure 8.1
 
-### Interlude: Kolmogorov-Smirnov test
+ # plot on the left
 
-One of the most celebrated tests in statistics is due to Kolmogorov in 1933. The *Kolmogorov-Smirnoff (KS) statistic* is:
-$$
-\sqrt{\frac{n}{2}} \sup_{x} |F_n(x)-G_n(x)|
-$$
-Here $F_n$ is the ECDF of $X_1,\ldots,X_n \sim F$, and $G_n$ is the ECDF of $Y_1,\ldots,Y_n \sim G$. Under $F=G$ (two distributions are the same), as $n \to \infty$, the KS statistic approaches the supremum of a Brownian bridge:
-$$
-\sup_{t \in [0,1]} |B(t)|
-$$
+plot (predicted, resid, xlab="predicted value", ylab="residual",
+  main="Residuals vs. predicted values", pch=20)
+abline (0,0, col="gray", lwd=.5)
 
----
+ # plot on the right
 
-Here $B$ is a Gaussian process with $B(0)=B(1)=0$, mean $\mathbb{E}(B(t))=0$ for all $t$, and covariance function $\mathrm{Cov}(B(s), B(t)) = s(1-t)$
+plot (final, resid, xlab="observed value", ylab="residual",
+  main="Residuals vs. observed values", pch=20)
+abline (0,0, col="gray", lwd=.5)
 
-```{r}
-n = 500
-t = 1:n/n
-Sig = t %o% (1-t)
-Sig = pmin(Sig, t(Sig))
-eig = eigen(Sig)
-Sig_half = eig$vec %*% diag(sqrt(eig$val)) %*% t(eig$vec)
-B = Sig_half %*% rnorm(n)
-plot(t, B, type="l")
-```
+## Plots figure 8.2
 
----
+ # plot on the left
 
-Two remarkable facts about the KS test:
+plot (predicted.fake, resid.fake, xlab="predicted value", ylab="residual",
+  main="Fake data: resids vs. predicted", pch=20)
+abline (0,0, col="gray", lwd=.5)
 
-1. It is *distribution-free*, meaning that the null distribution doesn't depend on $F,G$!
+ # plot on the right
 
-2. We can actually compute the null distribution and use this test, e.g., via `ks.test()`: 
-
-```{r}
-ks.test(rnorm(n), rt(n, df=1)) # Normal versus t1
-ks.test(rnorm(n), rt(n, df=10)) # Normal versus t10
-```
-
-
-### Estimated density function
-
-To compute histogram---a basic estimator of the density based on binning---use `hist()`
-
-```{r}
-hist.obj = hist(z, breaks=30, plot=FALSE) 
-class(hist.obj) # It's a list
-hist.obj$breaks # These are the break points that were used
-hist.obj$density # These are the estimated probabilities
-
-# We can plot it
-plot(hist.obj, col="pink", freq=FALSE, main="Histogram")
-lines(x, dnorm(x), lwd=2)
-legend("topleft", legend=c("Histogram", "Actual"), lwd=2, 
-       col=c("pink","black"))
-```
-
-## V. Pseudorandomness and seeds
-
-#### Same function call, different results
-
-Not surprisingly, we get different draws each time we call `rnorm()`
-
-```{r}
-mean(rnorm(n))
-mean(rnorm(n))
-mean(rnorm(n))
-mean(rnorm(n))
-```
-
-#### Is it really random?
-
-Random numbers generated in R (in any language) are not "truly" random; they are what we call **pseudorandom**
-
-- These are numbers generated by computer algorithms that very closely mimick "truly" random numbers
-- The study of such algorithms is an interesting research area in its own right!
-- The default algorithm in R (and in nearly all software languages) is called the "Mersenne Twister"
-- Type `?Random` in your R console to read more about this (and to read how to change the algorithm used for pseudorandom number generation, which you should never really have to do, by the way)
-
-#### Setting the random seed 
-
-All pseudorandom number generators depend on what is called a **seed** value 
-
-- This puts the random number generator in a well-defined "state", so that the numbers it generates, from then on, will be reproducible
-- The seed is just an integer, and can be set with `set.seed()`
-- The reason we set it: so that when someone else runs our simulation code, they can see the same---albeit, still random---results that we do
-- This can be tricky using RStudio and RMarkdown. Don't sweat it until you knit the final document
-
-#### Seed examples
-
-```{r}
-# Getting the same 5 random normals over and over
-set.seed(0); rnorm(5)
-set.seed(0); rnorm(5)
-set.seed(0); rnorm(5)
-```
-
----
-
-```{r}
-# Different seeds, different numbers
-set.seed(1); rnorm(5)
-set.seed(2); rnorm(5)
-set.seed(3); rnorm(5)
-```
-
----
-
-```{r}
-# Each time the seed is set, the same sequence follows (indefinitely)
-set.seed(0); rnorm(3); rnorm(2); rnorm(1)
-set.seed(0); rnorm(3); rnorm(2); rnorm(1)
-set.seed(0); rnorm(3); rnorm(2); rnorm(1)
-```
-
-## VI. Iteration and simulation
-
-### Drug effect model
-
-- Let's start with a motivating example: suppose we had a model for the way a drug affected certain patients
-- All patients will undergo chemotherapy. We believe those who aren't given the drug experience a reduction in tumor size of percentage
-$$
-X_{\mathrm{no\,drug}} \sim 100 \cdot \mathrm{Exp}(\mathrm{mean}=R), 
-\;\;\; R \sim \mathrm{Unif}(0,1) 
-$$
-- And those who were given the drug experience a reduction in tumor size of percentage
-$$
-X_{\mathrm{drug}} \sim 100 \cdot \mathrm{Exp}(\mathrm{mean}=2)
-$$
-(Here $\mathrm{Exp}$ denotes the exponential distribution, and $\mathrm{Unif}$ the uniform distribution)
-
-### What would you do?
-
-What would you do if you had such a model, and your scientist collaborators asked you: *how many patients would we need to have in each group (drug, no drug), in order to reliably see that the average reduction in tumor size is large?*
-
-- Answer used to be: get out your pen and paper, make some approximations
-- Answer is now: simulate from the model, no approximations required!
-
-### So, let's simulate!
-
-```{r}
-# Simulate, supposing 60 subjects in each group 
-set.seed(0)
-n = 60 
-mu_drug = 2
-mu_nodrug = runif(n, min=0, max=1)
-x_drug = 100*rexp(n, rate=1/mu_drug) 
-x_nodrug = 100*rexp(n, rate=1/mu_nodrug)
-```
-
----
-
-```{r}
-# Find the range of all the measurements together, and define breaks
-x_range = range(c(x_nodrug,x_drug))
-breaks = seq(min(x_range),max(x_range),length=20)
-
-# Produce hist of the non drug measurements, then drug measurements on top
-hist(x_nodrug, breaks=breaks, probability=TRUE, xlim=x_range, 
-     col="lightgray", xlab="Percentage reduction in tumor size", 
-     main="Comparison of tumor reduction")
-
-# Plot a histogram of the drug measurements, on top
-hist(x_drug, breaks=breaks, probability=TRUE, col=rgb(1,0,0,0.2), add=TRUE) 
-
-# Draw estimated densities on top, for each dist
-lines(density(x_nodrug), lwd=3, col=1)
-lines(density(x_drug), lwd=3, col=2)
-legend("topright", legend=c("No drug","Drug"), lty=1, lwd=3, col=1:2)
-```
-
-### Repetition and reproducibility
-
-- One single simulation is not always trustworthy (depends on the situation, of course)
-- In general, simulations should be repeated and aggregate results reported---requires iteration!
-- To make random number draws reproducible, we must set the seed with `set.seed()`
-- More than this, to make simulation results reproducible, we need to follow **good programming practices**
-- Gold standard: any time you show a simulation result (a figure, a table, etc.), you have code that can be run (by anyone) to produce exactly the same result
-
-### Iteration and simulation (and functions): good friends
-
-- Writing a **function** to complete a single run of your simulation is often very helpful
-- This allows the simulation itself to be intricate (e.g., intricate steps, several simulation parameters), but makes running the simulation simple
-- Then you can use **iteration** to run your simulation over and over again
-- Good design practice: write another function for this last part (running your simulation many times)
-
-### Code sketch
-
-Consider the code below for a generic simulation. Think about how you would frame this for the drug effect example, which you'll revisit in lab
+plot (y.fake, resid.fake, xlab="observed value", ylab="residual",
+  main="Fake data: resids vs. observed", pch=20)
+abline (0,0, col="gray", lwd=.5)
 
 ```
-# Function to do one simulation run
-one_sim = function(param1, param2=value2, param3=value3) {
-  # Possibly intricate simulation code goes here
+
+## III. Predictive simulation (20 - 30 min)
+
+The key concept in predictive simulation for model checking is to **simulate from the fitted model and compare to the actual data**.
+
+### Example 3: Comparing data to replications from a fitted 
+
+Data from Newcomb's famous 1882 experiment to measure the speed of light.
+
+```{r, light, eval=T, message=F, warning=F, fig.caption="Histogram of Simon Newcomb's measurements for estimating the speed of light, from Stigler (1977). The data represent the amount of time required for light to travel a distance of 7442 meters and are recorded as deviations from 24,800 nanoseconds."}
+## Read in the data
+# Data are at http://www.stat.columbia.edu/~gelman/arm/examples/lightspeed
+## library ("arm")
+
+y <- scan(file.path(tmp_dir, "lightspeed.dat"), skip=4)
+
+## Display original data
+hist(y, xlab="", ylab="", cex.main="1", yaxt="n", xlim=range(y))
+```
+
+```{r, light2, eval=T, message=F, warning=F, fig.caption=""}
+## Model fit 
+
+light <- lm (y ~ 1)
+display (light)
+
+## Create the replicated data 
+
+n.sims <- 1000
+sim.light <- sim (light, n.sims)
+
+## Create fake data 
+
+n <- length (y)
+y.rep <- array (NA, c(n.sims, n))
+for (s in 1:n.sims){
+  y.rep[s,] <- rnorm (n, sim.light@coef[s], sim.light@sigma[s])
 }
 
-# Function to do repeated simulation runs
-rep_sim = function(nreps, param1, param2=value2, param3=value3, seed=NULL) {
-  # Set the seed, if we need to
-  if(!is.null(seed)) set.seed(seed)
-  
-  # Run the simulation over and over
-  sim_objs = vector(length=nreps, mode="list")
-  ## for loop here, 
-  ## but other iteration techniques may be more efficient (e.g. sapply)
-  for (r in 1:nreps) {
-    sim_objs[r] = one_sim(param1, param2, param3)
+## Histogram of replicated data (Figure 8.4)
+
+par (mfrow=c(5,4), mar=c(3,1,2,1))
+for (s in 1:20){
+  hist (y.rep[s,], xlab="", ylab="", cex.main="1", yaxt="n", xlim=range(y))
+}
+```
+
+```{r, light3, eval=T, message=F, warning=F, fig.caption=""}
+## Write a function to make histograms with specified bin widths and ranges
+
+Hist.preset <- function (a, width, ...){
+  a.hi <- max (a, na.rm=TRUE)
+  a.lo <- min (a, na.rm=TRUE)
+  if (is.null(width)) width <- min (sqrt(a.hi-a.lo), 1e-5)
+  bin.hi <- width*ceiling(a.hi/width)
+  bin.lo <- width*floor(a.lo/width)
+  hist (a, breaks=seq(bin.lo,bin.hi,width), ...)
+}
+
+## Run the function
+
+par (mfrow=c(5,4), mar=c(3,1,2,1))
+for (s in 1:20){
+  Hist.preset (y.rep[s,], width=5, xlab="", ylab="", cex.main="1", yaxt="n",
+               xlim=range(y), main=paste("Replication #",s,sep=""))
+}
+
+```
+
+```{r, light4, eval=T, message=F, warning=F, fig.caption=""}
+## Numerical test
+
+Test <- function (y){
+  min (y)
+}
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
+
+## Histogram Figure 8.5
+
+par (mfrow=c(1,1))
+hist (test.rep, xlim=range (Test(y), test.rep), yaxt="n", ylab="",
+ xlab="", main="Observed Min(y) and distribution of Min(y.rep)")
+lines (rep (Test(y), 2), c(0,10*n))
+```
+
+### Example 4: roaches 
+
+```{r, roaches, eval=T, message=F, warning=F}
+##############################################################################
+## Read the cleaned data
+# All data are at http://www.stat.columbia.edu/~gelman/arm/examples/roaches
+## library ("arm")
+
+roachdata <- read.csv (file.path(tmp_dir, "roachdata.csv"))
+
+library(R2OpenBUGS)
+R2OpenBUGS::attach.all(roachdata)
+## Note: attaching is dangerous and generally not recommended
+## Except when you'd like the code to be highly readable.
+
+head(roachdata)
+## Fit the model
+```
+
+```{r, roaches2, eval=T, message=F, warning=F, fig.caption=""}
+glm.1 <- glm(y ~ roach1 + treatment + senior, family=poisson,
+  offset=log(exposure2))
+display (glm.1)
+
+## Comparing the data to a replicated dataset
+
+n <- length(y)
+X <- cbind (rep(1,n), roach1, treatment, senior)
+y.hat <- exposure2 * exp (X %*% coef(glm.1))
+y.rep <- rpois (n, y.hat)
+
+print (mean (y==0))
+print (mean (y.rep==0))
+
+## Comparing the data to 1000 replicated datasets
+
+n.sims <- 1000
+sim.1 <- sim (glm.1, n.sims)
+y.rep <- array (NA, c(n.sims, n))
+for (s in 1:n.sims){
+  y.hat <- exposure2 * exp (X %*% sim.1@coef[s,])
+  y.rep[s,] <- rpois (n, y.hat)
+}
+
+ # test statistic 
+
+Test <- function (y){
+  mean (y==0)
+}
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
+
+# p-value
+print (mean (test.rep > Test(y)))
+```
+
+Now let's fit a overdispersed Poisson (negative binomial).  
+
+```{r, roaches3, eval=T, message=F, warning=F, fig.caption=""}
+
+## Checking the overdispersed model
+
+glm.2 <- glm (y ~ roach1 + treatment + senior, family=quasipoisson,
+  offset=log(exposure2))
+display (glm.2)
+
+ # 1000 replicated datasets
+
+n.sims <- 1000
+sim.2 <- sim (glm.2, n.sims)
+y.rep <- array (NA, c(n.sims, n))
+overdisp <- summary(glm.2)$dispersion
+for (s in 1:n.sims){
+  y.hat <- exposure2 * exp (X %*% sim.2@coef[s,])
+  a <- y.hat/(overdisp-1)              # using R's parametrization for the
+  y.rep[s,] <- rnegbin (n, y.hat, a)   # negative binomial distribution
+}
+
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
+
+# p-value
+print (mean (test.rep > Test(y)))
+```
+
+### Example 5: Check the fit of a time-series model
+
+```{r unemp1, eval=T}
+## Read in the data
+# Data are at http://www.stat.columbia.edu/~gelman/arm/examples/unemployment
+## library ("arm")
+
+unemployment <- read.table (file.path(tmp_dir, "unemployment.dat"), header=TRUE)
+year <- unemployment$year
+y <- unemployment$unemployed.pct
+
+## Plot of the unemployment rate
+
+par (mar=c(4,4,2,2))
+plot (year, y, type="l", ylab="unemployment", xlab="year", yaxs="i",
+  ylim=c(0, max(y)*1.05), yaxt="n", mgp=c(2,.5,0), cex.axis=1.2, cex.lab=1.2)
+axis (2, c(0,5,10), paste (c(0,5,10), "%", sep=""), mgp=c(2,.5,0), cex.axis=1.2)
+
+## Fitting a 1st-order autogregression
+
+n <- length (y)
+y.lag <- c (NA, y[1:(n-1)])
+lm.lag <- lm (y ~ y.lag)
+display (lm.lag)
+```
+
+```{r, unemp2, eval=T, message=F, warning=F, fig.caption=""}
+## Simulating replicated datasets 
+
+b.hat <- coef (lm.lag)        # vector of 2 regression coefs
+s.hat <- sigma.hat (lm.lag)   # residual sd
+
+n.sims <- 1000
+y.rep <- array (NA, c(n.sims, n))
+for (s in 1:n.sims){
+  y.rep[s,1] <- y[1]
+  for (t in 2:n){
+    prediction <- c (1, y.rep[s,t-1]) %*% b.hat
+    y.rep[s,t] <- rnorm (1, prediction, s.hat)
   }
-  
-  # Aggregate the results somehow, and then return something
+}
+
+## Including uncertainty in the estimated parameters
+
+lm.lag.sim <- sim (lm.lag, n.sims)       # simulations of beta and sigma
+for (s in 1:n.sims){
+  y.rep[s,1] <- y[1]
+  for (t in 2:n){
+    prediction <-  c (1, y.rep[s,t-1]) %*% lm.lag.sim@coef[s,]
+    y.rep[s,t] <- rnorm (1, prediction, lm.lag.sim@sigma[s])
+  }
 }
 ```
 
-### Saving results
+```{r, unemp3, eval=T, message=F, warning=F, fig.caption="", fig.height=10}
+## Plot of simulated unemployment rate series
 
-Sometimes simulations take a long time to run, and we want to save intermediate or final output, for quick reference later
+par (mfrow=c(5,3), mar=c(4,4,2,2))
+for (s in 1:15){
+  plot (year, y.rep[s,], type="l", ylab="unemployment", xlab="year", yaxs="i",
+  ylim=c(0, max(y)*1.05), yaxt="n", mgp=c(2,.5,0),
+        main=paste("simulation #", s, sep=""), cex.main=0.95)
+  axis (2, c(0,5,10), paste (c(0,5,10), "%", sep=""), mgp=c(2,.5,0))
+}
+```
 
-There two different ways of saving things from R (there are more than two, but here are two useful ones):
+```{r, unemp4, eval=T, message=F, warning=F}
+## Numerical model check
 
-- `saveRDS()`: allows us to save single R objects (like a vector, matrix, list, etc.), in (say) .rds format. E.g.,
-    ```{r, eval=FALSE}
-    saveRDS(my.mat, file="my.matrix.rds")
-    ```
+Test <- function (y){
+  n <- length (y)
+  y.lag <- c (NA, y[1:(n-1)])
+  y.lag2 <- c (NA, NA, y[1:(n-2)])
+  sum (sign(y-y.lag) != sign(y.lag-y.lag2), na.rm=TRUE)
+}
 
-- `save()`: allows us to save any number of R objects in (say) .rdata format. E.g.,
-    ```{r, eval=FALSE}
-    save(mat.x, mat.y, list.z, file="my.objects.rdata")
-    ```
+n.sims <- 1000
+print (Test (y))
+test.rep <- rep (NA, n.sims)
+for (s in 1:n.sims){
+  test.rep[s] <- Test (y.rep[s,])
+}
 
-Note: there is a big difference between how these two treat variable names
+print (mean (test.rep > Test(y)))
+print (quantile (test.rep, c(.05,.5,.95)))
+```
 
-### Loading results
+## IV. Closing activity (5 - 10 min)
 
-Corresponding to the two different ways of saving, we have two ways of loading things into R:
+### Think-pair-share
 
-- `readRDS()`: allows us to load an object that has been saved by `savedRDS()`, and **assign a new variable name**. E.g.,
-    ```{r, eval=FALSE}
-    my.new.mat = readRDS("my.matrix.rds")
-    ```
+1. Think: Where/how you could apply today's concepts and skills to one of your data analytic problems.
+2. Pair: Refine your thoughts through discussion with a partner or small-group near you.
+3. Share: Share your combined thoughts with the whole group.
 
-- `load()`: allows us to load all objects that have been saved through `save()`, **according to their original variables names**. E.g.,
-    ```{r, eval=FALSE}
-    load("my.objects.rdata")
-    ```
-    
-## VII. Summary
+### Thanks for your attention and participation!
 
-- 3 `R` functions
-- 2 new statistical facts/ideas
-- 1 question
+Let me know if you have any questions.

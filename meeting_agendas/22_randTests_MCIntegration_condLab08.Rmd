@@ -100,8 +100,8 @@ Compare this to the exact value 0.2 (easily computed by hand).
 Approximate the integral $\int_2^5 sin(x) dx$ by completing the following lines:
 
 ```{r, eval = FALSE}
-u <- runif(10000, min = 2, max = )
-
+u <- runif(1e7, min = 2, max = 5)
+mean(sin(u))*(5-2)
 ```
 
 Compare this to the exact value -0.700.
@@ -113,9 +113,9 @@ The uniform density is not the only density used in MC integration. If the densi
 Approximate the integral $\int_1^\infty exp(-x^2)dx$. Recognize this as close to the exponential density if the support is different. So rewrite the integral as $\int_0^\infty exp[-(x+1)^2]dx$. Then use an exponential density for $X$.
 
 ```{r, eval = FALSE}
-x <- rexp(10000, rate = 1)
+x <- rexp(1e7, rate = 1)
 ## compute sample average of the ratio
-
+mean( exp(-(x+1)^2) / dexp(x) )
 ```
 
 Compare this to the true value 0.1394.
