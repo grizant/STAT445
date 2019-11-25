@@ -414,7 +414,7 @@ $\beta_1 \cdot$ ![](http://www.stat.cmu.edu/~ryantibs/statcomp/lectures/tree1.pn
 Many, many others
 ===
 
-There are many, many other statistical prediction methods out there; examples below. If you're interesting in learning more, take 36-462 Data Mining, or one of the Introduction to Machine Learning Courses 10-401, 10-601, 10-701
+There are many, many other statistical prediction methods out there; examples below. If you're interesting in learning more, take a course in Data Mining, or Statistical Learning Courses.
 
 - Kernel machines
 - Random forests
