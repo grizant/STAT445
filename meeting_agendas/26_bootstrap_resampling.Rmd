@@ -1,7 +1,7 @@
 ---
 title: Resampling and the bootstrap
 author: Presented by AG Schissler
-date: Wednesday November 26, 2019
+date: Wednesday November 27, 2019
 output:
   html_document:
     css: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/base.css
@@ -21,8 +21,9 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 Digging into more computational methods of inference and computation, including
 
+1) Statistical prediction
 2) Bootstrap
-3) Maximum Likelihood Estimation
+
 
 ## II. Resampling for statistical inference
 
@@ -34,11 +35,11 @@ What do you do when you don't have a formula? You can try to derive something or
 
 Another approach the estimating the standard error of a statistic is the bootstrap.
 
-Efron introduced the bootstrap in 1979. Since then there have been 1000+ theoretical papers assessing whether you can trust the boostrap. The answer is in most but not all cases the bootstrap works. It provides fully automatic inference (an algorithm). Rather than writing everything in math notation (since Efron and Hastie 2016 for clean way to do this), we'll discuss the algorithm below.
+Efron introduced the bootstrap in 1979. Since then there have been 1000+ theoretical papers assessing whether you can trust the boostrap. The answer is in most but not all cases the bootstrap works. It provides fully automatic inference (an algorithm). Rather than writing everything in math notation (see Efron and Hastie 2016 for clean way to do this), we'll discuss the algorithm below.
 
 ### An R program for the nonparametric bootstrap 
 
-Modified from Efron and Hastie 2016, Algorithm 10.1.
+Modified from Efron and Hastie 2016 (Book: *Computer Age Statistical Inference*), Algorithm 10.1.
 
 ```{r}
 do_boot <- function(x, B, func, ...){
@@ -100,7 +101,7 @@ mean(cor_boot) - cor(law$LSAT, law$GPA)
 
 ### Using the `boot` packge
 
-Also try the `boot` package for more exotic bootstrap estimates and confidence intervals. confidence intervals .
+Also try the `boot` package for more exotic bootstrap estimates and confidence intervals.
 
 ```{r}
 require(boot)
@@ -121,14 +122,8 @@ boot::boot.ci(boot.out = boot_obj, conf = 0.95)
 
 Note that BCa = "bias correct" and "adjusted for acceleration".
 
-### Let's try some more examples to get a feel for the bootstrap
-
-```{r}
-
-```
-
-## IV. Continue working on Lab 8, time permitting
+## IV. Continue working on Lab 09, time permitting
 
 ## V. Summary
 
-- Summarize the Bookstrap procedure in 1-3 simple sentences.
+- Summarize the Bootstrap procedure in 1-3 simple sentences.

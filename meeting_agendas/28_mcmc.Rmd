@@ -23,10 +23,11 @@ Digging into more computational methods of inference and computation, including
 
 1) Students will be able to simulate a basic Markov Chain
 2) Students will be able use a Markov Chain Monte Carlo to sample a target distribution 
-3) Students will be able use a Markov Chain Monte Carlo to perform Bayesian inference
-4) Students will be able to use statistical computing techniques to make inferences in Lab 10
+3) Students will be able to use statistical computing techniques to make inferences in Lab 10
 
 ## II. Markov Chain simulation
+
+***Opening remark: MCMC relies on clever use of ratios of probability density functions.***
 
 From Braun and Murdock 2018, Markov chains are sequences of random variables $X_0, X_1, \ldots$ where the distribution of $X_{t+1}$, conditional on all previous values, depends only on $X_t$. They are commonly used to model systems with short memories, such as the stock market. When $X_t$ is a discrete random variable with a finite number of states $1,\ldots,n$, you can write the conditional distributions in an $n \times n$ matrix $P$. Where each entry $P_{ij}$ holds the conditional probability that $X_{t+1}=j$ given that $X_t = i$.
 
@@ -114,7 +115,7 @@ Observe that in step (3c) the candidate point $Y$ is accepted with probability
 
 So it is only necessary to know the density of the target distribution $f$ up to a constant!
 
-The algorithm is designed so that the stationary distribution of the chain is $f$.
+**The algorithm is designed so that the stationary distribution of the chain is $f$.ce**
 
 The proposal distribution must be chosen so that the generated chain will converge to a stationary distribution --- the target distribution. A proposal distribution with the same support as the target distribution will generally satisify regularity conditions (irreducibility, positive recurrence, and aperiodicity) to guarantee convergence.
 
@@ -136,7 +137,9 @@ $$
  r(X_t, Y) = \frac{f(Y)}{f(X_t)}.
 $$
 
-This generalization provides greater efficiency (more rapid convergence to the stationary distribution) in certain cases.
+Why generalize (as in the Metropolis-Hastings sampler above)? Judicious choice of proposal density will provide greater efficiency (more rapid convergence to the stationary distribution) in certain cases.
+
+*Note: Roberts, Gelman, and Gilks (1997) recommend that the rejection rates in the range $[0.15, 0.5]$ for good performance.*
 
 ### Example from Rizzo 2006, the Rayleigh distribution
 

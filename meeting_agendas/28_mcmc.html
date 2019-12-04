@@ -59,13 +59,13 @@
 <ol style="list-style-type: decimal">
 <li>Students will be able to simulate a basic Markov Chain</li>
 <li>Students will be able use a Markov Chain Monte Carlo to sample a target distribution</li>
-<li>Students will be able use a Markov Chain Monte Carlo to perform Bayesian inference</li>
 <li>Students will be able to use statistical computing techniques to make inferences in Lab 10</li>
 </ol>
 </div>
 </div>
 <div id="ii.-markov-chain-simulation" class="section level2">
 <h2>II. Markov Chain simulation</h2>
+<p><strong><em>Opening remark: MCMC relies on clever use of ratios of probability density functions.</em></strong></p>
 <p>From Braun and Murdock 2018, Markov chains are sequences of random variables <span class="math inline">\(X_0, X_1, \ldots\)</span> where the distribution of <span class="math inline">\(X_{t+1}\)</span>, conditional on all previous values, depends only on <span class="math inline">\(X_t\)</span>. They are commonly used to model systems with short memories, such as the stock market. When <span class="math inline">\(X_t\)</span> is a discrete random variable with a finite number of states <span class="math inline">\(1,\ldots,n\)</span>, you can write the conditional distributions in an <span class="math inline">\(n \times n\)</span> matrix <span class="math inline">\(P\)</span>. Where each entry <span class="math inline">\(P_{ij}\)</span> holds the conditional probability that <span class="math inline">\(X_{t+1}=j\)</span> given that <span class="math inline">\(X_t = i\)</span>.</p>
 <p>An interesting fact about Markov chains is that they have an <em>invariant distribution</em>, also called a <em>stationary distribution</em>. This is a distribution <span class="math inline">\(P(X_t = i) =\pi_i\)</span> such that if <span class="math inline">\(X_t\)</span> is drawn from the invariant distribution and updated using the transition matrix <span class="math inline">\(P\)</span>, then the marginal distribution of <span class="math inline">\(X_{t+1}\)</span> will also be from the invariant distribution.</p>
 <div id="example-using-monte-carlo-to-find-an-invariant-distribution" class="section level3">
@@ -156,7 +156,7 @@ cat(&quot;Serevely ill person to start&quot;)</code></pre>
     \alpha (X_t, Y) = min \left( 1, \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)} \right),
     \]</span></p>
 <p>So it is only necessary to know the density of the target distribution <span class="math inline">\(f\)</span> up to a constant!</p>
-<p>The algorithm is designed so that the stationary distribution of the chain is <span class="math inline">\(f\)</span>.</p>
+<p><strong>The algorithm is designed so that the stationary distribution of the chain is <span class="math inline">\(f\)</span>.ce</strong></p>
 <p>The proposal distribution must be chosen so that the generated chain will converge to a stationary distribution — the target distribution. A proposal distribution with the same support as the target distribution will generally satisify regularity conditions (irreducibility, positive recurrence, and aperiodicity) to guarantee convergence.</p>
 </div>
 <div id="the-metropolis-sampler-1953" class="section level3">
@@ -171,7 +171,8 @@ cat(&quot;Serevely ill person to start&quot;)</code></pre>
 <p><span class="math display">\[
  r(X_t, Y) = \frac{f(Y)}{f(X_t)}.
 \]</span></p>
-<p>This generalization provides greater efficiency (more rapid convergence to the stationary distribution) in certain cases.</p>
+<p>Why generalize (as in the Metropolis-Hastings sampler above)? Judicious choice of proposal density will provide greater efficiency (more rapid convergence to the stationary distribution) in certain cases.</p>
+<p><em>Note: Roberts, Gelman, and Gilks (1997) recommend that the rejection rates in the range <span class="math inline">\([0.15, 0.5]\)</span> for good performance.</em></p>
 </div>
 <div id="example-from-rizzo-2006-the-rayleigh-distribution" class="section level3">
 <h3>Example from Rizzo 2006, the Rayleigh distribution</h3>

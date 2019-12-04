@@ -47,7 +47,7 @@
 
 <h1 class="title toc-ignore">Resampling and the bootstrap</h1>
 <h4 class="author">Presented by AG Schissler</h4>
-<h4 class="date">Wednesday November 26, 2019</h4>
+<h4 class="date">Wednesday November 27, 2019</h4>
 
 
 
@@ -56,9 +56,9 @@
 <div id="this-weeks-agenda" class="section level3">
 <h3>This week’s agenda</h3>
 <p>Digging into more computational methods of inference and computation, including</p>
-<ol start="2" style="list-style-type: decimal">
+<ol style="list-style-type: decimal">
+<li>Statistical prediction</li>
 <li>Bootstrap</li>
-<li>Maximum Likelihood Estimation</li>
 </ol>
 </div>
 </div>
@@ -70,10 +70,10 @@
 <div id="iii.-the-bootstrap" class="section level2">
 <h2>III. The Bootstrap</h2>
 <p>Another approach the estimating the standard error of a statistic is the bootstrap.</p>
-<p>Efron introduced the bootstrap in 1979. Since then there have been 1000+ theoretical papers assessing whether you can trust the boostrap. The answer is in most but not all cases the bootstrap works. It provides fully automatic inference (an algorithm). Rather than writing everything in math notation (since Efron and Hastie 2016 for clean way to do this), we’ll discuss the algorithm below.</p>
+<p>Efron introduced the bootstrap in 1979. Since then there have been 1000+ theoretical papers assessing whether you can trust the boostrap. The answer is in most but not all cases the bootstrap works. It provides fully automatic inference (an algorithm). Rather than writing everything in math notation (see Efron and Hastie 2016 for clean way to do this), we’ll discuss the algorithm below.</p>
 <div id="an-r-program-for-the-nonparametric-bootstrap" class="section level3">
 <h3>An R program for the nonparametric bootstrap</h3>
-<p>Modified from Efron and Hastie 2016, Algorithm 10.1.</p>
+<p>Modified from Efron and Hastie 2016 (Book: <em>Computer Age Statistical Inference</em>), Algorithm 10.1.</p>
 <pre class="r"><code>do_boot &lt;- function(x, B, func, ...){
     ## x is a data vector or matrix (with each row a case)
     ## B is the number of bootstrap replicates
@@ -131,7 +131,7 @@ mean(cor_boot) - cor(law$LSAT, law$GPA)</code></pre>
 </div>
 <div id="using-the-boot-packge" class="section level3">
 <h3>Using the <code>boot</code> packge</h3>
-<p>Also try the <code>boot</code> package for more exotic bootstrap estimates and confidence intervals. confidence intervals .</p>
+<p>Also try the <code>boot</code> package for more exotic bootstrap estimates and confidence intervals.</p>
 <pre class="r"><code>require(boot)
 r &lt;- function(x, i) {
     ## want correlation between columns 1 and 2
@@ -190,17 +190,14 @@ print(boot_obj)</code></pre>
 ## Calculations and Intervals on Original Scale</code></pre>
 <p>Note that BCa = “bias correct” and “adjusted for acceleration”.</p>
 </div>
-<div id="lets-try-some-more-examples-to-get-a-feel-for-the-bootstrap" class="section level3">
-<h3>Let’s try some more examples to get a feel for the bootstrap</h3>
 </div>
-</div>
-<div id="iv.-continue-working-on-lab-8-time-permitting" class="section level2">
-<h2>IV. Continue working on Lab 8, time permitting</h2>
+<div id="iv.-continue-working-on-lab-09-time-permitting" class="section level2">
+<h2>IV. Continue working on Lab 09, time permitting</h2>
 </div>
 <div id="v.-summary" class="section level2">
 <h2>V. Summary</h2>
 <ul>
-<li>Summarize the Bookstrap procedure in 1-3 simple sentences.</li>
+<li>Summarize the Bootstrap procedure in 1-3 simple sentences.</li>
 </ul>
 </div>
 

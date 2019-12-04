@@ -1,8 +1,14 @@
 ---
-title: "Lab 09: Bootstrap, MLE, MCMC"
+title: "Lab 10: Bootstrap, MLE, MCMC"
 author: "AG Schissler"
 date: "Week of 12/03/2018"
-output: html_document
+output:
+  html_document:
+    css: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/base.css
+    highlight: null
+    theme: null
+    includes:
+      in_header: ~/OneDrive - University of Nevada, Reno/Service/ADA/ADA_compliant_teaching_workflow/styles/notebook.html
 ---
 
 ```{r, include=FALSE}
@@ -13,7 +19,7 @@ Name:
 NSHE ID:  
 Collaborated with:  
 
-This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, **next** week.
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Sunday 11:59pm, **OR BY THE DUE DATE IN CANVAS**.
 
 Learning outcomes
 ===

@@ -21,7 +21,7 @@ knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
 
 1. Log in the your workstation.
 2. Open the RStudio application on your machine.
-3. Open lesson26_mle_optim.Rmd from website so that you can work along the lecture.
+3. Open 27_mle_optim.Rmd from Canvas so that you can work along the lecture.
 
 ### This week's agenda
 
