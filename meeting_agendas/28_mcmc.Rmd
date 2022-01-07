@@ -115,7 +115,7 @@ Observe that in step (3c) the candidate point $Y$ is accepted with probability
 
 So it is only necessary to know the density of the target distribution $f$ up to a constant!
 
-**The algorithm is designed so that the stationary distribution of the chain is $f$.ce**
+**The algorithm is designed so that the stationary distribution of the chain is $f$.**
 
 The proposal distribution must be chosen so that the generated chain will converge to a stationary distribution --- the target distribution. A proposal distribution with the same support as the target distribution will generally satisify regularity conditions (irreducibility, positive recurrence, and aperiodicity) to guarantee convergence.
 
